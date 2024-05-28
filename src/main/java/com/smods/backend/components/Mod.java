@@ -12,8 +12,4 @@ public class Mod {
     private Set<Mod> preRequisite;
     private double minBid;
     private double medianBid;
-
-    public String toString(){
-        return "setter injection works";
-    }
 }

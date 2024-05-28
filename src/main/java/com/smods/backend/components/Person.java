@@ -16,8 +16,4 @@ public class Person {
     public Person(Mod mod){
         this.mods.add(mod);
     }
-
-    public String toString(){
-        return "constructor injection works: " + mods.toString();
-    }
 }
