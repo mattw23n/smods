@@ -1,68 +1,29 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Loading from "./loading";
-import { UserContext } from "../data/user";
-import axios from "axios";
-import {UserProvider} from "../data/user";
 
 function Form() {
-    const { user, setUser } = useContext(UserContext) || {};
-
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
     };
 
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
     };
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Username:", username);
+        console.log("Email:", email);
         console.log("Password:", password);
-
-        setLoading(true);
-
-        try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', {
-                username: username,
-                password: password,
-            });
-
-            if (response.status === 200) {
-                const { jwt, refreshToken, username } = response.data;
-                console.log("Login successful:", jwt);
-                // Store tokens in localStorage or context
-                localStorage.setItem("jwt", jwt);
-                localStorage.setItem("refreshToken", refreshToken);
-                if (setUser) setUser({ username, email: username });
-                navigate('/home'); // Redirect to home page
-            } else {
-                alert('Invalid username or password');
-            }
-        } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
-            alert('Login failed');
-        } finally {
-            setLoading(false);
-        }
     };
-
-    if (loading) {
-        return <Loading />;
-    }
 
     return (
         <div className="mx-auto p-4 w-full max-w-md">
@@ -71,16 +32,16 @@ function Form() {
                     <p className="text-center text-2xl font-bold font-poppins">Sign In</p>
                     <div>
                         <p className="font-bold pb-1 text-sm font-poppins">
-                            Username or Email
+                            Email
                         </p>
-                        <label htmlFor="username" className="sr-only">Username</label>
+                        <label htmlFor="email" className="sr-only">Email</label>
                         <div className="relative">
                             <input
-                                type="text"
-                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
-                                placeholder="Enter username"
-                                value={username}
-                                onChange={handleUsernameChange}
+                                type="email"
+                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm shadow-sm"
+                                placeholder="Enter email"
+                                value={email}
+                                onChange={handleEmailChange}
                             />
                         </div>
                     </div>
@@ -92,7 +53,7 @@ function Form() {
                             </p>
                             <input
                                 type="password"
-                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
+                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm shadow-sm"
                                 placeholder="Enter password"
                                 value={password}
                                 onChange={handlePasswordChange}
@@ -107,7 +68,7 @@ function Form() {
                             onChange={handleCheckboxChange}
                             className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                         />
-                        <label htmlFor="remember-me" className="font-poppins ml-2 block text-xs text-gray-900">
+                        <label htmlFor="remember-me" className="font-poppins ml-2 block text-sm text-gray-900">
                             Remember me
                         </label>
                     </div>
@@ -118,7 +79,7 @@ function Form() {
                         Sign in
                     </button>
                     <p className="text-center text-sm text-gray-500 font-poppins">
-                        Don't have an account?
+                        Don't have an account? 
                         <a className="font-bold font-poppins" href="#"> Register</a>
                     </p>
                 </form>
@@ -129,7 +90,7 @@ function Form() {
 
 function Content() {
     return (
-        <div className="min-h-screen flex-1 bg-gradient-to-b from-white to-blue-400 flex items-center justify-center min-h-[83vh]">
+        <div className="min-h-screen flex-1 bg-gradient-to-b from-white to-blue-400 p-4 flex items-center justify-center min-h-[85vh]">
             <Form />
         </div>
     );
@@ -137,13 +98,11 @@ function Content() {
 
 function SignIn() {
     return (
-        <UserProvider>
-            <div className="min-h-screen flex flex-col">
-                <Header isSignIn={true} />
-                <Content />
-                <Footer />
-            </div>
-        </UserProvider>
+        <div className="min-h-screen flex flex-col">
+            <Header isSignIn={true} />
+            <Content />
+            <Footer />
+        </div>
     );
 }
 
