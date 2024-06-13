@@ -9,6 +9,8 @@ import PlanningEdit from './pages/planning_edit.jsx';
 import Home from './pages/home.jsx';
 import Loading from './pages/loading.jsx';
 import NewPlan from './pages/home_new_plan.jsx';
+import PlanningGroup from './pages/planning_group.jsx';
+import PlanningYear from './pages/planning_year.jsx';
 
 function App() {
     return (
@@ -16,11 +18,12 @@ function App() {
           {/* <BackgroundGradientAnimation>
           </BackgroundGradientAnimation> */}
           {/* <Landing/> */}
-          {/* <Planning/> */}
+          <Planning/>
           {/* <Home /> */}
           {/* <Loading></Loading> */}
-          {/* <PlanningEditCopy/> */}
-          <PlanningEdit></PlanningEdit>
+          {/* <PlanningEdit></PlanningEdit> */}
+          {/* <PlanningYear></PlanningYear> */}
+          {/* <PlanningGroup></PlanningGroup> */}
         </div>
     );
 }
