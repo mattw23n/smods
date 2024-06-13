@@ -366,7 +366,7 @@ function Content() {
 }
 
 
-function PlanningEditCopy2(){
+function PlanningEdit(){
     return(
         <div class="bg-background">
             <Header></Header>
@@ -376,4 +376,4 @@ function PlanningEditCopy2(){
     );
 }
 
-export default PlanningEditCopy2;
+export default PlanningEdit;
