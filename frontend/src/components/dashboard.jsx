@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const ActiveCounter = ({Current, Max, Category, type}) => {
     return (
-      <div className={`flex gap-1 w-fit items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
-        <p class="text-xl">{Current}/{Max} </p>
-        {Category}
+      <div className={`flex gap-1 w-full items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
+        <p class="text-xl ">{Current}/{Max} </p>
+        <p className="whitespace-nowrap">{Category}</p>
       </div>
     )
   }
@@ -36,7 +36,7 @@ const PlanBar = ({mods}) => {
     const totalCUs = mods.length
 
     const Tab1 = (
-      <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-3 gap-x-8 gap-y-2">
+      <div class="bg-gray-100 rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto" style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
         <ActiveCounter Current={uniCore.length} Max={6} Category="UNI CORE" type="uc" />
         <ActiveCounter Current={majorCore.length} Max={16} Category="MAJOR CORE" type="mc"/>
         <ActiveCounter Current={majorElective.length} Max={3} Category="MAJOR ELECTIVE" type="me"/>
@@ -46,7 +46,7 @@ const PlanBar = ({mods}) => {
     );
 
     const Tab2 = (
-        <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 font-bold text-text">
+        <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 font-bold text-text w-fit">
           <div className="flex justify-end items-center gap-5 font-archivo">
             <p>🌏 Asia Studies </p>
             <CrossCheck status={true}/>
@@ -79,7 +79,7 @@ const PlanBar = ({mods}) => {
     );
 
     const Tab3 = (
-        <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2">
+        <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
                 <p class="text-xl">111.00</p>
                 Total Grade Points
@@ -100,8 +100,8 @@ const PlanBar = ({mods}) => {
     ];
             
     return (
-        <div className="w-fit h-fit rounded-3xl bg-gray-200">
-            <div class="px-4 py-2">
+        <div className="h-fit rounded-3xl bg-gray-200">
+            <div class="px-4 py-2 w-auto">
                 <Tabs tabData={tabData}/>
             </div>
         </div>
@@ -125,7 +125,7 @@ const Tabs = ({ tabData }) => {
     const tabs = getTabs();
   
     return (
-      <div className="mx-auto mt-4">
+      <div className="mx-auto mt-4 flex-grow">
         <div className="flex border-b">
           {tabs.map((tab, index) => (
             <button class="max-w"
@@ -184,29 +184,69 @@ const PlanDetails = ({title, major, track}) => {
 
                 <span class="inline-flex -space-x-px overflow-hidden rounded-lg border bg-white shadow-sm">
                     <button
-                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
+                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
                     >
                         4Y
                     </button>
 
                     <button
-                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
+                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
                     >
                         Y
                     </button>
 
                     <button
-                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
+                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
                     >
                         T
                     </button>
                     <button
-                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:relative"
+                        class="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
                     >
                         G
                     </button>
                 </span>
             </div>
+        </div>
+    )
+}
+
+const ButtonGroup = () => {
+    return(
+        <div className="flex flex-col gap-4">
+            <div className="flex gap-x-2">
+                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                </button>
+                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                </button>
+                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                    </svg>
+                </button>
+            </div>
+            <div className="rounded-3xl bg-gray-200 flex justify-between items-center px-5 py-2 font-archivo font-bold">
+                GPA
+                <label
+                htmlFor="AcceptConditions"
+                className="relative inline-block h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary"
+                >
+                <input type="checkbox" id="AcceptConditions" className="peer sr-only" />
+
+                <span
+                    className="absolute inset-y-0 start-0 m-1 size-6 rounded-full bg-white transition-all peer-checked:start-6"
+                ></span>
+                </label>
+
+            </div>
+                
+            
         </div>
     )
 }
@@ -220,6 +260,7 @@ const Dashboard = ({mods}) => {
         <div className="mx-20 my-5 flex gap-5">
             <PlanDetails title={title} major={major} track={track}/>
             <PlanBar mods={mods}/>
+            <ButtonGroup/>
         </div>
     )
 }

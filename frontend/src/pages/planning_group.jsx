@@ -62,13 +62,13 @@ const Mod = ({courseCode, title, type, term, handleDragStart}) => {
 
     return(
         <>
-        <DropIndicator beforeId={courseCode} term={term}/>
+        <DropIndicator beforeId={courseCode} type={type}/>
             <motion.div 
             layout
             layoutId = {courseCode}
             draggable="true" 
             onDragStart={(e) => handleDragStart(e, {courseCode, title, type, term})}
-            className={`px-3 py-1 min-w-64 bg-${type}-l 
+            className={`px-3 py-1 w-80 bg-${type}-l 
             rounded-full items-center font-archivo 
             text-xs flex justify-between
             cursor-grab active:cursor-grabbing`}
@@ -82,6 +82,9 @@ const Mod = ({courseCode, title, type, term, handleDragStart}) => {
                 <div>
                     {title}
                 </div>
+                <div>
+                    Term {term}
+                </div>
                 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
@@ -94,17 +97,35 @@ const Mod = ({courseCode, title, type, term, handleDragStart}) => {
     );
 }
 
-const DropIndicator = ({ beforeId, term}) => {
+const DropIndicator = ({ beforeId, type}) => {
     return(
         <div
             data-before={beforeId || "-1"}
-            data-column={term}
+            data-column={type}
             className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
         />
     )
 }
 
-const Term = ({term, mods, setMods}) => {
+const Term = ({term, mods, setMods, type}) => {
+    const typeDict = {
+        "uc":"UNI CORE",
+        "mc":"MAJOR CORE",
+        "tm":"TRACK MODULE",
+        "me":"MAJOR ELECTIVE",
+        "fe":"FREE ELECTIVE",
+    }
+
+    const findValue = (dict, targetKey) => {
+        for (const key in dict) {
+          if (key === targetKey) {
+            return dict[key];
+          }
+        }
+        return null; // If the key is not found
+    };
+    
+
     const [active, setActive] = useState(false);
 
     const handleDragStart = (e, mod) => {
@@ -158,7 +179,7 @@ const Term = ({term, mods, setMods}) => {
     }
 
     const getIndicators = (e) => {
-        return Array.from(document.querySelectorAll(`[data-column="${term}"]`));
+        return Array.from(document.querySelectorAll(`[data-column="${type}"]`));
     }
 
     const handleDragLeave = () => {
@@ -202,12 +223,12 @@ const Term = ({term, mods, setMods}) => {
         }
     }
     
-    const filteredMods = mods.filter((m) => m.term === term);
+    const filteredMods = mods.filter((m) => m.type === type);
 
     return(
-        <div class="px-4 py-4 bg-white bg-opacity-30 rounded-3xl justify-center items-center">
+        <div class={`px-4 py-4 bg-${type}-l rounded-3xl justify-center items-center h-fit`}>
             <div className="flex justify-between">
-                <p className="font-poppins text-xs pb-2">Term {term}</p>
+                <p className="font-poppins text-xs pb-2 font-bold">{findValue(typeDict, type)}</p>
                 <span className="rounded text-xs font-poppins">{filteredMods.length} mods</span>
             </div>
             
@@ -222,7 +243,7 @@ const Term = ({term, mods, setMods}) => {
                     return <Mod key={m.courseCode} {...m}
                     handleDragStart={handleDragStart}/>
                 })}
-                <DropIndicator beforeId={-1} term={term}/>
+                <DropIndicator beforeId={-1} type={type}/>
 
                 
             
@@ -232,16 +253,16 @@ const Term = ({term, mods, setMods}) => {
     );
 }
 
-function Year({num, mods, setMods}){
+// function Year({num, mods, setMods}){
 
-    return(
-        <div class="h-fit px-4 py-4 bg-gray-200 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2">
-            <p className="font-poppins font-bold text-sm">Year {num}</p>
-            <Term term={num * 2 - 1} mods={mods} setMods={setMods}></Term>
-            <Term term={num * 2} mods={mods} setMods={setMods}></Term>
-        </div>
-    );
-}
+//     return(
+//         <div class="h-fit px-4 py-4 bg-gray-200 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2">
+//             <p className="font-poppins font-bold text-sm">Year {num}</p>
+//             <Term term={num * 2 - 1} mods={mods} setMods={setMods} type={"uc"}></Term>
+//             <Term term={num * 2} mods={mods} setMods={setMods}></Term>
+//         </div>
+//     );
+// }
 
 function Content(){
     const [mods, setMods] = useState(DEFAULT_MODS);
@@ -306,17 +327,18 @@ function Content(){
             <div ref={containerRef}
                 className="container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab"
                 style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
-                <Year num={1} mods={mods} setMods={setMods}></Year>
-                <Year num={2} mods={mods} setMods={setMods}></Year>
-                <Year num={3} mods={mods} setMods={setMods}></Year>
-                <Year num={4} mods={mods} setMods={setMods}></Year>
+                <Term type={"uc"} mods={mods} setMods={setMods}></Term>
+                <Term type={"mc"} mods={mods} setMods={setMods}></Term>
+                <Term type={"tm"} mods={mods} setMods={setMods}></Term>
+                <Term type={"me"} mods={mods} setMods={setMods}></Term>
+                <Term type={"fe"} mods={mods} setMods={setMods}></Term>
             </div>
         </>
         
     );
 }
 
-function Planning(){
+function PlanningGroup(){
     return(
         <div class="bg-background">
             <Header></Header>
@@ -327,4 +349,4 @@ function Planning(){
     );
 }
 
-export default Planning;
+export default PlanningGroup;

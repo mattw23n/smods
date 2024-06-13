@@ -304,7 +304,7 @@ function Content(){
         <>
             <Dashboard mods={mods}></Dashboard>
             <div ref={containerRef}
-                className="container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab"
+                className="container h-[580px] ml-20 mb-10 pb-10 flex flex-col gap-4 overflow-x-scroll scroll-auto focus:cursor-grab"
                 style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
                 <Year num={1} mods={mods} setMods={setMods}></Year>
                 <Year num={2} mods={mods} setMods={setMods}></Year>
@@ -316,7 +316,7 @@ function Content(){
     );
 }
 
-function Planning(){
+function PlanningYear(){
     return(
         <div class="bg-background">
             <Header></Header>
@@ -327,4 +327,4 @@ function Planning(){
     );
 }
 
-export default Planning;
+export default PlanningYear;
