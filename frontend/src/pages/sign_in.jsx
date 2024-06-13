@@ -38,7 +38,7 @@ function Form() {
                         <div className="relative">
                             <input
                                 type="email"
-                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm shadow-sm"
+                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
                                 placeholder="Enter email"
                                 value={email}
                                 onChange={handleEmailChange}
@@ -53,7 +53,7 @@ function Form() {
                             </p>
                             <input
                                 type="password"
-                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm shadow-sm"
+                                className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
                                 placeholder="Enter password"
                                 value={password}
                                 onChange={handlePasswordChange}
@@ -68,7 +68,7 @@ function Form() {
                             onChange={handleCheckboxChange}
                             className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                         />
-                        <label htmlFor="remember-me" className="font-poppins ml-2 block text-sm text-gray-900">
+                        <label htmlFor="remember-me" className="font-poppins ml-2 block text-xs text-gray-900">
                             Remember me
                         </label>
                     </div>
