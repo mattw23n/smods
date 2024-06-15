@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.smods</groupId>
-	<artifactId>backend</artifactId>
+	<artifactId>heap-smods</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
 	<description>A web application for SMU students to plan their modules</description>
