@@ -12,9 +12,5 @@ public class User {
     private String email;
     private Set<String> major;
     private Set<String> track;
-    private Set<Mod> mods = new HashSet<>();
-    @Autowired
-    public User(Mod mod){
-        this.mods.add(mod);
-    }
+
 }
