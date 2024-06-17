@@ -1,6 +1,8 @@
 package com.smods.backend.controller;
 
 import com.smods.backend.dto.LoginRequest;
+import com.smods.backend.dto.UserDTO;
+import com.smods.backend.model.User;
 import com.smods.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,16 @@ public class AuthController {
             return ResponseEntity.ok("Login successful");
         } else {
             return ResponseEntity.status(401).body("Invalid username or password");
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+        User user = userService.registerUser(userDTO);
+        if (user != null) {
+            return ResponseEntity.ok("Registration successful");
+        } else {
+            return ResponseEntity.status(400).body("Registration failed");
         }
     }
 }
