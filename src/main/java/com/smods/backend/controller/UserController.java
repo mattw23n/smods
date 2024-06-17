@@ -3,6 +3,7 @@ package com.smods.backend.controller;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.model.User;
 import com.smods.backend.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +16,23 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public User registerUser(@RequestBody UserDTO userDTO) {
-        return userService.registerUser(userDTO);
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        User updatedUser = userService.updateUser(id, userDTO);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO);
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 }

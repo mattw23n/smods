@@ -39,10 +39,7 @@ public class UserService {
     // Login a user
     public boolean loginUser(LoginRequest loginRequest) {
         User user = findByUsername(loginRequest.getUsername());
-        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return true;
-        }
-        return false;
+        return user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
     }
 
     // Update user details
@@ -59,5 +56,10 @@ public class UserService {
         } else {
             throw new RuntimeException("User not found with id: " + id);
         }
+    }
+
+    // Find user by ID
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }
