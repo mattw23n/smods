@@ -2,6 +2,8 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
+import com.smods.backend.exception.EmailAlreadyExistsException;
+import com.smods.backend.exception.UsernameAlreadyExistsException;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,16 @@ public class UserService {
 
     // Register a new user
     public User registerUser(UserDTO userDTO) {
+        // Check if username already exists
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already exists: " + userDTO.getUsername());
+        }
+
+        // Check if email already exists
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("Email already exists: " + userDTO.getEmail());
+        }
+
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
