@@ -4,6 +4,7 @@ import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.model.User;
 import com.smods.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> register(@RequestBody @Valid UserDTO userDTO) {
         User user = userService.registerUser(userDTO);
         if (user != null) {
             return ResponseEntity.ok("Registration successful");
