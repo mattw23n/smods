@@ -17,6 +17,9 @@ public class User {
     private String email;
     private String role;
 
+    private boolean emailVerified;
+    private String verificationCode;
+
     @ElementCollection
     private Set<String> major = new HashSet<>();
 
@@ -40,6 +43,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.emailVerified = false;
     }
 
     // Getters and setters
@@ -82,6 +86,22 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
     }
 
     public Set<String> getMajor() {
