@@ -37,4 +37,10 @@ public class AuthController {
             return ResponseEntity.status(400).body("Registration failed");
         }
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyEmail(@RequestParam String code) {
+        userService.verifyUser(code);
+        return ResponseEntity.ok("Email verified successfully.");
+    }
 }
