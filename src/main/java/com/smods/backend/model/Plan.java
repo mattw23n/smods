@@ -1,38 +1,70 @@
 package com.smods.backend.model;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.util.*;
-
-@Component
+@Entity
 public class Plan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
     private String degree;
     private String track;
-    private Set<Module> exemptions;
-    private Set<Module> plannedModules;
+
+    @ManyToMany
+    @JoinTable(
+            name = "plan_exemptions",
+            joinColumns = @JoinColumn(name = "plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "module_id")
+    )
+    private Set<Module> exemptions = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "plan_modules",
+            joinColumns = @JoinColumn(name = "plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "module_id")
+    )
+    private Set<Module> plannedModules = new HashSet<>();
+
+    public Plan() {
+        // Default constructor for JPA
+    }
 
     public Plan(String name, String degree, String track, Set<Module> exemptions) {
         this.name = name;
         this.degree = degree;
         this.track = track;
         this.exemptions = exemptions;
-        this.plannedModules = new HashSet<Module>();
     }
 
-    public void addModule(Module module){
-        if (plannedModules.contains(module)){
-            throw new PlanModificationException("you already picked this module");
+    public void addModule(Module module) {
+        if (plannedModules.contains(module)) {
+            throw new PlanModificationException("You already picked this module");
         }
         plannedModules.add(module);
     }
 
-    public void removeModule(Module module){
-        if (!plannedModules.contains(module)){
-            throw new PlanModificationException("you have not picked this module yet");
+    public void removeModule(Module module) {
+        if (!plannedModules.contains(module)) {
+            throw new PlanModificationException("You have not picked this module yet");
         }
         plannedModules.remove(module);
     }
+
+    // Getters and setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
