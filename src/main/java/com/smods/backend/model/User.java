@@ -1,6 +1,6 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.Mod;
+import com.smods.backend.model.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
