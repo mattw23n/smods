@@ -20,11 +20,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        boolean isAuthenticated = userService.loginUser(loginRequest);
-        if (isAuthenticated) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid username or password");
+        String loginStatus = userService.loginUser(loginRequest);
+        switch (loginStatus) {
+            case "Login successful":
+                return ResponseEntity.ok(loginStatus);
+            case "Please verify your email":
+                return ResponseEntity.status(403).body(loginStatus);
+            default:
+                return ResponseEntity.status(401).body(loginStatus);
         }
     }
 
@@ -40,7 +43,11 @@ public class AuthController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@RequestParam String code) {
-        userService.verifyUser(code);
-        return ResponseEntity.ok("Email verified successfully.");
+        try {
+            userService.verifyUser(code);
+            return ResponseEntity.ok("Email verified successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Invalid verification code.");
+        }
     }
 }

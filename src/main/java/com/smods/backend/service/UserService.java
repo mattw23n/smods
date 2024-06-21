@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
@@ -51,7 +51,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setRole("USER");
-        user.setVerificationCode(UUID.randomUUID().toString());
+        user.setVerificationCode(generateVerificationCode());
 
         // Send verification email
         emailService.sendVerificationEmail(user);
@@ -71,6 +71,12 @@ public class UserService {
         // You can add more validation rules here as necessary
     }
 
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // Generates a 6-digit number
+        return String.valueOf(code);
+    }
+
     // Verify the user's email
     public void verifyUser(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode)
@@ -87,9 +93,15 @@ public class UserService {
     }
 
     // Login a user
-    public boolean loginUser(LoginRequest loginRequest) {
+    public String loginUser(LoginRequest loginRequest) {
         User user = findByUsername(loginRequest.getUsername());
-        return user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()) && user.isEmailVerified();
+        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return "Invalid username or password";
+        }
+        if (!user.isEmailVerified()) {
+            return "Please verify your email";
+        }
+        return "Login successful";
     }
 
     // Update user details
