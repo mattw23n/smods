@@ -7,11 +7,13 @@ import com.smods.backend.exception.InvalidCharacterException;
 import com.smods.backend.exception.UsernameAlreadyExistsException;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
@@ -19,11 +21,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     private static final Pattern NON_ENGLISH_PATTERN = Pattern.compile("[^\\p{ASCII}]");
 
-    public UserService(UserRepository userRepository) {
+    @Autowired
+    public UserService(UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -46,6 +51,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setRole("USER");
+        user.setVerificationCode(generateVerificationCode());
+
+        // Send verification email
+        emailService.sendVerificationEmail(user);
+
         return userRepository.save(user);
     }
 
@@ -61,15 +71,37 @@ public class UserService {
         // You can add more validation rules here as necessary
     }
 
+    private String generateVerificationCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // Generates a 6-digit number
+        return String.valueOf(code);
+    }
+
+    // Verify the user's email
+    public void verifyUser(String verificationCode) {
+        User user = userRepository.findByVerificationCode(verificationCode)
+                .orElseThrow(() -> new RuntimeException("Invalid verification code"));
+
+        user.setEmailVerified(true);
+        user.setVerificationCode(null);
+        userRepository.save(user);
+    }
+
     // Find a user by username
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
     }
 
     // Login a user
-    public boolean loginUser(LoginRequest loginRequest) {
+    public String loginUser(LoginRequest loginRequest) {
         User user = findByUsername(loginRequest.getUsername());
-        return user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
+        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            return "Invalid username or password";
+        }
+        if (!user.isEmailVerified()) {
+            return "Please verify your email";
+        }
+        return "Login successful";
     }
 
     // Update user details
