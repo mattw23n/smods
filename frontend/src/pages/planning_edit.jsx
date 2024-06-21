@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Header from "../components/header";
 import {motion} from "framer-motion";
-import Dashboard from "../components/dashboard";
+import Dashboard from "../components/dashboardOld";
 
 const DEFAULT_MODS = [
     //TERM 1

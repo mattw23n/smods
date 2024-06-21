@@ -1,250 +1,163 @@
 import React, { useState, useRef, useEffect} from "react";
 import Header from "../components/header";
-import {motion} from "framer-motion";
-import Dashboard from "../components/dashboard";
 import Footer from "../components/footer";
+import Year from "../components/year";
+import PlanBar from "../components/planBar";
+import modulesData from "../data/modsData";
 
-const DEFAULT_MODS = [
-    //TERM 1
-    {courseCode: "COR1201", title: "Calculus", type: "uc", term:1},
-    {courseCode: "COR3001", title: "Big Questions", type: "uc", term:1},
-    {courseCode: "CS101", title: "Intro to Programming I", type: "mc", term:1},
-    {courseCode: "CS104", title: "Math Fund. for Computing", type: "mc", term:1},
-    {courseCode: "IS211", title: "Interactive Design Prot.", type: "mc", term:1},
+const DEFAULT_MODS = modulesData
 
-    //TERM 2
-    {courseCode: "CS102", title: "Intro to Programming II", type: "mc", term:2},
-    {courseCode: "CS105", title: "Stats for Data Science", type: "mc", term:2},
-    {courseCode: "CS106", title: "Computer Hardware", type: "mc", term:2},
-    {courseCode: "IS112", title: "Data Management", type: "mc", term:2},
+// const TemplateMod = {
+//     courseCode: "",
+//     courseTitle: "",
+//     courseType: "",
+//     courseLink: "",
+//     requirements:{
+//         mutuallyExclusive: [],
+//         prerequisites: [],
+//         corequisites: [],
+//     },
+//     term:1,
+//     GPA: 0.0,
+//     isError: false,
+// }
 
-    //TERM 3
-    {courseCode: "CS103", title: "Linear Algebra for Comp.", type: "mc", term:3},
-    {courseCode: "CS201", title: "Data Structures & Algo.", type: "mc", term:3},
-    {courseCode: "CS203", title: "Collaborative Software Dev.", type: "mc", term:3},
-    {courseCode: "CS204", title: "Interconnection of CPS", type: "mc", term:3},
+const PlanDetails = ({plan, setPlan}) => {
+    const {name, degree, track} = plan
 
-    //TERM 4
-    {courseCode: "CS202", title: "Design & Analysis of Algo.", type: "mc", term:4},
-    {courseCode: "CS205", title: "OS Concepts with Android", type: "mc", term:4},
-    {courseCode: "CS206", title: "Software Product Mgmt", type: "mc", term:4},
-    {courseCode: "CS601", title: "Track Course", type: "tm", term:4},
-
-    //TERM 5
-    {courseCode: "CS301", title: "IT Solution Architecture", type: "mc", term:5},
-    {courseCode: "CS302", title: "IT Solution Lifecycle Mgmt", type: "mc", term:5},
-    {courseCode: "CS602", title: "Track Course", type: "tm", term:5},
-    {courseCode: "CS603", title: "Track Course", type: "tm", term:5},
-
-    //TERM 6
-    {courseCode: "CS701", title: "Major Elective", type: "me", term:6},
-    {courseCode: "CS702", title: "Major Elective", type: "me", term:6},
-    {courseCode: "CS703", title: "Major Elective", type: "me", term:6},
-    {courseCode: "CS604", title: "Track Course", type: "tm", term:6},
-
-    //TERM 7
-    {courseCode: "COR3031", title: "Korean", type: "uc", term:7},
-    {courseCode: "COR3301", title: "Ethics & Social Resp.", type: "uc", term:7},
-    {courseCode: "COR4201", title: "Food Culture in Asia", type: "fe", term:7},
-    {courseCode: "MGMT101", title: "Business Mod", type: "fe", term:7},
-
-    //TERM 8
-    {courseCode: "STATS101", title: "Econs Mod", type: "fe", term:8},
-    {courseCode: "ACCT102", title: "Accounting Mod", type: "fe", term:8},
-    {courseCode: "PSYCH101", title: "Sosci Mod", type: "fe", term:8},
-    {courseCode: "LAW101", title: "Law Mod", type: "fe", term:8},
-]
-
-const Mod = ({courseCode, title, type, term, handleDragStart}) => {
-    let codeIndex = courseCode.search(/[0-9]/g);
-    let code = courseCode.substring(codeIndex)
-    let course = courseCode.substring(0, codeIndex)
-
-    return(
-        <>
-        <DropIndicator beforeId={courseCode} term={term}/>
-            <motion.div 
-            layout
-            layoutId = {courseCode}
-            draggable="true" 
-            onDragStart={(e) => handleDragStart(e, {courseCode, title, type, term})}
-            className={`px-3 py-1 min-w-64 bg-${type}-l 
-            rounded-full items-center font-archivo 
-            text-xs flex justify-between
-            cursor-grab active:cursor-grabbing`}
-            >
-                <div>
-                    {course}
+    return (
+        <div className="px-6 py-4 w-64 rounded-3xl bg-gray-200 flex flex-col gap-2">
+            <div className="flex flex-col">
+                <p className="font-poppins font-bold text-text text-lg">{name}</p>
+                <div className="flex text-text font-archivo gap-2 text-sm">
+                    <p className="font-bold">Degree:</p>
+                    <p>{degree}</p>
                 </div>
-                <div>
-                    {code}
+                <div className="flex text-text font-archivo gap-2 text-sm">
+                    <p className="font-bold">Track:</p>
+                    <p>{track}</p>
                 </div>
-                <div>
-                    {title}
-                </div>
-                
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </div>
+            
+            <div className="bg-gray-300 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-gray-400 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                </svg>
+                <a href={`${plan.handbookLink}`}>
+                    CSAcademicHandbook.pdf
+                </a>
+            </div>
+
+            <div className="bg-gray-300 rounded-lg pl-2 w-fit flex justify-between items-center gap-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
 
-            </motion.div>
-        
-        </>
-        
-    );
-}
+                <span className="inline-flex -space-x-px overflow-hidden rounded-lg border bg-white shadow-sm">
+                    <button
+                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    >
+                        4Y
+                    </button>
 
-const DropIndicator = ({ beforeId, term}) => {
-    return(
-        <div
-            data-before={beforeId || "-1"}
-            data-column={term}
-            className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
-        />
+                    <button
+                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    >
+                        Y
+                    </button>
+
+                    <button
+                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    >
+                        T
+                    </button>
+                    <button
+                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    >
+                        G
+                    </button>
+                </span>
+            </div>
+        </div>
     )
 }
 
-const Term = ({term, mods, setMods}) => {
-    const [active, setActive] = useState(false);
+const ButtonGroup = ({plan, setPlan}) => {
+    const { isEditMode } = plan
 
-    const handleDragStart = (e, mod) => {
-        e.dataTransfer.setData("courseCode", mod.courseCode);
+    const handleEditButton = () => {
+        setPlan(prevPlan => ({
+            ...prevPlan,
+            isEditMode: !prevPlan.isEditMode, // Update isEditMode
+        }));   
+    }
+
+    const handleCheckboxChange = (e) => {
+        const status = e.target.checked;
+        // console.log(status)
+        setPlan(prevPlan => ({
+            ...prevPlan,
+            isGPAOn: status, // Update isGPAOn based on checkbox state
+        }));
     };
-    
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        highlightIndicator(e);
-        setActive(true);
-    }
-    
-    const highlightIndicator = (e) => {
-        const indicators = getIndicators();
-        // console.log(indicators)
-        clearHighlights(indicators);
-        const el = getNearestIndicator(e, indicators);
-        el.element.style.opacity = "1";
-    };
-
-    const clearHighlights = (els) => {
-        const indicators = els || getIndicators();
-
-        indicators.forEach((i) => {
-            i.style.opacity = "0";
-        });
-    };
-
-    const getNearestIndicator = (e, indicators) => {
-        const DISTANCE_OFFSET = 50;
-
-        const el = indicators.reduce(
-            (closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
-                if(offset < 0 && offset > closest.offset){
-                    return { offset: offset, element: child};
-                }else{
-                    return closest;
-                }
-            }, 
-            {
-                offset: Number.NEGATIVE_INFINITY,
-                element: indicators[indicators.length - 1],
-
-            }
-        );
-
-        return el;
-    }
-
-    const getIndicators = (e) => {
-        return Array.from(document.querySelectorAll(`[data-column="${term}"]`));
-    }
-
-    const handleDragLeave = () => {
-        setActive(false);
-        clearHighlights();
-    }
-
-    const handleDragEnd = (e) => {
-        setActive(false);
-        clearHighlights();
-
-        const courseCode = e.dataTransfer.getData("courseCode")
-        const indicators = getIndicators();
-        const {element} = getNearestIndicator(e, indicators);
-
-        const before = element.dataset.before || "-1";
-
-        if(before !== courseCode) {
-            let copy = [...mods];
-
-            let modToTransfer = copy.find((m) => m.courseCode === courseCode);
-
-            if(!modToTransfer) return;
-
-            modToTransfer = {...modToTransfer, term};
-
-            copy = copy.filter((m) => m.courseCode !== courseCode);
-
-            const moveToBack = before === "-1";
-
-            if(moveToBack){
-                copy.push(modToTransfer);
-            }else{
-                const insertAtIndex = copy.findIndex((el) => el.courseCode === before);
-                if(insertAtIndex === undefined) return;
-
-                copy.splice(insertAtIndex, 0, modToTransfer);
-            }
-
-            setMods(copy);
-        }
-    }
-    
-    const filteredMods = mods.filter((m) => m.term === term);
 
     return(
-        <div class="px-4 py-4 bg-white bg-opacity-30 rounded-3xl justify-center items-center">
-            <div className="flex justify-between">
-                <p className="font-poppins text-xs pb-2">Term {term}</p>
-                <span className="rounded text-xs font-poppins">{filteredMods.length} mods</span>
-            </div>
-            
-            <div 
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDragEnd}
-            className={` w-full px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
-                    ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
-                
-                {filteredMods.map((m) => {
-                    return <Mod key={m.courseCode} {...m}
-                    handleDragStart={handleDragStart}/>
-                })}
-                <DropIndicator beforeId={-1} term={term}/>
+        <div className="flex flex-col gap-4">
+            <div className="flex gap-x-2">
+                <button className={`bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-100 ${plan.isEditMode ? 'bg-primary' : ''}`}
+                onClick={handleEditButton}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                </button>
 
-                
-            
+                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                </button>
+                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+                    </svg>
+                </button>
             </div>
-            
+            {isEditMode && (
+            <div className="rounded-3xl bg-gray-200 flex justify-between items-center px-5 py-2 font-archivo font-bold">
+                GPA
+                <label
+                htmlFor="AcceptConditions"
+                className="relative inline-block h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-primary"
+                >
+                <input type="checkbox" id="AcceptConditions" className="peer sr-only" checked={plan.isGPAOn} onChange={handleCheckboxChange} />
+                
+                <span
+                    className="absolute inset-y-0 start-0 m-1 size-6 rounded-full bg-white transition-all peer-checked:start-6"
+                ></span>
+                </label>
+            </div> 
+            )}
+             
         </div>
-    );
+    )
 }
 
-function Year({num, mods, setMods}){
+const Dashboard = ({plan, setPlan, mods}) => {
 
     return(
-        <div class="h-fit px-4 py-4 bg-gray-200 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2">
-            <p className="font-poppins font-bold text-sm">Year {num}</p>
-            <Term term={num * 2 - 1} mods={mods} setMods={setMods}></Term>
-            <Term term={num * 2} mods={mods} setMods={setMods}></Term>
+        <div className="mx-20 my-5 flex gap-5">
+            <PlanDetails plan={plan} setPlan={setPlan}/>
+            <PlanBar plan={plan} setPlan={setPlan} mods={mods}/>
+            <ButtonGroup plan={plan} setPlan={setPlan}/>
         </div>
-    );
+    )
 }
 
-function Content(){
-    const [mods, setMods] = useState(DEFAULT_MODS);
+function Content({plan, setPlan, mods, setMods}){
+    const { isEditMode} = plan
+    const yearNums = [1, 2, 3, 4];
+
     const containerRef = useRef(null);
     const isDragging = useRef(false);
     const pos = useRef({ top: 0, left: 0, x: 0, y: 0 });
@@ -298,29 +211,47 @@ function Content(){
         };
     }, [isDragging]);
 
-    
-
     return(
         <>
-            <Dashboard mods={mods}></Dashboard>
-            <div ref={containerRef}
-                className="container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab"
-                style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
-                <Year num={1} mods={mods} setMods={setMods}></Year>
-                <Year num={2} mods={mods} setMods={setMods}></Year>
-                <Year num={3} mods={mods} setMods={setMods}></Year>
-                <Year num={4} mods={mods} setMods={setMods}></Year>
+            <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
+            <div className="flex gap-5">
+                <div ref={containerRef}
+                    className={`${isEditMode ? `ml-20 grid grid-cols-2 gap-5` 
+                    : `container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab`}`}
+                    style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
+                    {yearNums.map(num => (
+                    <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
+                    ))}
+                </div>
+                {isEditMode && (
+                    <div className="bg-gray-300">CourseSearch</div>
+                )}
+                    
             </div>
+            
         </>
         
     );
 }
 
 function Planning(){
+    const [mods, setMods] = useState(DEFAULT_MODS);
+
+    const [plan, setPlan] = useState({
+        name:"Gilchris' Master Plan",
+        degree:"Computer Science",
+        track:["Artificial Intelligence"],
+        handbookLink:"www.smu.edu.sg",
+        modsArray:[mods, setMods],
+        view:4,
+        isEditMode:false,
+        isGPAOn:false,
+    });
+
     return(
-        <div class="bg-background">
+        <div className="bg-background">
             <Header></Header>
-            <Content></Content>
+            <Content plan={plan} setPlan={setPlan} mods={mods} setMods={setMods}></Content>
             <Footer></Footer>
         </div>
 
