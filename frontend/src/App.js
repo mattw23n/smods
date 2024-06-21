@@ -10,7 +10,7 @@ import PlanningGroup from './pages/planning_group.jsx';
 import PlanningYear from './pages/planning_year.jsx';
 
 function App() {
-    const [currentPage, setCurrentPage] = useState('Loading');
+    const [currentPage, setCurrentPage] = useState('Planning');
 
     return (
         <div>
@@ -19,6 +19,8 @@ function App() {
             {currentPage === 'Home' && <Home />}
             {currentPage === 'Loading' && <Loading />}
             {currentPage === 'PlanningEdit' && <PlanningEdit />}
+            {currentPage === 'PlanningGroup' && <PlanningGroup />}
+            {currentPage === 'PlanningYear' && <PlanningYear />}
             {currentPage === 'NewPlan' && <NewPlan />}
             {currentPage === 'SignIn' && <SignIn />}
         </div>

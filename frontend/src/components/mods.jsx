@@ -1,0 +1,112 @@
+import React, { useState } from "react"
+import {m, motion} from "framer-motion";
+import DeleteButton from "./deleteButton";
+import DropIndicator from "./dropIndicator";
+
+const GPASelect = () => {
+}
+
+const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
+    const { courseTitle, courseCode, courseType, courseLink, term, GPA, isError } = module;
+    const { isEditMode, isGPAOn } = plan;
+
+    const grades = [
+        {letter:"A+", value:4.3},
+        {letter:"A", value:4.0},
+        {letter:"A-", value:3.7},
+        {letter:"B+", value:3.3},
+        {letter:"B", value:3.0},
+        {letter:"B-", value:2.7},
+    ]
+
+    const getGradeValue = (letter) => {
+        const grade = grades.find(g => g.letter === letter);
+        return grade ? grade.value : null; // Return the value or null if not found
+    };
+
+    const getLetterValue = (grade) => {
+        const letter = grades.find(g => g.value === grade);
+        return letter ? letter.letter : null; // Return the value or null if not found
+    };
+
+    const [selectedGPA, setGPA] = useState("");
+    
+    const handleGPAChange = (event) => {
+        const updatedGPA = event.target.value
+        console.log(updatedGPA)
+
+        //use setMods to set that mod's specific GPA to that
+        const tempCopy = mods.filter(m => m.courseCode !== courseCode)
+
+        console.log(tempCopy)
+
+        const modToChange = module
+        modToChange.GPA = getGradeValue(updatedGPA)
+
+        tempCopy.push(module)
+        console.log("tempcopy")
+        console.log(tempCopy)
+
+        setMods(tempCopy)
+        setGPA(updatedGPA);
+    }
+
+    let codeIndex = courseCode.search(/[0-9]/g);
+    let code = courseCode.substring(codeIndex)
+    let course = courseCode.substring(0, codeIndex)
+
+    return(
+        <>
+        <DropIndicator beforeId={courseCode} term={term}/>
+            <motion.div layout
+            layoutId = {courseCode}
+            draggable="true" 
+            onDragStart={(e) => handleDragStart(e, module)}
+            className={`px-3 py-1 ${isGPAOn ? 'min-w-80' : 'min-w-64' }  ${isError ? 'bg-red-500' : `bg-${courseType}-l`}
+            rounded-full items-center font-archivo 
+            text-xs flex gap-1 justify-between
+            cursor-grab active:cursor-grabbing`}
+            >
+                {isEditMode && (
+                    <DeleteButton setMods={setMods} module={module} />
+                )}
+                <div>
+                    {course} {code} {courseTitle} 
+                </div>
+
+                <div className="flex items-center justify-between gap-1">
+                    {isGPAOn && 
+                    <div>
+
+                        <select
+                        className="select rounded-xl bg-white/50 border-gray-100  font-archivo text-xs"
+                        value={selectedGPA}
+                        onChange={handleGPAChange}>
+
+                        <option>{getLetterValue(GPA)}</option>
+                        
+                        {grades.map((g, index) => (
+                            <option key={index} value={g.letter}>
+                                {g.letter}
+                            </option>
+                        ))}
+
+                        </select>
+                    </div>}
+                    
+                    <a href={`${courseLink}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                        </svg>
+                    </a>
+                </div>
+                
+
+                
+                
+            </motion.div>
+        </>
+    );
+}
+
+export default Mod
