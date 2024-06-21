@@ -1,17 +1,21 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.Mod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private String password;
     private String email;
-    private Set<String> major;
-    private Set<String> track;
+    private String role;
 
     private boolean emailVerified;
     private String verificationCode;
