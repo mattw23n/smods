@@ -7,9 +7,10 @@ CREATE TABLE IF NOT EXISTS `users` (
     `password` VARCHAR(255) NOT NULL,
     `email` VARCHAR(45) NOT NULL UNIQUE,
     `role` VARCHAR(45) NOT NULL,
+    `email_verified` BOOLEAN NOT NULL DEFAULT FALSE,
+    `verification_code` VARCHAR(255),
     PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
-
 SELECT * FROM `users`;
 -- Delete FROM `users`;
 
