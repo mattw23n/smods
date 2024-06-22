@@ -29,8 +29,8 @@ function NavItem({ title, link }) {
 
 function Header({ isSignIn }) {
     return (
-        <header>
-            <div className="mx-8 max-w-full px-4 sm:px-6 lg:px-8 ">
+        <header className="fixed top-0 left-0 w-full z-50 bg-white backdrop-blur bg-opacity-60">
+            <div className="mx-8 max-w-full px-3 sm:px-6 lg:px-8 pt-3 pb-0">
                 <div className="flex h-16 items-center justify-between">
                     <Logo src={logo} />
 
