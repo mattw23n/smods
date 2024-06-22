@@ -1,19 +1,20 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Module {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "mods")
+    @Column(name = "users")
     private Set<User> users = new HashSet<>();
 
     public Module() {

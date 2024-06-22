@@ -1,7 +1,6 @@
 package com.smods.backend.controller;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.smods.backend.model.Module;
 import com.smods.backend.model.Plan;

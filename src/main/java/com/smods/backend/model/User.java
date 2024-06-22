@@ -1,16 +1,20 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.Mod;
+import com.smods.backend.model.Module;
+import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-@Component
+@Entity
 public class User {
+
     private String email;
     private Set<String> major;
     private Set<String> track;
+
+    private Set<Plan> plans;
+
 
 }

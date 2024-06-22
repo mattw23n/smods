@@ -1,34 +1,31 @@
 package com.smods.backend.model;
 
+import com.smods.backend.exception.PlanModificationException;
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "degree")
     private String degree;
+
+    @Column(name = "track")
     private String track;
 
-    @ManyToMany
-    @JoinTable(
-            name = "plan_exemptions",
-            joinColumns = @JoinColumn(name = "plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
+    @Column(name = "exemptions")
     private Set<Module> exemptions = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(
-            name = "plan_modules",
-            joinColumns = @JoinColumn(name = "plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
+    @Column(name = "plannedModules")
     private Set<Module> plannedModules = new HashSet<>();
 
     public Plan() {
