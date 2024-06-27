@@ -1,43 +1,41 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
+    @Column(name = "USERNAME", nullable = false, unique = true)
     private String username;
+
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "ROLE", nullable = false)
     private String role;
 
-    private boolean emailVerified;
+    @Column(name = "EMAIL_VERIFIED", nullable = false)
+    private Boolean emailVerified;
+
+    @Column(name = "VERIFICATION_CODE")
     private String verificationCode;
 
-    @ElementCollection
-    private Set<String> major = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Plan> plans;
 
-    @ElementCollection
-    private Set<String> track = new HashSet<>();
+    // Default constructor
+    public User() {}
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_modules",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
-    private Set<Module> mods = new HashSet<>();
-
-    public User() {
-        // Default constructor for JPA
-    }
-
+    // Constructor
     public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
@@ -46,8 +44,7 @@ public class User {
         this.emailVerified = false;
     }
 
-    // Getters and setters
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -88,11 +85,11 @@ public class User {
         this.role = role;
     }
 
-    public boolean isEmailVerified() {
+    public Boolean getEmailVerified() {
         return emailVerified;
     }
 
-    public void setEmailVerified(boolean emailVerified) {
+    public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
@@ -104,31 +101,11 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
-    public Set<String> getMajor() {
-        return major;
+    public List<Plan> getPlans() {
+        return plans;
     }
 
-    public void setMajor(Set<String> major) {
-        this.major = major;
-    }
-
-    public Set<String> getTrack() {
-        return track;
-    }
-
-    public void setTrack(Set<String> track) {
-        this.track = track;
-    }
-
-    public Set<Module> getMods() {
-        return mods;
-    }
-
-    public void setMods(Set<Module> mods) {
-        this.mods = mods;
-    }
-
-    public void addMod(Module mod) {
-        this.mods.add(mod);
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
     }
 }

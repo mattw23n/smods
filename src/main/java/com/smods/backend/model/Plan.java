@@ -1,8 +1,9 @@
 package com.smods.backend.model;
 
+import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
+import com.smods.backend.exception.PlanModificationException;
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "PLAN")
@@ -10,37 +11,34 @@ public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pid;
+    @Column(name = "PID")
+    private Long id;
 
-    @Column(name = "PName", length = 100)
+    @Column(name = "PNAME")
     private String pname;
 
-    @Column(name = "Degree", length = 100)
+    @Column(name = "DEGREE")
     private String degree;
 
-    @Column(name = "Track", length = 100)
+    @Column(name = "TRACK")
     private String track;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<User> users = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "UID")
+    private User user;
 
-    // Default constructor
-    public Plan() {}
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    private List<PlanModuleGpa> planModuleGPAs;
 
-    // Constructor with parameters
-    public Plan(String pname, String degree, String track) {
-        this.pname = pname;
-        this.degree = degree;
-        this.track = track;
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    private List<PlanModulePreassignedGpa> planModulePreassignedGPAs;
+
+    public Long getId() {
+        return id;
     }
 
-    // Getters and Setters
-    public int getPid() {
-        return pid;
-    }
-
-    public void setPid(int pid) {
-        this.pid = pid;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPname() {
@@ -67,11 +65,27 @@ public class Plan {
         this.track = track;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<PlanModuleGpa> getPlanModuleGPAs() {
+        return planModuleGPAs;
+    }
+
+    public void setPlanModuleGPAs(List<PlanModuleGpa> planModuleGPAs) {
+        this.planModuleGPAs = planModuleGPAs;
+    }
+
+    public List<PlanModulePreassignedGpa> getPlanModulePreassignedGPAs() {
+        return planModulePreassignedGPAs;
+    }
+
+    public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGpa> planModulePreassignedGPAs) {
+        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 }

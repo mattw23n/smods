@@ -98,7 +98,7 @@ public class UserService {
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return "Invalid username or password";
         }
-        if (!user.isEmailVerified()) {
+        if (!user.getEmailVerified()) {
             return "Please verify your email";
         }
         return "Login successful";
