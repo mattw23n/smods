@@ -8,10 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String welcome() {
-        StringBuilder message = new StringBuilder();
-        for (int i = 0; i < 69; i++) {
-            message.append("(☞ﾟヮﾟ)☞ welcome to smods ☜(ﾟヮﾟ☜)<br>");
-        }
-        return message.toString();
+        return "(☞ﾟヮﾟ)☞ welcome to smods ☜(ﾟヮﾟ☜)<br>".repeat(69);
     }
 }
