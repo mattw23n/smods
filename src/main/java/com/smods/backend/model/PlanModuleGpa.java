@@ -1,14 +1,13 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
+import com.smods.backend.model.composite_key.PlanModuleGpaKey;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "PLAN_MODULE_PREASSIGNED_GPA")
-public class PlanModulePreassignedGpa {
-
+@Table(name = "PLAN_MODULE_GPA")
+public class PlanModuleGpa {
     @EmbeddedId
-    private PlanModulePreassignedGpaKey id;
+    private PlanModuleGpaKey id;
 
     @ManyToOne
     @MapsId("pid")
@@ -27,10 +26,10 @@ public class PlanModulePreassignedGpa {
     private String term;
 
     // Default constructor
-    public PlanModulePreassignedGpa() {}
+    public PlanModuleGpa() {}
 
     // Constructor with parameters
-    public PlanModulePreassignedGpa(PlanModulePreassignedGpaKey id, Plan plan, Module module, Float gpa, String term) {
+    public PlanModuleGpa(PlanModuleGpaKey id, Plan plan, Module module, Float gpa, String term) {
         this.id = id;
         this.plan = plan;
         this.module = module;
@@ -39,11 +38,11 @@ public class PlanModulePreassignedGpa {
     }
 
     // Getters and Setters
-    public PlanModulePreassignedGpaKey getId() {
+    public PlanModuleGpaKey getId() {
         return id;
     }
 
-    public void setId(PlanModulePreassignedGpaKey id) {
+    public void setId(PlanModuleGpaKey id) {
         this.id = id;
     }
 
