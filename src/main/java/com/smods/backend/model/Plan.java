@@ -5,72 +5,50 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "PLAN")
 public class Plan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int pid;
 
-    private String name;
+    @Column(name = "PName", length = 100)
+    private String pname;
+
+    @Column(name = "Degree", length = 100)
     private String degree;
+
+    @Column(name = "Track", length = 100)
     private String track;
 
-    @ManyToMany
-    @JoinTable(
-            name = "plan_exemptions",
-            joinColumns = @JoinColumn(name = "plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
-    private Set<Module> exemptions = new HashSet<>();
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<User> users = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "plan_modules",
-            joinColumns = @JoinColumn(name = "plan_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
-    private Set<Module> plannedModules = new HashSet<>();
+    // Default constructor
+    public Plan() {}
 
-    public Plan() {
-        // Default constructor for JPA
-    }
-
-    public Plan(String name, String degree, String track, Set<Module> exemptions) {
-        this.name = name;
+    // Constructor with parameters
+    public Plan(String pname, String degree, String track) {
+        this.pname = pname;
         this.degree = degree;
         this.track = track;
-        this.exemptions = exemptions;
     }
 
-    public void addModule(Module module) {
-        if (plannedModules.contains(module)) {
-            throw new PlanModificationException("You already picked this module");
-        }
-        plannedModules.add(module);
+    // Getters and Setters
+    public int getPid() {
+        return pid;
     }
 
-    public void removeModule(Module module) {
-        if (!plannedModules.contains(module)) {
-            throw new PlanModificationException("You have not picked this module yet");
-        }
-        plannedModules.remove(module);
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+    public String getPname() {
+        return pname;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 
     public String getDegree() {
@@ -89,19 +67,11 @@ public class Plan {
         this.track = track;
     }
 
-    public Set<Module> getExemptions() {
-        return exemptions;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setExemptions(Set<Module> exemptions) {
-        this.exemptions = exemptions;
-    }
-
-    public Set<Module> getPlannedModules() {
-        return plannedModules;
-    }
-
-    public void setPlannedModules(Set<Module> plannedModules) {
-        this.plannedModules = plannedModules;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }
