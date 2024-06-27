@@ -55,7 +55,7 @@ public class Module {
     )
     private List<Module> mutuallyExclusives;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "mutuallyExclusives")
     private List<Module> mutuallyExclusiveWith;
 
     @ElementCollection
