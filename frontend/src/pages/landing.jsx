@@ -7,27 +7,27 @@ import calendar from "../images/calendar.png";
 function Hero() {
     return (
         <section className="bg-gradient-to-b from-white to-blue-400">
-            <div className="grid max-w-screen-xl h-screen px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
-                <div className="mr-auto place-self-center lg:col-span-7">
-                    <h1 className="max-w-2xl ml-10 pt-2 mb-4 text-4xl font-extrabold font-poppins md:text-5xl xl:text-6xl leading-loose">
-                        Plan your mods. Hassle free.
-                    </h1>
-                    <p className="max-w-2xl ml-10 font-medium font-archivo text-dark lg:mb-8 md:text-lg lg:text-xl">
-                        Make the most out of your studies with SMODS.
-                    </p>
-                    <a href="#" className="inline-flex ml-10 items-center justify-center px-5 py-3 mr-3 text-base font-bold font-poppins text-center text-white rounded-3xl bg-primary hover:bg-dark focus:ring-4 focus:ring-primary-300">
-                        Plan Now!
-                        <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                    </a>
-                    {/* <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                        Speak to Sales
-                    </a>  */}
+
+                    <div className="grid my-24 py-12 px-16 mx-auto lg:gap-8 xl:gap-0 lg:grid-cols-12 rounded-xl bg-slate-50 bg-opacity-30 shadow-lg" style={{ width: '83.333333vw', height: '83.333333vh' }}>
+                        <div className="mr-auto place-self-center lg:col-span-7">
+                        <h1 className="max-w-2xl ml-10 pt-2 mb-4 text-4xl font-extrabold font-poppins md:text-5xl xl:text-6xl leading-loose">
+                            Plan your mods. Hassle free.
+                        </h1>
+                        <p className="max-w-2xl ml-10 font-medium font-archivo text-dark lg:mb-8 md:text-lg lg:text-xl">
+                            Make the most out of your studies with SMODS.
+                        </p>
+                        <a href="#" className="inline-flex ml-10 items-center justify-center px-5 py-3 mr-3 text-base font-bold font-poppins text-center text-white rounded-3xl bg-primary hover:shadow-lg hover:scale-105 transform transition duration-300 focus:ring-4 focus:ring-primary-300">
+                            Plan Now!
+                            <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                            </svg>
+                        </a>
+                    </div>
+                    <div className="place-self-center w-full lg:mt-0 lg:col-span-5 lg:flex">
+                    <div className="max-w-xs mx-auto lg:max-w-sm xl:max-w-md">
+                        <img src={Laptop} alt="mockup" className="w-full h-auto" />
+                    </div>
                 </div>
-                <div className="place-self-center w-full lg:mt-0 lg:col-span-5 lg:flex">
-                <div className="max-w-xs mx-auto lg:max-w-sm xl:max-w-md">
-                    <img src={Laptop} alt="mockup" className="w-full h-auto" />
-                </div>
-            </div>
 
             </div>
             <div className="flex flex-col items-center mx-6 mt-8">
