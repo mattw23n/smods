@@ -2,7 +2,6 @@ package com.smods.backend.controller;
 
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.security.CustomUserDetails;
 import com.smods.backend.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,24 +22,24 @@ public class PlanController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Plan>> getAllPlans(Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getId();
+    public ResponseEntity<List<Plan>> getAllPlans(@RequestParam Long userId) {
         List<Plan> plans = planService.getAllPlansByUser(userId);
         return ResponseEntity.ok(plans);
     }
 
     @PostMapping
-    public ResponseEntity<Plan> createPlan(Authentication authentication, @RequestBody Plan plan) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userId = userDetails.getId();
+    public ResponseEntity<Plan> createPlan(@RequestBody Plan plan) {
+        Long userId = plan.getUser().getUserId();
+        if (userId == null) {
+            return ResponseEntity.badRequest().body(null);  // Handle the case where userId is not provided
+        }
         Plan createdPlan = planService.createPlan(userId, plan);
         return ResponseEntity.ok(createdPlan);
     }
 
-    @PutMapping("/add-module")
+    @PutMapping("/{planId}/edit")
     public ResponseEntity<PlanModuleGPA> addModule(
-            @RequestParam Long planId,
+            @PathVariable Long planId,
             @RequestParam Long userId,
             @RequestParam String moduleId,
             @RequestParam int term) {
