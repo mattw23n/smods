@@ -1,49 +1,41 @@
 package com.smods.backend.model.composite_key;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 public class PlanModulePreassignedGpaKey implements Serializable {
+    private PlanKey planId;
 
-    private Long uid;
-    private Long pid;
-    private String mid;
+    @Column(name = "MODULE_ID")
+    private String moduleId;
 
     // Default constructor
     public PlanModulePreassignedGpaKey() {}
 
     // Constructor with parameters
-    public PlanModulePreassignedGpaKey(Long uid, Long pid, String mid) {
-        this.uid = uid;
-        this.pid = pid;
-        this.mid = mid;
+
+    public PlanModulePreassignedGpaKey(PlanKey planId, String moduleId) {
+        this.planId = planId;
+        this.moduleId = moduleId;
     }
 
-    // Getters and Setters
-    public Long getUid() {
-        return uid;
+    public PlanKey getPlanId() {
+        return planId;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
+    public void setPlanId(PlanKey planId) {
+        this.planId = planId;
     }
 
-    public Long getPid() {
-        return pid;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setPid(Long pid) {
-        this.pid = pid;
-    }
-
-    public String getMid() {
-        return mid;
-    }
-
-    public void setMid(String mid) {
-        this.mid = mid;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     @Override
@@ -51,22 +43,11 @@ public class PlanModulePreassignedGpaKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlanModulePreassignedGpaKey that = (PlanModulePreassignedGpaKey) o;
-        return Objects.equals(uid, that.uid) &&
-                Objects.equals(pid, that.pid) &&
-                Objects.equals(mid, that.mid);
+        return Objects.equals(planId, that.planId) && Objects.equals(moduleId, that.moduleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uid, pid, mid);
-    }
-
-    @Override
-    public String toString() {
-        return "PlanModulePreassignedGpaKey{" +
-                "uid=" + uid +
-                ", pid=" + pid +
-                ", mid='" + mid + '\'' +
-                '}';
+        return Objects.hash(planId, moduleId);
     }
 }
