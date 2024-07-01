@@ -33,7 +33,7 @@ public class Module {
     private List<Module> preRequisites;
 
     @ManyToMany(mappedBy = "preRequisites")
-    private List<Module> prerequisiteDependents;
+    private List<Module> preRequisiteDependents;
 
     @ManyToMany
     @JoinTable(
@@ -122,11 +122,11 @@ public class Module {
     }
 
     public List<Module> getPrerequisiteDependents() {
-        return prerequisiteDependents;
+        return preRequisiteDependents;
     }
 
-    public void setPrerequisiteDependents(List<Module> prerequisiteDependents) {
-        this.prerequisiteDependents = prerequisiteDependents;
+    public void setPrerequisiteDependents(List<Module> preRequisiteDependents) {
+        this.preRequisiteDependents = preRequisiteDependents;
     }
 
     public List<Module> getCorequisites() {
@@ -191,7 +191,7 @@ public class Module {
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
                 ", preRequisites=" + preRequisites +
-                ", prerequisiteDependents=" + prerequisiteDependents +
+                ", preRequisiteDependents=" + preRequisiteDependents +
                 ", coRequisites=" + coRequisites +
                 ", corequisiteDependents=" + corequisiteDependents +
                 ", mutuallyExclusives=" + mutuallyExclusives +
