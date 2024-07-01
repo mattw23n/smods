@@ -6,18 +6,18 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class PlanModulePreassignedGPAKey implements Serializable {
+public class PlanModulePreassignedGpaKey implements Serializable {
     private PlanKey planId;
 
     @Column(name = "MODULE_ID")
     private String moduleId;
 
     // Default constructor
-    public PlanModulePreassignedGPAKey() {}
+    public PlanModulePreassignedGpaKey() {}
 
     // Constructor with parameters
 
-    public PlanModulePreassignedGPAKey(PlanKey planId, String moduleId) {
+    public PlanModulePreassignedGpaKey(PlanKey planId, String moduleId) {
         this.planId = planId;
         this.moduleId = moduleId;
     }
@@ -42,7 +42,7 @@ public class PlanModulePreassignedGPAKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModulePreassignedGPAKey that = (PlanModulePreassignedGPAKey) o;
+        PlanModulePreassignedGpaKey that = (PlanModulePreassignedGpaKey) o;
         return Objects.equals(planId, that.planId) && Objects.equals(moduleId, that.moduleId);
     }
 

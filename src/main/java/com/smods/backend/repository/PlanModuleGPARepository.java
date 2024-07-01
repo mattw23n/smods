@@ -1,11 +1,11 @@
 package com.smods.backend.repository;
 
-import com.smods.backend.model.PlanModuleGPA;
+import com.smods.backend.model.PlanModuleGpa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.smods.backend.model.composite_key.PlanModuleGPAKey;
+import com.smods.backend.model.composite_key.PlanModuleGpaKey;
 @Repository
-public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, PlanModuleGPAKey> {
+public interface PlanModuleGpaRepository extends JpaRepository<PlanModuleGPA, PlanModuleGpaKey> {
 //    1. Basic CRUD Operations
 
 //    Create: Save a new entity or a batch of entities.
