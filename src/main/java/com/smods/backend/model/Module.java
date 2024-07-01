@@ -1,8 +1,6 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
 import jakarta.persistence.*;
-
 import java.util.*;
 
 @Entity
@@ -10,20 +8,20 @@ import java.util.*;
 public class Module {
 
     @Id
-    @Column(name = "MID")
-    private String id;
+    @Column(name = "MODULE_ID")
+    private String moduleId;
 
-    @Column(name = "MNAME")
+    @Column(name = "MODULE_NAME")
     private String name;
 
-    @Column(name = "CU")
-    private Float cu;
+    @Column(name = "COURSE_UNIT")
+    private Float courseUnit;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    private List<PlanModuleGpa> planModuleGPAs;
+    private List<PlanModuleGPA> planModuleGPAs;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    private List<PlanModulePreassignedGpa> planModulePreassignedGPAs;
+    private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
 
     @ManyToMany
     @JoinTable(
@@ -63,12 +61,12 @@ public class Module {
     @Column(name = "requirement")
     private List<String> requirements;
 
-    public String getId() {
-        return id;
+    public String getModuleId() {
+        return moduleId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setModuleId(String moduleId) {
+        this.moduleId = moduleId;
     }
 
     public String getName() {
@@ -79,27 +77,27 @@ public class Module {
         this.name = name;
     }
 
-    public Float getCu() {
-        return cu;
+    public Float getCourseUnit() {
+        return courseUnit;
     }
 
-    public void setCu(Float cu) {
-        this.cu = cu;
+    public void setCourseUnit(Float courseUnit) {
+        this.courseUnit = courseUnit;
     }
 
-    public List<PlanModuleGpa> getPlanModuleGPAs() {
+    public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
 
-    public void setPlanModuleGPAs(List<PlanModuleGpa> planModuleGPAs) {
+    public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
         this.planModuleGPAs = planModuleGPAs;
     }
 
-    public List<PlanModulePreassignedGpa> getPlanModulePreassignedGPAs() {
+    public List<PlanModulePreassignedGPA> getPlanModulePreassignedGPAs() {
         return planModulePreassignedGPAs;
     }
 
-    public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGpa> planModulePreassignedGPAs) {
+    public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGPA> planModulePreassignedGPAs) {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 
