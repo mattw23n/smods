@@ -27,30 +27,30 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "PRE_REQUISITE",
-            joinColumns = @JoinColumn(name = "MID"),
-            inverseJoinColumns = @JoinColumn(name = "MID2")
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
     )
-    private List<Module> prerequisites;
+    private List<Module> preRequisites;
 
-    @ManyToMany(mappedBy = "prerequisites")
+    @ManyToMany(mappedBy = "preRequisites")
     private List<Module> prerequisiteDependents;
 
     @ManyToMany
     @JoinTable(
             name = "CO_REQUISITE",
-            joinColumns = @JoinColumn(name = "MID"),
-            inverseJoinColumns = @JoinColumn(name = "MID2")
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
     )
-    private List<Module> corequisites;
+    private List<Module> coRequisites;
 
-    @ManyToMany(mappedBy = "corequisites")
+    @ManyToMany(mappedBy = "coRequisites")
     private List<Module> corequisiteDependents;
 
     @ManyToMany
     @JoinTable(
             name = "MUTUALLY_EXCLUSIVE",
-            joinColumns = @JoinColumn(name = "MID"),
-            inverseJoinColumns = @JoinColumn(name = "MID2")
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
     )
     private List<Module> mutuallyExclusives;
 
@@ -58,7 +58,7 @@ public class Module {
     private List<Module> mutuallyExclusiveWith;
 
     @ElementCollection
-    @CollectionTable(name = "GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MID"))
+    @CollectionTable(name = "GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MODULE_ID"))
     @Column(name = "requirement")
     private List<String> requirements;
 
@@ -66,10 +66,10 @@ public class Module {
     public Module() {}
 
     // Constructor
-    public Module(String id, String name, Float cu) {
-        this.id = id;
+    public Module(String moduleId, String name, Float courseUnit) {
+        this.moduleId = moduleId;
         this.name = name;
-        this.cu = cu;
+        this.courseUnit = courseUnit;
     }
 
     // Getters and Setters
@@ -114,11 +114,11 @@ public class Module {
     }
 
     public List<Module> getPrerequisites() {
-        return prerequisites;
+        return preRequisites;
     }
 
-    public void setPrerequisites(List<Module> prerequisites) {
-        this.prerequisites = prerequisites;
+    public void setPrerequisites(List<Module> preRequisites) {
+        this.preRequisites = preRequisites;
     }
 
     public List<Module> getPrerequisiteDependents() {
@@ -130,11 +130,11 @@ public class Module {
     }
 
     public List<Module> getCorequisites() {
-        return corequisites;
+        return coRequisites;
     }
 
-    public void setCorequisites(List<Module> corequisites) {
-        this.corequisites = corequisites;
+    public void setCorequisites(List<Module> coRequisites) {
+        this.coRequisites = coRequisites;
     }
 
     public List<Module> getCorequisiteDependents() {
@@ -174,25 +174,25 @@ public class Module {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(id, module.id);
+        return Objects.equals(moduleId, module.moduleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(moduleId);
     }
 
     @Override
     public String toString() {
         return "Module{" +
-                "id='" + id + '\'' +
+                "id='" + moduleId + '\'' +
                 ", name='" + name + '\'' +
-                ", cu=" + cu +
+                ", cu=" + courseUnit +
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
-                ", prerequisites=" + prerequisites +
+                ", preRequisites=" + preRequisites +
                 ", prerequisiteDependents=" + prerequisiteDependents +
-                ", corequisites=" + corequisites +
+                ", coRequisites=" + coRequisites +
                 ", corequisiteDependents=" + corequisiteDependents +
                 ", mutuallyExclusives=" + mutuallyExclusives +
                 ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +

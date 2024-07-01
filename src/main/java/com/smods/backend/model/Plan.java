@@ -36,8 +36,8 @@ public class Plan {
     }
 
     // Constructor with parameters
-    public Plan(String pname, String degree, String track, User user) {
-        this.pname = pname;
+    public Plan(String planName, String degree, String track, User user) {
+        this.planName = planName;
         this.degree = degree;
         this.track = track;
         this.user = user;
@@ -107,8 +107,8 @@ public class Plan {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(id, plan.id) &&
-                Objects.equals(pname, plan.pname) &&
+        return Objects.equals(planId, plan.planId) &&
+                Objects.equals(planName, plan.planName) &&
                 Objects.equals(degree, plan.degree) &&
                 Objects.equals(track, plan.track) &&
                 Objects.equals(user, plan.user);
@@ -116,6 +116,6 @@ public class Plan {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pname, degree, track, user);
+        return Objects.hash(planId, planName, degree, track, user);
     }
 }
