@@ -1,7 +1,7 @@
 package com.smods.backend.controller;
 
 import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGpa;
+import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.security.CustomUserDetails;
 import com.smods.backend.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,12 @@ public class PlanController {
     }
 
     @PutMapping("/add-module")
-    public ResponseEntity<PlanModuleGpa> addModule(
+    public ResponseEntity<PlanModuleGPA> addModule(
             @RequestParam Long planId,
+            @RequestParam Long userId,
             @RequestParam String moduleId,
-            @RequestParam String term) {
-        PlanModuleGpa updatedModule = planService.addModule(planId, moduleId, term);
+            @RequestParam int term) {
+        PlanModuleGPA updatedModule = planService.addModule(planId, userId, moduleId, term);
         return ResponseEntity.ok(updatedModule);
     }
 }

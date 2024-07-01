@@ -1,9 +1,10 @@
 package com.smods.backend.service;
 
 import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGpa;
-import com.smods.backend.model.composite_key.PlanModuleGpaKey;
-import com.smods.backend.repository.PlanModuleGpaRepository;
+import com.smods.backend.model.PlanModuleGPA;
+import com.smods.backend.model.composite_key.PlanKey;
+import com.smods.backend.model.composite_key.PlanModuleGPAKey;
+import com.smods.backend.repository.PlanModuleGPARepository;
 import com.smods.backend.repository.PlanRepository;
 import com.smods.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ import java.util.List;
 public class PlanService {
 
     private final PlanRepository planRepository;
-    private final PlanModuleGpaRepository planModuleGpaRepository;
+    private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, PlanModuleGpaRepository planModuleGpaRepository, UserRepository userRepository) {
+    public PlanService(PlanRepository planRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository) {
         this.planRepository = planRepository;
-        this.planModuleGpaRepository = planModuleGpaRepository;
+        this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
     }
 
@@ -34,18 +35,23 @@ public class PlanService {
         return planRepository.save(plan);
     }
 
-    public PlanModuleGpa addModule(Long planId, String moduleId, String term) {
-        Plan plan = planRepository.findById(planId).orElseThrow(() -> new RuntimeException("Plan not found"));
-        Long uid = plan.getUser().getId();
+    public PlanModuleGPA addModule(Long planId, Long userId, String moduleId, int term) {
+        PlanKey planKey = new PlanKey(planId, userId);
+        planRepository.findById(planKey)
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-        PlanModuleGpaKey id = new PlanModuleGpaKey(uid, planId, moduleId);
+        PlanModuleGPAKey id = new PlanModuleGPAKey(planKey, moduleId);
 
-        PlanModuleGpa planModuleGpa = planModuleGpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plan module not found"));
+        // Check if the module already exists in the plan
+        boolean moduleExists = planModuleGPARepository.existsById(id);
+        if (moduleExists) {
+            throw new RuntimeException("Module already exists in the plan");
+        }
 
         // Add methods to validate pre-requisites, co-requisites, mutually exclusive
         // before saving the module
-        planModuleGpa.setTerm(term);
-        return planModuleGpaRepository.save(planModuleGpa);
+        PlanModuleGPA planModuleGPA = new PlanModuleGPA();
+        planModuleGPA.setTerm(term);
+        return planModuleGPARepository.save(planModuleGPA);
     }
 }
