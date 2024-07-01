@@ -28,13 +28,13 @@ public class PlanModuleGPA {
     private Float gpa;
 
     @Column(name = "TERM")
-    private String term;
+    private int term;
 
     // Default constructor
     public PlanModuleGPA() {}
 
     // Constructor with parameters
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, Float gpa, String term) {
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, Float gpa, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.plan = plan;
         this.module = module;
@@ -67,19 +67,19 @@ public class PlanModuleGPA {
         this.module = module;
     }
 
-    public Float getGpa() {
+    public Float getGPA() {
         return gpa;
     }
 
-    public void setGpa(Float gpa) {
+    public void setGPA(Float gpa) {
         this.gpa = gpa;
     }
 
-    public String getTerm() {
+    public int getTerm() {
         return term;
     }
 
-    public void setTerm(String term) {
+    public void setTerm(int term) {
         this.term = term;
     }
 
@@ -87,8 +87,8 @@ public class PlanModuleGPA {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModuleGpa that = (PlanModuleGpa) o;
-        return Objects.equals(id, that.id) &&
+        PlanModuleGPA that = (PlanModuleGPA) o;
+        return Objects.equals(planModuleGPAId, that.planModuleGPAId) &&
                 Objects.equals(plan, that.plan) &&
                 Objects.equals(module, that.module) &&
                 Objects.equals(gpa, that.gpa) &&
@@ -96,13 +96,13 @@ public class PlanModuleGPA {
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, plan, module, gpa, term);
+        return Objects.hash(planModuleGPAId, plan, module, gpa, term);
     }
 
     @Override
     public String toString() {
-        return "PlanModuleGpa{" +
-                "id=" + id +
+        return "PlanModuleGPA{" +
+                "id=" + planModuleGPAId +
                 ", plan=" + plan +
                 ", module=" + module +
                 ", gpa=" + gpa +
