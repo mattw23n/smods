@@ -1,43 +1,31 @@
 package com.smods.backend.service;
 
 import com.smods.backend.model.Plan;
+import com.smods.backend.model.User;
 import com.smods.backend.repository.PlanRepository;
+import com.smods.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlanService {
-    private final PlanRepository planRepository;
 
     @Autowired
-    public PlanService(PlanRepository planRepository) {
-        this.planRepository = planRepository;
+    private PlanRepository planRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Plan> getAllPlansByUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        return planRepository.findByUser(user);
     }
 
-    public List<Plan> getAllPlans() {
-        return planRepository.findAll();
-    }
-
-    public Optional<Plan> getPlanById(Integer id) {
-        return planRepository.findById(id);
-    }
-
-    public Plan createPlan(Plan plan) {
+    public Plan createPlan(Long userId, Plan plan) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        plan.setUser(user);
         return planRepository.save(plan);
-    }
-
-    public Plan updatePlan(Integer id, Plan planDetails) {
-        Plan plan = planRepository.findById(id).orElseThrow(() -> new RuntimeException("Plan not found with id: " + id));
-        plan.setPname(planDetails.getPname());
-        plan.setDegree(planDetails.getDegree());
-        plan.setTrack(planDetails.getTrack());
-        return planRepository.save(plan);
-    }
-
-    public void deletePlan(Integer id) {
-        planRepository.deleteById(id);
     }
 }
