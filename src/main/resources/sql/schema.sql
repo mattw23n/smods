@@ -13,70 +13,69 @@ DROP TABLE IF EXISTS `USERS`;
 DROP TABLE IF EXISTS `MODULE`;
 
 CREATE TABLE co_requisite (
-    mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL,
-    PRIMARY KEY (mid, mid2)
+    module_id VARCHAR(255) NOT NULL,
+    module_id2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (module_id, module_id2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE grad_requirement (
-    mid VARCHAR(255) NOT NULL,
-    requirement VARCHAR(255),
-    PRIMARY KEY (mid, requirement)
+    module_id VARCHAR(255) NOT NULL,
+    requirement VARCHAR(255)
 ) ENGINE=InnoDB;
 
 CREATE TABLE module (
-    mid VARCHAR(255) NOT NULL,
-    cu FLOAT(23),
-    mname VARCHAR(255),
-    PRIMARY KEY (mid)
+    module_id VARCHAR(255) NOT NULL,
+    course_unit FLOAT,
+    module_name VARCHAR(255),
+    PRIMARY KEY (module_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE mutually_exclusive (
-    mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL,
-    PRIMARY KEY (mid, mid2)
+    module_id VARCHAR(255) NOT NULL,
+    module_id2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (module_id, module_id2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan (
-    pid BIGINT NOT NULL AUTO_INCREMENT,
+    plan_id BIGINT NOT NULL,
     degree VARCHAR(255),
-    pname VARCHAR(255),
+    plan_name VARCHAR(255),
     track VARCHAR(255),
-    uid BIGINT,
-    PRIMARY KEY (pid)
+    user_id BIGINT NOT NULL,
+    PRIMARY KEY (plan_id, user_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan_module_gpa (
-    uid BIGINT NOT NULL,
-    gpa FLOAT(23),
-    term VARCHAR(255),
-    MID VARCHAR(255) NOT NULL,
-    PID BIGINT NOT NULL,
-    PRIMARY KEY (MID, PID, uid)
+    gpa FLOAT,
+    term INTEGER,
+    plan_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    module_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (module_id, plan_id, user_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan_module_preassigned_gpa (
-    uid BIGINT NOT NULL,
-    gpa FLOAT(23),
-    term VARCHAR(255),
-    MID VARCHAR(255) NOT NULL,
-    PID BIGINT NOT NULL,
-    PRIMARY KEY (MID, PID, uid)
+    gpa FLOAT,
+    term INTEGER,
+    plan_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    module_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (module_id, plan_id, user_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE pre_requisite (
-    mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL,
-    PRIMARY KEY (mid, mid2)
+    module_id VARCHAR(255) NOT NULL,
+    module_id2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (module_id, module_id2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE users (
-    uid BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     email_verified BIT NOT NULL,
     password VARCHAR(32) NOT NULL,
     role VARCHAR(255) NOT NULL,
     username VARCHAR(16) NOT NULL,
     verification_code INTEGER NOT NULL,
-    PRIMARY KEY (uid)
+    PRIMARY KEY (user_id)
 ) ENGINE=InnoDB;
