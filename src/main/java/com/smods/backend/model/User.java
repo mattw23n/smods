@@ -11,8 +11,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UID", nullable = false, unique = true)
-    private Long id;
+    @Column(name = "USER_ID")
+    private Long userId;
 
     @Column(name = "USERNAME", nullable = false, unique = true, length = 16)
     private String username;
@@ -48,12 +48,13 @@ public class User {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
