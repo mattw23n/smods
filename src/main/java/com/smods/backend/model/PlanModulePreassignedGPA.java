@@ -1,23 +1,26 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
+import com.smods.backend.model.composite_key.PlanModulePreassignedGPAKey;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "PLAN_MODULE_PREASSIGNED_GPA")
-public class PlanModulePreassignedGpa {
+public class PlanModulePreassignedGPA {
 
     @EmbeddedId
-    private PlanModulePreassignedGpaKey id;
+    private PlanModulePreassignedGPAKey planModulePreassignedGPAId;
 
     @ManyToOne
-    @MapsId("pid")
-    @JoinColumn(name = "PID")
+    @MapsId("planId")
+    @JoinColumns({
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
+    })
     private Plan plan;
 
     @ManyToOne
-    @MapsId("mid")
-    @JoinColumn(name = "MID")
+    @MapsId("moduleId")
+    @JoinColumn(name = "MODULE_ID")
     private Module module;
 
     @Column(name = "GPA")
@@ -27,24 +30,24 @@ public class PlanModulePreassignedGpa {
     private String term;
 
     // Default constructor
-    public PlanModulePreassignedGpa() {}
+    public PlanModulePreassignedGPA() {}
 
     // Constructor with parameters
-    public PlanModulePreassignedGpa(PlanModulePreassignedGpaKey id, Plan plan, Module module, Float gpa, String term) {
-        this.id = id;
+
+    public PlanModulePreassignedGPA(PlanModulePreassignedGPAKey planModulePreassignedGPAId, Plan plan, Module module, Float gpa, String term) {
+        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
         this.plan = plan;
         this.module = module;
         this.gpa = gpa;
         this.term = term;
     }
 
-    // Getters and Setters
-    public PlanModulePreassignedGpaKey getId() {
-        return id;
+    public PlanModulePreassignedGPAKey getPlanModulePreassignedGPAId() {
+        return planModulePreassignedGPAId;
     }
 
-    public void setId(PlanModulePreassignedGpaKey id) {
-        this.id = id;
+    public void setPlanModulePreassignedGPAId(PlanModulePreassignedGPAKey planModulePreassignedGPAId) {
+        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
     }
 
     public Plan getPlan() {

@@ -1,22 +1,25 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModuleGpaKey;
+import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "PLAN_MODULE_GPA")
-public class PlanModuleGpa {
+public class PlanModuleGPA {
     @EmbeddedId
-    private PlanModuleGpaKey id;
+    private PlanModuleGPAKey planModuleGPAId;
 
     @ManyToOne
-    @MapsId("pid")
-    @JoinColumn(name = "PID")
+    @MapsId("planId")
+    @JoinColumns({
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
+    })
     private Plan plan;
 
     @ManyToOne
-    @MapsId("mid")
-    @JoinColumn(name = "MID")
+    @MapsId("moduleId")
+    @JoinColumn(name = "MODULE_ID")
     private Module module;
 
     @Column(name = "GPA")
@@ -26,11 +29,11 @@ public class PlanModuleGpa {
     private String term;
 
     // Default constructor
-    public PlanModuleGpa() {}
+    public PlanModuleGPA() {}
 
     // Constructor with parameters
-    public PlanModuleGpa(PlanModuleGpaKey id, Plan plan, Module module, Float gpa, String term) {
-        this.id = id;
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, Float gpa, String term) {
+        this.planModuleGPAId = planModuleGPAId;
         this.plan = plan;
         this.module = module;
         this.gpa = gpa;
@@ -38,12 +41,12 @@ public class PlanModuleGpa {
     }
 
     // Getters and Setters
-    public PlanModuleGpaKey getId() {
-        return id;
+    public PlanModuleGPAKey getId() {
+        return planModuleGPAId;
     }
 
-    public void setId(PlanModuleGpaKey id) {
-        this.id = id;
+    public void setId(PlanModuleGPAKey planModuleGPAId) {
+        this.planModuleGPAId = planModuleGPAId;
     }
 
     public Plan getPlan() {
