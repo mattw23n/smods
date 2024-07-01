@@ -2,25 +2,23 @@ package com.smods.backend.model.composite_key;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import org.hibernate.annotations.Columns;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class PlanModuleGpaKey implements Serializable {
+public class PlanModuleGPAKey implements Serializable {
     private PlanKey planId;
 
     @Column(name = "MODULE_ID")
     private String moduleId;
 
     // Default constructor
-    public PlanModuleGpaKey() {}
+    public PlanModuleGPAKey() {}
 
     // Constructor with parameters
 
-    public PlanModuleGpaKey(PlanKey planId, String moduleId) {
+    public PlanModuleGPAKey(PlanKey planId, String moduleId) {
         this.planId = planId;
         this.moduleId = moduleId;
     }
@@ -46,7 +44,7 @@ public class PlanModuleGpaKey implements Serializable {
 
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModuleGpaKey that = (PlanModuleGpaKey) o;
+        PlanModuleGPAKey that = (PlanModuleGPAKey) o;
         return Objects.equals(planId, that.planId) && Objects.equals(moduleId, that.moduleId);
     }
 
