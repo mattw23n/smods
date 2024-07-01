@@ -42,7 +42,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyEmail(@RequestParam String code) {
+    public ResponseEntity<String> verifyEmail(@RequestParam Integer code) {
         try {
             userService.verifyUser(code);
             return ResponseEntity.ok("Email verified successfully.");

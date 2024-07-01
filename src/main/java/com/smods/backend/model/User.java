@@ -1,20 +1,23 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
+
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "USERS")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "UID", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "USERNAME", nullable = false, unique = true)
+    @Column(name = "USERNAME", nullable = false, unique = true, length = 16)
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PASSWORD", nullable = false, length = 32)
     private String password;
 
     @Column(name = "EMAIL", nullable = false, unique = true)
@@ -26,10 +29,10 @@ public class User {
     @Column(name = "EMAIL_VERIFIED", nullable = false)
     private Boolean emailVerified;
 
-    @Column(name = "VERIFICATION_CODE")
-    private String verificationCode;
+    @Column(name = "VERIFICATION_CODE", nullable = false)
+    private Integer verificationCode;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Plan> plans;
 
     // Default constructor
@@ -93,11 +96,11 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
-    public String getVerificationCode() {
+    public Integer getVerificationCode() {
         return verificationCode;
     }
 
-    public void setVerificationCode(String verificationCode) {
+    public void setVerificationCode(Integer verificationCode) {
         this.verificationCode = verificationCode;
     }
 
@@ -107,5 +110,32 @@ public class User {
 
     public void setPlans(List<Plan> plans) {
         this.plans = plans;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", emailVerified=" + emailVerified +
+                ", verificationCode='" + verificationCode + '\'' +
+                ", plans=" + plans +
+                '}';
     }
 }

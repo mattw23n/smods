@@ -71,14 +71,13 @@ public class UserService {
         // You can add more validation rules here as necessary
     }
 
-    private String generateVerificationCode() {
+    private Integer generateVerificationCode() {
         Random random = new Random();
-        int code = 100000 + random.nextInt(900000); // Generates a 6-digit number
-        return String.valueOf(code);
+        return 100000 + random.nextInt(900000);
     }
 
     // Verify the user's email
-    public void verifyUser(String verificationCode) {
+    public void verifyUser(Integer verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode)
                 .orElseThrow(() -> new RuntimeException("Invalid verification code"));
 

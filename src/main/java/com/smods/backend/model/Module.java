@@ -1,9 +1,8 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
 import jakarta.persistence.*;
-
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "MODULE")
@@ -19,10 +18,10 @@ public class Module {
     @Column(name = "CU")
     private Float cu;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanModuleGpa> planModuleGPAs;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlanModulePreassignedGpa> planModulePreassignedGPAs;
 
     @ManyToMany
@@ -63,6 +62,17 @@ public class Module {
     @Column(name = "requirement")
     private List<String> requirements;
 
+    // Default constructor
+    public Module() {}
+
+    // Constructor
+    public Module(String id, String name, Float cu) {
+        this.id = id;
+        this.name = name;
+        this.cu = cu;
+    }
+
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -157,5 +167,36 @@ public class Module {
 
     public void setRequirements(List<String> requirements) {
         this.requirements = requirements;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Module module = (Module) o;
+        return Objects.equals(id, module.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Module{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", cu=" + cu +
+                ", planModuleGPAs=" + planModuleGPAs +
+                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
+                ", prerequisites=" + prerequisites +
+                ", prerequisiteDependents=" + prerequisiteDependents +
+                ", corequisites=" + corequisites +
+                ", corequisiteDependents=" + corequisiteDependents +
+                ", mutuallyExclusives=" + mutuallyExclusives +
+                ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
+                ", requirements=" + requirements +
+                '}';
     }
 }
