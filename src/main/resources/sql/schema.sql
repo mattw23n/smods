@@ -1,3 +1,4 @@
+DROP DATABASE `SMODS`;
 CREATE DATABASE IF NOT EXISTS `smods`;
 USE `smods`;
 
@@ -13,12 +14,14 @@ DROP TABLE IF EXISTS `MODULE`;
 
 CREATE TABLE co_requisite (
     mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL
+    mid2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (mid, mid2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE grad_requirement (
     mid VARCHAR(255) NOT NULL,
-    requirement VARCHAR(255)
+    requirement VARCHAR(255),
+    PRIMARY KEY (mid, requirement)
 ) ENGINE=InnoDB;
 
 CREATE TABLE module (
@@ -30,7 +33,8 @@ CREATE TABLE module (
 
 CREATE TABLE mutually_exclusive (
     mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL
+    mid2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (mid, mid2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan (
@@ -43,33 +47,36 @@ CREATE TABLE plan (
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan_module_gpa (
+    uid BIGINT NOT NULL,
     gpa FLOAT(23),
     term VARCHAR(255),
     MID VARCHAR(255) NOT NULL,
     PID BIGINT NOT NULL,
-    PRIMARY KEY (MID, PID)
+    PRIMARY KEY (MID, PID, uid)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plan_module_preassigned_gpa (
+    uid BIGINT NOT NULL,
     gpa FLOAT(23),
     term VARCHAR(255),
     MID VARCHAR(255) NOT NULL,
     PID BIGINT NOT NULL,
-    PRIMARY KEY (MID, PID)
+    PRIMARY KEY (MID, PID, uid)
 ) ENGINE=InnoDB;
 
 CREATE TABLE pre_requisite (
     mid VARCHAR(255) NOT NULL,
-    mid2 VARCHAR(255) NOT NULL
+    mid2 VARCHAR(255) NOT NULL,
+    PRIMARY KEY (mid, mid2)
 ) ENGINE=InnoDB;
 
 CREATE TABLE users (
-    id BIGINT NOT NULL AUTO_INCREMENT,
+    uid BIGINT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     email_verified BIT NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(32) NOT NULL,
     role VARCHAR(255) NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    verification_code VARCHAR(255),
-    PRIMARY KEY (id)
+    username VARCHAR(16) NOT NULL,
+    verification_code INTEGER NOT NULL,
+    PRIMARY KEY (uid)
 ) ENGINE=InnoDB;

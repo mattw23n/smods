@@ -3,6 +3,8 @@ package com.smods.backend.model;
 import com.smods.backend.model.composite_key.PlanModuleGpaKey;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "PLAN_MODULE_GPA")
 public class PlanModuleGpa {
@@ -76,5 +78,32 @@ public class PlanModuleGpa {
 
     public void setTerm(String term) {
         this.term = term;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlanModuleGpa that = (PlanModuleGpa) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(plan, that.plan) &&
+                Objects.equals(module, that.module) &&
+                Objects.equals(gpa, that.gpa) &&
+                Objects.equals(term, that.term);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, plan, module, gpa, term);
+    }
+
+    @Override
+    public String toString() {
+        return "PlanModuleGpa{" +
+                "id=" + id +
+                ", plan=" + plan +
+                ", module=" + module +
+                ", gpa=" + gpa +
+                ", term='" + term + '\'' +
+                '}';
     }
 }

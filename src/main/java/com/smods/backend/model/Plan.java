@@ -1,7 +1,5 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModulePreassignedGpaKey;
-import com.smods.backend.exception.PlanModificationException;
 import jakarta.persistence.*;
 import java.util.*;
 
@@ -32,6 +30,20 @@ public class Plan {
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<PlanModulePreassignedGpa> planModulePreassignedGPAs;
+
+    // Default constructor
+    public Plan() {
+    }
+
+    // Constructor with parameters
+    public Plan(String pname, String degree, String track, User user) {
+        this.pname = pname;
+        this.degree = degree;
+        this.track = track;
+        this.user = user;
+    }
+
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -87,5 +99,24 @@ public class Plan {
 
     public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGpa> planModulePreassignedGPAs) {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    }
+
+    // Equals and hashCode methods
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plan plan = (Plan) o;
+        return Objects.equals(id, plan.id) &&
+                Objects.equals(pname, plan.pname) &&
+                Objects.equals(degree, plan.degree) &&
+                Objects.equals(track, plan.track) &&
+                Objects.equals(user, plan.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, pname, degree, track, user);
     }
 }
