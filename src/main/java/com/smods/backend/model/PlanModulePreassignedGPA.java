@@ -1,24 +1,28 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.composite_key.PlanModuleGpaKey;
+import com.smods.backend.model.composite_key.PlanModulePreassignedGPAKey;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "PLAN_MODULE_GPA")
-public class PlanModuleGpa {
+@Table(name = "PLAN_MODULE_PREASSIGNED_GPA")
+public class PlanModulePreassignedGPA {
+
     @EmbeddedId
-    private PlanModuleGpaKey id;
+    private PlanModulePreassignedGPAKey planModulePreassignedGPAId;
 
     @ManyToOne
-    @MapsId("pid")
-    @JoinColumn(name = "PID")
+    @MapsId("planId")
+    @JoinColumns({
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
+    })
     private Plan plan;
 
     @ManyToOne
-    @MapsId("mid")
-    @JoinColumn(name = "MID")
+    @MapsId("moduleId")
+    @JoinColumn(name = "MODULE_ID")
     private Module module;
 
     @Column(name = "GPA")
@@ -28,24 +32,24 @@ public class PlanModuleGpa {
     private String term;
 
     // Default constructor
-    public PlanModuleGpa() {}
+    public PlanModulePreassignedGPA() {}
 
     // Constructor with parameters
-    public PlanModuleGpa(PlanModuleGpaKey id, Plan plan, Module module, Float gpa, String term) {
-        this.id = id;
+
+    public PlanModulePreassignedGPA(PlanModulePreassignedGPAKey planModulePreassignedGPAId, Plan plan, Module module, Float gpa, String term) {
+        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
         this.plan = plan;
         this.module = module;
         this.gpa = gpa;
         this.term = term;
     }
 
-    // Getters and Setters
-    public PlanModuleGpaKey getId() {
-        return id;
+    public PlanModulePreassignedGPAKey getPlanModulePreassignedGPAId() {
+        return planModulePreassignedGPAId;
     }
 
-    public void setId(PlanModuleGpaKey id) {
-        this.id = id;
+    public void setPlanModulePreassignedGPAId(PlanModulePreassignedGPAKey planModulePreassignedGPAId) {
+        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
     }
 
     public Plan getPlan() {
@@ -79,18 +83,18 @@ public class PlanModuleGpa {
     public void setTerm(String term) {
         this.term = term;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModuleGpa that = (PlanModuleGpa) o;
+        PlanModulePreassignedGpa that = (PlanModulePreassignedGpa) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(plan, that.plan) &&
                 Objects.equals(module, that.module) &&
                 Objects.equals(gpa, that.gpa) &&
                 Objects.equals(term, that.term);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, plan, module, gpa, term);
@@ -98,7 +102,7 @@ public class PlanModuleGpa {
 
     @Override
     public String toString() {
-        return "PlanModuleGpa{" +
+        return "PlanModulePreassignedGpa{" +
                 "id=" + id +
                 ", plan=" + plan +
                 ", module=" + module +
