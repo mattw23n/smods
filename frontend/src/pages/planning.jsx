@@ -4,6 +4,8 @@ import Footer from "../components/footer";
 import Year from "../components/year";
 import PlanBar from "../components/planBar";
 import modulesData from "../data/modsData";
+import CourseSearch from "../components/courseSearch";
+import Background from "../components/background";
 
 const DEFAULT_MODS = modulesData
 
@@ -22,61 +24,64 @@ const DEFAULT_MODS = modulesData
 //     isError: false,
 // }
 
+
 const PlanDetails = ({plan, setPlan}) => {
-    const {name, degree, track} = plan
+    const {title, degree, tracks, view} = plan
+
+    const buttonData = [
+        { value: 4, label: '4Y' },
+        { value: 3, label: 'Y' },
+        { value: 2, label: 'T' },
+        { value: 1, label: 'G' },
+      ];
+
+    console.log(view)
 
     return (
-        <div className="px-6 py-4 w-64 rounded-3xl bg-gray-200 flex flex-col gap-2">
+        <div className="px-6 py-4 w-fit rounded-3xl bg-white/50 flex flex-col gap-2">
             <div className="flex flex-col">
-                <p className="font-poppins font-bold text-text text-lg">{name}</p>
+                <p className="font-poppins font-bold text-text text-lg">{title}</p>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Degree:</p>
                     <p>{degree}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Track:</p>
-                    <p>{track}</p>
+                    <p>{tracks}</p>
                 </div>
             </div>
             
-            <div className="bg-gray-300 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-gray-400 transition-all">
+            <div className="bg-blue-100 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-blue-300 hover:scale-105 transition all">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                 </svg>
                 <a href={`${plan.handbookLink}`}>
-                    CSAcademicHandbook.pdf
+                    CSAcademicHandbook
                 </a>
             </div>
 
-            <div className="bg-gray-300 rounded-lg pl-2 w-fit flex justify-between items-center gap-4">
+            <div className="rounded-lg w-fit flex justify-between items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
 
-                <span className="inline-flex -space-x-px overflow-hidden rounded-lg border bg-white shadow-sm">
+                <span className="inline-flex -space-x-px overflow-hidden rounded-lg border bg-blue-100">
+                {buttonData.map(button => (
                     <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    key={button.value}
+                    className={`inline-block px-4 py-1 text-sm font-medium focus:relative ${
+                        view === button.value ? 'bg-blue-300 text-white' : 'hover:bg-blue-300'
+                    }`}
+                    value={button.value}
+                    onClick={() => setPlan(prevPlan => ({
+                        ...prevPlan,
+                        view: button.value, // Update view based on state
+                    }))}
                     >
-                        4Y
+                    {button.label}
                     </button>
-
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        Y
-                    </button>
-
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        T
-                    </button>
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        G
-                    </button>
+                ))}
                 </span>
             </div>
         </div>
@@ -91,6 +96,7 @@ const ButtonGroup = ({plan, setPlan}) => {
             ...prevPlan,
             isEditMode: !prevPlan.isEditMode, // Update isEditMode
         }));   
+
     }
 
     const handleCheckboxChange = (e) => {
@@ -105,26 +111,26 @@ const ButtonGroup = ({plan, setPlan}) => {
     return(
         <div className="flex flex-col gap-4">
             <div className="flex gap-x-2">
-                <button className={`bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-100 ${plan.isEditMode ? 'bg-primary' : ''}`}
+                <button className={`bg-white/70 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isEditMode ? 'bg-blue-300' : ''}`}
                 onClick={handleEditButton}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
                 </button>
 
-                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                <button className="bg-white/70 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                 </button>
-                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                <button className="bg-white/70 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                     </svg>
                 </button>
             </div>
             {isEditMode && (
-            <div className="rounded-3xl bg-gray-200 flex justify-between items-center px-5 py-2 font-archivo font-bold">
+            <div className="rounded-3xl bg-white/70 flex justify-between items-center px-5 py-2 font-archivo font-bold">
                 GPA
                 <label
                 htmlFor="AcceptConditions"
@@ -155,79 +161,55 @@ const Dashboard = ({plan, setPlan, mods}) => {
 }
 
 function Content({plan, setPlan, mods, setMods}){
-    const { isEditMode} = plan
+    const { isEditMode, view } = plan
     const yearNums = [1, 2, 3, 4];
 
-    const containerRef = useRef(null);
-    const isDragging = useRef(false);
-    const pos = useRef({ top: 0, left: 0, x: 0, y: 0 });
+    const isGroupView = view === 1
 
-    useEffect(() => {
-        const ele = containerRef.current;
+    const groups = ["uc", "mc", "me", "tm", "fe"]
 
-        const mouseDownHandler = (e) => {
-            pos.current = {
-                left: ele.scrollLeft,
-                top: ele.scrollTop,
-                x: e.clientX,
-                y: e.clientY,
-            };
-            isDragging.current = true;
-            ele.style.cursor = 'grabbing';
-            ele.style.userSelect = 'none';
+    const viewModes = {
+        4:["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
+        3:["container h-[580px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
+        2:["container h-[330px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
+        1:["h-fit pb-10 overflow-x-auto", "inline-block"],
+    }
 
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        };
-
-        const mouseMoveHandler = (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - pos.current.x;
-            const dy = e.clientY - pos.current.y;
-
-            ele.scrollTop = pos.current.top - dy;
-            ele.scrollLeft = pos.current.left - dx;
-        };
-
-        const mouseUpHandler = () => {
-            isDragging.current = false;
-            ele.style.cursor = 'grab';
-            ele.style.removeProperty('user-select');
-
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-
-        if (ele) {
-            ele.addEventListener('mousedown', mouseDownHandler);
-        }
-
-        return () => {
-            if (ele) {
-                ele.removeEventListener('mousedown', mouseDownHandler);
-            }
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-    }, [isDragging]);
+    const viewTailwind = viewModes[view][0]
+    const viewTailwindChild = viewModes[view][1]
 
     return(
         <>
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
-            <div className="flex gap-5">
-                <div ref={containerRef}
-                    className={`${isEditMode ? `ml-20 grid grid-cols-2 gap-5` 
-                    : `container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab`}`}
-                    style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
+            <div className={`${isEditMode ? `px-20 mb-10 flex gap-5`: "px-20 mb-10"}`}>
+                <div >
+                {!isGroupView && (
+                    <div className={viewTailwind}>
+                    <div  className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
                     {yearNums.map(num => (
                     <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
                     ))}
+                    </div>
+                    
+                    </div>
+                )}
+                {isGroupView && (
+                    <div className={viewTailwind}>
+                        <div className={viewTailwindChild}>
+                            <Year plan={plan} mods={mods} setMods={setMods}></Year>
+                        </div>
+                    </div>
+                    
+                    )}
                 </div>
+                
+                
                 {isEditMode && (
-                    <div className="bg-gray-300">CourseSearch</div>
+                    <CourseSearch plan={plan}></CourseSearch>
                 )}
                     
             </div>
+            
             
         </>
         
@@ -238,21 +220,24 @@ function Planning(){
     const [mods, setMods] = useState(DEFAULT_MODS);
 
     const [plan, setPlan] = useState({
-        name:"Gilchris' Master Plan",
+        title:"Gilchris' Master Plan",
         degree:"Computer Science",
-        track:["Artificial Intelligence"],
+        tracks:["Artificial Intelligence"],
         handbookLink:"www.smu.edu.sg",
-        modsArray:[mods, setMods],
         view:4,
         isEditMode:false,
         isGPAOn:false,
     });
 
     return(
-        <div className="bg-background">
+        <div className="relative">
+            <Background/>
+            <div className="relative z-10">
             <Header></Header>
             <Content plan={plan} setPlan={setPlan} mods={mods} setMods={setMods}></Content>
             <Footer></Footer>
+            </div>
+            
         </div>
 
     );
