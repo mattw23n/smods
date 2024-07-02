@@ -28,8 +28,7 @@ public class PlanController {
     }
 
     @PostMapping
-    public ResponseEntity<Plan> createPlan(@RequestBody Plan plan) {
-        Long userId = plan.getUser().getUserId();
+    public ResponseEntity<Plan> createPlan(@RequestParam Long userId, @RequestBody Plan plan) {
         if (userId == null) {
             return ResponseEntity.badRequest().body(null);  // Handle the case where userId is not provided
         }
