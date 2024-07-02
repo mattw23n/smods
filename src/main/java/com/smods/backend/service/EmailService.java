@@ -21,7 +21,7 @@ public class EmailService {
         message.setTo(user.getEmail());
         message.setSubject("Email Verification");
         String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + user.getVerificationToken();
-        message.setText("Dear " + user.getUsername() + ",\n\nPlease verify your email using the following link: \n" + verificationUrl + "\n\nThank you,\nYour App Name");
+        message.setText("Dear " + user.getUsername() + ",\n\nPlease verify your email using the following link: \n" + verificationUrl + "\n\nThank you,\nSMODS");
         mailSender.send(message);
     }
 }
