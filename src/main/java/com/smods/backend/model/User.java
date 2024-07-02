@@ -38,7 +38,7 @@ public class User {
     private Date tokenExpiryDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @JsonBackReference(value = "user-plan")
     private List<Plan> plans;
 
     // Default constructor

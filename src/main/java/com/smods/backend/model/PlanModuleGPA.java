@@ -18,7 +18,7 @@ public class PlanModuleGPA {
             @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
             @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
     })
-    @JsonBackReference
+    @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
     @ManyToOne
