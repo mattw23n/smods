@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
+    private final JavaMailSender mailSender;
+
     @Autowired
-    private JavaMailSender mailSender;
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void sendVerificationEmail(User user) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Email Verification");
-        message.setText("Please verify your email using the following code: " + user.getVerificationCode());
+        String verificationUrl = "http://localhost:8080/api/auth/verify?token=" + user.getVerificationToken();
+        message.setText("Dear " + user.getUsername() + ",\n\nPlease verify your email using the following link: \n" + verificationUrl + "\n\nThank you,\nYour App Name");
         mailSender.send(message);
     }
 }

@@ -2,6 +2,7 @@ package com.smods.backend.model;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID", nullable = false, unique = true)
     private Long userId;
 
     @Column(name = "USERNAME", nullable = false, unique = true, length = 16)
@@ -26,11 +27,14 @@ public class User {
     @Column(name = "ROLE", nullable = false)
     private String role;
 
-    @Column(name = "EMAIL_VERIFIED", nullable = false)
+    @Column(name = "EMAIL_VERIFIED")
     private Boolean emailVerified;
 
-    @Column(name = "VERIFICATION_CODE", nullable = false)
-    private Integer verificationCode;
+    @Column(name = "VERIFICATION_TOKEN", unique = true)
+    private String verificationToken;
+
+    @Column(name = "TOKEN_EXPIRY_DATE")
+    private Date tokenExpiryDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Plan> plans;
@@ -97,12 +101,20 @@ public class User {
         this.emailVerified = emailVerified;
     }
 
-    public Integer getVerificationCode() {
-        return verificationCode;
+    public String getVerificationToken() {
+        return verificationToken;
     }
 
-    public void setVerificationCode(Integer verificationCode) {
-        this.verificationCode = verificationCode;
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public Date getTokenExpiryDate() {
+        return tokenExpiryDate;
+    }
+
+    public void setTokenExpiryDate(Date tokenExpiryDate) {
+        this.tokenExpiryDate = tokenExpiryDate;
     }
 
     public List<Plan> getPlans() {
@@ -135,7 +147,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +
                 ", emailVerified=" + emailVerified +
-                ", verificationCode='" + verificationCode + '\'' +
+                ", verificationToken='" + verificationToken + '\'' +
+                ", tokenExpiryDate=" + tokenExpiryDate +
                 ", plans=" + plans +
                 '}';
     }
