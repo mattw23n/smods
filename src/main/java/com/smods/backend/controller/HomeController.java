@@ -42,12 +42,12 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login() {
-        return ResponseEntity.ok(homeService.login());
+    public String login() {
+        return "redirect:/api/auth/login";
     }
 
     @GetMapping("/register")
-    public ResponseEntity<String> register() {
-        return ResponseEntity.ok(homeService.register());
+    public String register() {
+        return "redirect:/api/auth/register";
     }
 }
