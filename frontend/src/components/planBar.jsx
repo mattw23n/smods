@@ -46,20 +46,22 @@ const Tabs = ({ tabData }) => {
   
     return (
       <div className="mx-auto mt-4 flex-grow">
-        <div className="flex border-b">
+        <div className="flex border-b border-gray mx-2 gap-10">
           {tabs.map((tab, index) => (
             <button class="max-w"
               key={index}
-              className={`flex gap-1 mx-2 px-2 py-2 ${activeTab === index ? 'rounded-lg bg-sky-100 p-2 font-archivo text-primary' : 'font-archivo text-text'}`}
+              className={`flex px-2 py-2 mb-2 font-archivo hover:scale-105 hover:bg-sky-100 hover:rounded-lg hover:text-primary text-primary transition all ${activeTab === index ? 'rounded-lg bg-sky-100 p-2 text-blue-500' : 'text-text'}`}
               onClick={() => setActiveTab(index)}
             >
+              <div className="flex gap-1">
               <p className="font-bold">{tab.curr}/{tab.max}</p>
-              
               {tab.label}
+              </div>
+              
             </button>
           ))}
         </div>
-        <div className="p-4">
+        <div className="p-4 transition all">
           {tabs.map((tab, index) => (
             activeTab === index && (
               <div key={index} className="max-w-full">
@@ -125,7 +127,8 @@ const PlanBar = ({plan, setPlan, mods}) => {
 
     
     const Tab1 = (
-      <div class="bg-gray-100 rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto" style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
+      <div class="bg-white rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto" 
+      style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
         <ActiveCounter Current={uniCore.length} Max={6} Category="UNI CORE" type="uc" />
         <ActiveCounter Current={majorCore.length} Max={17} Category="MAJOR CORE" type="mc"/>
         <ActiveCounter Current={majorElective.length} Max={3} Category="MAJOR ELECTIVE" type="me"/>
@@ -168,7 +171,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
     );
 
     const Tab3 = (
-        <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
+        <div class="bg-white/50 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
                 <p class="text-xl">{totalPoints}</p>
                 Total Grade Points
@@ -189,7 +192,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
     ];
             
     return (
-        <div className="h-fit rounded-3xl bg-gray-200">
+        <div className="h-fit rounded-3xl bg-white/50">
             <div class="px-4 py-2 w-auto">
                 <Tabs tabData={tabData}/>
             </div>

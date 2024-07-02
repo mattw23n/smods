@@ -47,6 +47,7 @@ module.exports = {
         'bold': 700
       },
       animation: {
+        gradient: "gradient 10s alternate infinite",
         blob: "blob 7s infinite",
         first: "moveVertical 30s ease infinite",
         second: "moveInCircle 20s reverse infinite",
@@ -55,6 +56,10 @@ module.exports = {
         fifth: "moveInCircle 20s ease infinite",
       },
       keyframes: {
+        gradient:{
+          '0%': { backgroundPosition: '0%' },
+          '100%': { backgroundPosition: '100%' },
+        },
         blob:{
           "0%" : {
             transform: "translate(0px, 0px) scale(1)",
@@ -103,6 +108,9 @@ module.exports = {
           },
         },
         
+      },
+      backgroundSize: {
+        '300': '300% 300%',
       },
     },
   },

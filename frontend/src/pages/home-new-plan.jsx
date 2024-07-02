@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Background from "../components/background";
+import TemplateUser from "../data/user";
 
 
-const Content = ({}) => {
+const Content = ({ user, setUser }) => {
+
+    const { name, plans, templates } = user
+
     const majors = [
         {Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
         {Title: "Information Systems", Tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
@@ -15,8 +21,16 @@ const Content = ({}) => {
     const [selectedMajor, setSelectedMajor] = useState("");
     const [selectedTrack, setSelectedTrack] = useState("");
 
+    const [errors, setErrors] = useState({
+        title: "",
+        major: "",
+        track: "",
+    });
+
+
     const handleMajorChange = (event) => {
         setSelectedMajor(event.target.value);
+        
       };
 
     const handleTrackChange = (event) => {
@@ -27,6 +41,28 @@ const Content = ({}) => {
         setSelectedTitle(event.target.value);
       };
 
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        {console.log(selectedMajor + selectedTrack + selectedTitle)}
+
+        // Validate form
+        const newErrors = {
+            title: selectedTitle ? '' : 'Title is required',
+            major: selectedMajor ? '' : 'Major is required',
+            track: selectedTrack ? '' : 'Track is required',
+        };
+
+        setErrors(newErrors);
+
+        // Check if there are no errors
+        if (!newErrors.title && !newErrors.major && !newErrors.track) {
+            // Form is valid, proceed with form submission
+            console.log('Form submitted');
+            // Your form submission logic here
+        }
+    };
+
     const selectedMajorTracks = majors.find((m) => m.Title === selectedMajor)?.Tracks || [];
     
     return(
@@ -34,25 +70,28 @@ const Content = ({}) => {
             <div className="mx-16 my-8 max-h-none max-w-screen flex-col gap-10">
                 <div className="text-text font-poppins font-bold">
                         <p className="text-l">Good Afternoon</p>
-                        <p className="text-3xl">Dohn Joe</p>
+                        <p className="text-3xl">{name}</p>
                 </div>
                 <div className="max-w-none py-4 flex gap-20">
                     <div className="flex flex-col gap-5">
-                        <a className="flex rounded-xl w-32 bg-secondary px-6 py-3 justify-between align-center font-bold font-poppins text-l text-background transition 
-                        hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
-                            href="#">
-                            <span> New </span>
+                        <Link
+                            className="flex rounded-xl w-32 bg-gray-500 px-6 py-3 justify-between align-center font-bold font-poppins text-l text-background transition 
+                            hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
+                            to="/"
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                             </svg>
 
-                        </a>
+                            <span>Back</span>
+                        </Link>
 
                     </div>
 
                     <div className="max-w-none flex flex-col gap-2 text-text">
                         <p className="text-l font-poppins font-bold">🪄Create a New Plan</p>
-                        <div className="isolate w-[600px] shadow-lg ring-1 ring-black/5 px-4 py-4 bg-white/0 rounded-3xl flex flex-col gap-5 text-text">
+                        <form className="isolate w-[600px] shadow-lg ring-1 ring-black/5 px-4 py-4 bg-white/50 rounded-3xl flex flex-col gap-5 text-text"
+                        onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Name </label>
 
@@ -64,6 +103,8 @@ const Content = ({}) => {
                                     value={selectedTitle}
                                     onChange={handleTitleChange}
                                 />
+                                {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
+
                             </div>
                             <div>
                                 <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Major </label>
@@ -81,6 +122,8 @@ const Content = ({}) => {
                                         </option>
                                     ))}
                                 </select>
+                                {errors.major && <p className="text-red-500 text-xs mt-1">{errors.major}</p>}
+
                             </div>
                             <div>
                                 <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Track </label>
@@ -91,7 +134,7 @@ const Content = ({}) => {
                                 onChange={handleTrackChange}
                                 disabled={!selectedMajor} >
 
-                                <option disabled selected>Your Track</option>
+                                <option disabled value="">Your Track</option>
                                     {selectedMajorTracks.map((track, index) => (
                                         <option key={index} value={track}>
                                         {track}
@@ -99,19 +142,21 @@ const Content = ({}) => {
                                     ))}
                             
                                 </select>
+                                {errors.track && <p className="text-red-500 text-xs mt-1">{errors.track}</p>}
                             </div>
-                            <a className="flex rounded-xl w-24 bg-secondary px-6 py-3 justify-center align-center font-bold font-poppins text-l text-background transition 
-                            hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
-                                href="#">
-                                <span> Create </span>
-
-                            </a>
+                            <button
+                                type="submit"
+                                className="flex rounded-xl w-24 bg-secondary px-6 py-3 justify-center align-center font-bold font-poppins text-l text-background transition
+                                hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
+                            >
+                                Create
+                            </button>
                             
-                        </div>
+                        </form>
                         
                     </div>
                         
-                    {console.log(selectedMajor + selectedTrack + selectedTitle)}
+                    
                 </div>
             </div>
             
@@ -120,14 +165,19 @@ const Content = ({}) => {
 }
 
 function NewPlan(){
+
+    const [user, setUser] = useState(
+        TemplateUser
+    );
     
-
-
     return (
-        <div className="bg-background">
-            <Header></Header>
-            <Content></Content>
-            <Footer></Footer>
+        <div className="relative">
+            <Background />
+            <div className="relative z-10">
+                <Header></Header>
+                <Content user={user} setUser={setUser}></Content>
+                <Footer></Footer>
+            </div>
         </div>
     );
 }

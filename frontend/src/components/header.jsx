@@ -1,5 +1,6 @@
 import React from 'react';
 import logo from "../images/smods-logo-dark.png";
+import { Link } from 'react-router-dom';
 
 //Header
 function Avatar({ src, alt }) {
@@ -9,12 +10,12 @@ function Avatar({ src, alt }) {
 function Logo({ src, title }) {
     return (
         <div className='flex-1 md:flex md:items-center md:gap-12'>
-            <a className="block text-teal-600" href="#">
+            <Link className="block text-teal-600" to={"/"}>
                 <span className="sr-only">Home</span>
                 <div className="flex gap-3">
                     <img loading="lazy" src={src} alt={`${title} logo`} className="shrink-0 self-start max-w-full aspect-[2.36] w-[160px]" />
                 </div>
-            </a>
+            </Link>
         </div>
     );
 }
@@ -29,8 +30,8 @@ function NavItem({ title, link }) {
 
 function Header({ isSignIn }) {
     return (
-        <header>
-            <div className="mx-8 max-w-full px-4 sm:px-6 lg:px-8 ">
+        <header className="top-0 left-0 w-full z-50 bg-white/30 backdrop-blur border-b">
+            <div className="mx-8 max-w-full px-3 sm:px-6 lg:px-8 pb-0">
                 <div className="flex h-16 items-center justify-between">
                     <Logo src={logo} />
 
