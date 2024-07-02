@@ -1,6 +1,7 @@
 package com.smods.backend.service;
 
 import com.smods.backend.model.*;
+import com.smods.backend.model.Module;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -14,6 +15,7 @@ import java.util.List;
 public class PlanService {
 
     private final PlanRepository planRepository;
+    private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
     private final PreRequisiteRepository preRequisiteRepository;
@@ -21,10 +23,11 @@ public class PlanService {
     private final MutuallyExclusiveRepository mutuallyExclusiveRepository;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository,
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository,
                        PreRequisiteRepository preRequisiteRepository, CoRequisiteRepository coRequisiteRepository,
                        MutuallyExclusiveRepository mutuallyExclusiveRepository) {
         this.planRepository = planRepository;
+        this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
         this.preRequisiteRepository = preRequisiteRepository;
@@ -38,6 +41,7 @@ public class PlanService {
 
     public Plan createPlan(Long userId, Plan plan) {
         plan.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+        plan.setPlanId(new PlanKey((long) 1, userId));
         return planRepository.save(plan);
     }
 
@@ -46,25 +50,25 @@ public class PlanService {
         Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-        PlanModuleGPAKey id = new PlanModuleGPAKey(planKey, moduleId);
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new RuntimeException("Module not found"));
 
-        // Check if the module already exists in the plan
-        boolean moduleExists = planModuleGPARepository.existsById(id);
-        if (moduleExists) {
-            throw new RuntimeException("Module already exists in the plan");
-        }
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
 
-        // Validate prerequisites and collect unsatisfied ones
-        List<PreRequisite> unsatisfiedPrerequisites = validatePrerequisites(plan, moduleId, term);
-        if (!unsatisfiedPrerequisites.isEmpty()) {
+        PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                .orElse(new PlanModuleGPA());
+
+//      Validate prerequisites and collect unsatisfied ones
+        List<PreRequisite> unsatisfiedPreRequisites = validatePreRequisites(plan, moduleId, term);
+        if (!unsatisfiedPreRequisites.isEmpty()) {
             StringBuilder message = new StringBuilder("Pre-requisites for " + moduleId + " not satisfied: ");
-            for (PreRequisite preReq : unsatisfiedPrerequisites) {
+            for (PreRequisite preReq : unsatisfiedPreRequisites) {
                 message.append(preReq.getModuleId2()).append(" ");
             }
             throw new RuntimeException(message.toString().trim());
         }
 
-        // Validate co-requisites and collect unsatisfied ones
+//      Validate co-requisites and collect unsatisfied ones
         List<CoRequisite> unsatisfiedCoRequisites = validateCoRequisites(plan, moduleId, term);
         if (!unsatisfiedCoRequisites.isEmpty()) {
             StringBuilder message = new StringBuilder("Co-requisites for " + moduleId + " not satisfied: ");
@@ -84,15 +88,15 @@ public class PlanService {
             throw new RuntimeException(message.toString().trim());
         }
 
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA();
-        planModuleGPA.setId(id);
+        planModuleGPA.setId(planModuleGPAKey);
         planModuleGPA.setPlan(plan);
+        planModuleGPA.setModule(module);
         planModuleGPA.setTerm(term);
 
         return planModuleGPARepository.save(planModuleGPA);
     }
 
-    private List<PreRequisite> validatePrerequisites(Plan plan, String moduleId, int term) {
+    private List<PreRequisite> validatePreRequisites(Plan plan, String moduleId, int term) {
         List<PreRequisite> preRequisites = preRequisiteRepository.findByModuleId(moduleId);
         List<PreRequisite> unsatisfiedPreRequisites = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smods.backend.model.composite_key.PlanKey;
 import jakarta.persistence.*;
 import java.util.*;
@@ -23,12 +24,15 @@ public class Plan {
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
+    @JsonManagedReference
     private User user;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PlanModuleGPA> planModuleGPAs;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
 
     // Default constructor

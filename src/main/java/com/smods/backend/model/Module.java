@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -19,9 +20,11 @@ public class Module {
     private Float courseUnit;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<PlanModuleGPA> planModuleGPAs;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
 
     @ManyToMany
@@ -33,6 +36,7 @@ public class Module {
     private List<Module> preRequisites;
 
     @ManyToMany(mappedBy = "preRequisites")
+    @JsonBackReference
     private List<Module> preRequisiteDependents;
 
     @ManyToMany
@@ -44,6 +48,7 @@ public class Module {
     private List<Module> coRequisites;
 
     @ManyToMany(mappedBy = "coRequisites")
+    @JsonBackReference
     private List<Module> corequisiteDependents;
 
     @ManyToMany
@@ -55,6 +60,7 @@ public class Module {
     private List<Module> mutuallyExclusives;
 
     @ManyToMany(mappedBy = "mutuallyExclusives")
+    @JsonBackReference
     private List<Module> mutuallyExclusiveWith;
 
     @ElementCollection
@@ -113,19 +119,19 @@ public class Module {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 
-    public List<Module> getPrerequisites() {
+    public List<Module> getPreRequisites() {
         return preRequisites;
     }
 
-    public void setPrerequisites(List<Module> preRequisites) {
+    public void setPreRequisites(List<Module> preRequisites) {
         this.preRequisites = preRequisites;
     }
 
-    public List<Module> getPrerequisiteDependents() {
+    public List<Module> getPreRequisiteDependents() {
         return preRequisiteDependents;
     }
 
-    public void setPrerequisiteDependents(List<Module> preRequisiteDependents) {
+    public void setPreRequisiteDependents(List<Module> preRequisiteDependents) {
         this.preRequisiteDependents = preRequisiteDependents;
     }
 
