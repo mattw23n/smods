@@ -42,12 +42,12 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyEmail(@RequestParam Integer code) {
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         try {
-            userService.verifyUser(code);
+            userService.verifyUser(token);
             return ResponseEntity.ok("Email verified successfully.");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body("Invalid verification code.");
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 }

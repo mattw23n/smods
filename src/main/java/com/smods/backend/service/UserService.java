@@ -5,6 +5,7 @@ import com.smods.backend.dto.UserDTO;
 import com.smods.backend.exception.EmailAlreadyExistsException;
 import com.smods.backend.exception.InvalidCharacterException;
 import com.smods.backend.exception.UsernameAlreadyExistsException;
+import com.smods.backend.exception.VerificationTokenNotFoundException;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +13,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
-import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
 public class UserService {
 
+    private static final Pattern NON_ENGLISH_PATTERN = Pattern.compile("[^\\p{ASCII}]");
+    private static final long TOKEN_EXPIRY_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-
-    private static final Pattern NON_ENGLISH_PATTERN = Pattern.compile("[^\\p{ASCII}]");
 
     @Autowired
     public UserService(UserRepository userRepository, EmailService emailService) {
@@ -50,8 +53,10 @@ public class UserService {
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
+        user.setEmailVerified(false);
         user.setRole("USER");
-        user.setVerificationCode(generateVerificationCode());
+        user.setVerificationToken(generateVerificationToken());
+        user.setTokenExpiryDate(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_DURATION));
 
         // Send verification email
         emailService.sendVerificationEmail(user);
@@ -71,18 +76,22 @@ public class UserService {
         // You can add more validation rules here as necessary
     }
 
-    private Integer generateVerificationCode() {
-        Random random = new Random();
-        return 100000 + random.nextInt(900000);
+    private String generateVerificationToken() {
+        return UUID.randomUUID().toString();
     }
 
     // Verify the user's email
-    public void verifyUser(Integer verificationCode) {
-        User user = userRepository.findByVerificationCode(verificationCode)
-                .orElseThrow(() -> new RuntimeException("Invalid verification code"));
+    public void verifyUser(String verificationToken) {
+        User user = userRepository.findByVerificationToken(verificationToken)
+                .orElseThrow(() -> new VerificationTokenNotFoundException("Invalid verification token"));
+
+        if (user.getTokenExpiryDate().before(new Date())) {
+            throw new VerificationTokenNotFoundException("Verification token has expired");
+        }
 
         user.setEmailVerified(true);
-        user.setVerificationCode(null);
+        user.setVerificationToken(null);
+        user.setTokenExpiryDate(null);
         userRepository.save(user);
     }
 

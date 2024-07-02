@@ -76,6 +76,10 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
     username VARCHAR(16) NOT NULL,
-    verification_code INTEGER NOT NULL,
+    verification_token varchar(255),
+    token_expiry_date datetime(6),
     PRIMARY KEY (user_id)
 ) ENGINE=InnoDB;
+
+delete from users;
+select * from users;
