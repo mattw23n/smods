@@ -20,11 +20,11 @@ public class Module {
     private Float courseUnit;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonBackReference(value = "module-planModuleGPA")
     private List<PlanModuleGPA> planModuleGPAs;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonBackReference(value = "module-planModulePreassignedGPA")
     private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
 
     @ManyToMany
@@ -36,7 +36,7 @@ public class Module {
     private List<Module> preRequisites;
 
     @ManyToMany(mappedBy = "preRequisites")
-    @JsonBackReference
+    @JsonBackReference(value = "preRequisiteDependents")
     private List<Module> preRequisiteDependents;
 
     @ManyToMany
@@ -48,7 +48,7 @@ public class Module {
     private List<Module> coRequisites;
 
     @ManyToMany(mappedBy = "coRequisites")
-    @JsonBackReference
+    @JsonBackReference(value = "coRequisiteDependents")
     private List<Module> corequisiteDependents;
 
     @ManyToMany
@@ -60,7 +60,7 @@ public class Module {
     private List<Module> mutuallyExclusives;
 
     @ManyToMany(mappedBy = "mutuallyExclusives")
-    @JsonBackReference
+    @JsonBackReference(value = "mutuallyExclusiveWith")
     private List<Module> mutuallyExclusiveWith;
 
     @ElementCollection

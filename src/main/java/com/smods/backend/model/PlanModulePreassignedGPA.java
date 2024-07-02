@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smods.backend.model.composite_key.PlanModulePreassignedGPAKey;
 import jakarta.persistence.*;
 
@@ -18,6 +19,7 @@ public class PlanModulePreassignedGPA {
             @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
             @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
     })
+    @JsonBackReference(value = "plan-planModulePreassignedGPA")
     private Plan plan;
 
     @ManyToOne
