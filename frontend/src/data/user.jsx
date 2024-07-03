@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from 'react';
 import DEFAULT_PLANS from "./plans";
 
 
@@ -15,4 +15,16 @@ const TemplateUser = {
     templates: templates,
 }
 
-export default TemplateUser
+
+export const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+
+  const [user, setUser] = useState(TemplateUser);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+};

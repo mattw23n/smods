@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
-import TemplateUser from "../data/user";
+import { UserContext } from "../data/user";
 
 const majors = [
     {title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
@@ -16,7 +16,7 @@ const majors = [
 const Card = ({plan, user, setUser, isTemplate}) => {
 
     const { title, date, degree, tracks} = plan
-    console.log(plan)
+    // console.log(plan)
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -134,8 +134,10 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
 
 const Content = ({user, setUser}) => {
-
+    
     const {name, plans, templates} = user
+
+    console.log(plans)
 
     const isEmptyPlan = plans.length === 0
     
@@ -194,7 +196,7 @@ const Content = ({user, setUser}) => {
 }
 
 function Home(){
-    const [user, setUser] = useState(TemplateUser);
+    const {user, setUser} = useContext(UserContext)
 
     return (
         <div className="relative flex flex-col min-h-screen">
