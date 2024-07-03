@@ -8,6 +8,7 @@ import SignIn from './pages/sign_in.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AboutUs from './pages/aboutUs.jsx';
 import ContactUs from './pages/contactUs.jsx';
+import Anims from './pages/justForAnims.jsx';
 
 function App() {
     // const [currentPage, setCurrentPage] = useState('Home');
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<ContactUs />} />
+                <Route path="/anims" element={<Anims />} />
             </Routes>
         </Router>
     );

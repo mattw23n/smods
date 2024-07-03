@@ -54,8 +54,18 @@ module.exports = {
         third: "moveInCircle 40s linear infinite",
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
+        scrollLeft: 'scrollLeft 20s linear infinite',
+        loopscroll: "loop-scroll 50s linear infinite",
       },
       keyframes: {
+        loopscroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        scrollLeft: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
         gradient:{
           '0%': { backgroundPosition: '0%' },
           '100%': { backgroundPosition: '100%' },
