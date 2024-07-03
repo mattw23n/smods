@@ -5,7 +5,7 @@ const DropIndicator = ({ beforeId, term}) => {
         <div
             data-before={beforeId || "-1"}
             data-column={term}
-            className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
+            className="my-0.5 h-0.5 w-full bg-blue-500 opacity-0"
         />
     )
 }

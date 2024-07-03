@@ -121,7 +121,7 @@ const SearchBar = ({plan}) => {
                 <input 
                     type="search" 
                     id="default-search" 
-                    className="block w-full p-4 pl-10 text-sm text-gray-500 font-archivo rounded-xl bg-gray-100 outline-none" 
+                    className="block w-full p-4 pl-10 text-sm text-gray-500 font-archivo rounded-xl bg-white outline-none" 
                     placeholder="Search Modules, Courses..." 
                     value={searchTerm}
                     onChange={handleInputChange}
@@ -145,7 +145,7 @@ const SearchBar = ({plan}) => {
 const CourseSearch = ({plan}) => {
 
     return (
-        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10">
+        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit">
             <div>
                 <p className="font-poppins font-bold text-sm mb-2">Course Search</p>
                 <SearchBar plan={plan} ></SearchBar>

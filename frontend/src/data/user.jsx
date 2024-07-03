@@ -7,13 +7,14 @@ const templates = [
     { title: "Skynet", date: "30 June 2024", degree: "Computer Science", tracks: ["Artificial Intelligence"] },
   ];
 
-const TemplateUser = {
+export const TemplateUser = {
     name:"Gilchris Nathaniel",
     email:"gilchris@gmail.com",
     password:"i like trains",
     plans: DEFAULT_PLANS,
     templates: templates,
 }
+
 
 
 export const UserContext = createContext();
