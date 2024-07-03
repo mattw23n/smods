@@ -3,7 +3,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 
 function Form() {
-    const [email, setEmail] = useState("");
+    const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
 
@@ -11,8 +11,8 @@ function Form() {
         setIsChecked(event.target.checked);
     };
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
+    const handleUserChange = (event) => {
+        setUser(event.target.value);
     };
 
     const handlePasswordChange = (event) => {
@@ -21,7 +21,7 @@ function Form() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("Email:", email);
+        console.log("User:", user);
         console.log("Password:", password);
     };
 
@@ -32,16 +32,16 @@ function Form() {
                     <p className="text-center text-2xl font-bold font-poppins">Sign In</p>
                     <div>
                         <p className="font-bold pb-1 text-sm font-poppins">
-                            Email
+                            Username
                         </p>
-                        <label htmlFor="email" className="sr-only">Email</label>
+                        <label htmlFor="user" className="sr-only">Username</label>
                         <div className="relative">
                             <input
-                                type="email"
+                                type="user"
                                 className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
-                                placeholder="Enter email"
-                                value={email}
-                                onChange={handleEmailChange}
+                                placeholder="Enter username"
+                                value={user}
+                                onChange={handleUserChange}
                             />
                         </div>
                     </div>
@@ -90,7 +90,7 @@ function Form() {
 
 function Content() {
     return (
-        <div className="min-h-screen flex-1 bg-gradient-to-b from-white to-blue-400 p-4 flex items-center justify-center min-h-[85vh]">
+        <div className="min-h-screen flex-1 bg-gradient-to-b from-white to-blue-400 flex items-center justify-center min-h-[83vh]">
             <Form />
         </div>
     );
