@@ -136,7 +136,7 @@ function Column({title, links}){
 
 function Footer(){
     return (
-        <footer className="bg-gray-900">
+        <footer className="bg-gray-900 footer">
             <div className="mx-8 max-w-screen-xl space-y-8 px-4 py-10 sm:px-6 lg:space-y-16 lg:px-8">
                 <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
                 <div>

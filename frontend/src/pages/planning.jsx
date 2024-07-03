@@ -7,6 +7,9 @@ import modulesData from "../data/modsData";
 import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 
+import { useParams } from 'react-router-dom';
+import TemplateUser from "../data/user";
+
 const DEFAULT_MODS = modulesData
 
 // const TemplateMod = {
@@ -23,6 +26,31 @@ const DEFAULT_MODS = modulesData
 //     GPA: 0.0,
 //     isError: false,
 // }
+const Modal = () => {
+    const openModal = () => {
+      document.getElementById('my_modal_3').showModal();
+    };
+  
+    const closeModal = () => {
+      document.getElementById('my_modal_3').close();
+    };
+  
+    return (
+      <div>
+        <button className="btn" onClick={openModal}>open modal</button>
+        <dialog id="my_modal_3" className="modal rounded-xl">
+          <div className="bg-gray-100 rounded-xl p-4 relative">
+            <button onClick={closeModal} className="absolute right-2 top-2">✕</button>
+            <p className="font-bold text font-poppins">Share this plan!</p>
+            <div className="rounded-lg border-2 border-black bg-white">
+                link
+            </div>
+            <p className="py-4">Press ESC key or click on ✕ button to close</p>
+          </div>
+        </dialog>
+      </div>
+    );
+  };
 
 
 const PlanDetails = ({plan, setPlan}) => {
@@ -47,7 +75,11 @@ const PlanDetails = ({plan, setPlan}) => {
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Track:</p>
-                    <p>{tracks}</p>
+                    <div className="flex flex-col">
+                    {tracks.map((track, index) => (
+                        <p key={index}>{track}</p>
+                    ))}
+                    </div>
                 </div>
             </div>
             
@@ -90,6 +122,21 @@ const PlanDetails = ({plan, setPlan}) => {
 
 const ButtonGroup = ({plan, setPlan}) => {
     const { isEditMode } = plan
+    const [isShareOn, setIsShareOn] = useState(false);
+
+
+
+    const openModal = () => {
+        document.getElementById('my_modal_3').showModal();
+        setIsShareOn(true)
+
+    };
+    
+    const closeModal = () => {
+        document.getElementById('my_modal_3').close();
+        setIsShareOn(false)
+    };
+    
 
     const handleEditButton = () => {
         setPlan(prevPlan => ({
@@ -123,11 +170,25 @@ const ButtonGroup = ({plan, setPlan}) => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                 </button>
-                <button className="bg-white/70 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all">
+
+                <button className={`bg-white/70 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isShareOn ? 'bg-blue-300' : ''}`}
+                onClick={openModal}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                     </svg>
+                    
                 </button>
+                <dialog id="my_modal_3" className="modal rounded-xl">
+                    <div className="bg-gray-100 rounded-xl p-4 relative">
+                        <button onClick={closeModal} className="absolute right-2 top-2">✕</button>
+                        <p className="font-bold text font-poppins">Share this plan!</p>
+                        <div className="rounded-lg border-2 border-black bg-white">
+                            link
+                        </div>
+                        <p className="py-4">Press ESC key or click on ✕ button to close</p>
+                    </div>
+                </dialog>
+                
             </div>
             {isEditMode && (
             <div className="rounded-3xl bg-white/70 flex justify-between items-center px-5 py-2 font-archivo font-bold">
@@ -179,7 +240,7 @@ function Content({plan, setPlan, mods, setMods}){
     const viewTailwindChild = viewModes[view][1]
 
     return(
-        <>
+        <div className="flex-grow">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
             <div className={`${isEditMode ? `px-20 mb-10 flex gap-5`: "px-20 mb-10"}`}>
                 <div >
@@ -211,26 +272,25 @@ function Content({plan, setPlan, mods, setMods}){
             </div>
             
             
-        </>
+        </div>
         
     );
 }
 
 function Planning(){
-    const [mods, setMods] = useState(DEFAULT_MODS);
+    //get plan ID
+    const { id } = useParams();
 
-    const [plan, setPlan] = useState({
-        title:"Gilchris' Master Plan",
-        degree:"Computer Science",
-        tracks:["Artificial Intelligence"],
-        handbookLink:"www.smu.edu.sg",
-        view:4,
-        isEditMode:false,
-        isGPAOn:false,
-    });
+    //get selectedPlan
+    const selectedPlan = TemplateUser.plans.find((p) => p.id ===  parseInt(id))
+    console.log(selectedPlan)
+    
+    const [plan, setPlan] = useState(selectedPlan);
+
+    const [mods, setMods] = useState(plan.mods);
 
     return(
-        <div className="relative">
+        <div className="relative flex flex-col min-h-screen">
             <Background/>
             <div className="relative z-10">
             <Header></Header>

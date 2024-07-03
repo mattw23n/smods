@@ -3,6 +3,7 @@ import Laptop from "../images/prot_clean.png";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import calendar from "../images/calendar.png";
+import { Link } from 'react-router-dom';
 
 function Hero() {
     return (
@@ -15,10 +16,10 @@ function Hero() {
                     <p className="max-w-2xl ml-10 font-medium font-archivo text-dark lg:mb-8 md:text-lg lg:text-xl">
                         Make the most out of your studies with SMODS.
                     </p>
-                    <a href="#" className="inline-flex ml-10 items-center justify-center px-5 py-3 mr-3 text-base font-bold font-poppins text-center text-white rounded-3xl bg-primary hover:bg-dark focus:ring-4 focus:ring-primary-300">
+                    <Link  to="/signin" className="inline-flex ml-10 items-center justify-center px-5 py-3 mr-3 text-base font-bold font-poppins text-center text-white rounded-3xl bg-primary hover:bg-dark focus:ring-4 focus:ring-primary-300">
                         Plan Now!
                         <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                    </a>
+                    </Link>
                     {/* <a href="#" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                         Speak to Sales
                     </a>  */}
@@ -77,53 +78,53 @@ function Hero() {
     </div>
 
     <div class="w-full h-40 flex items-center justify-center cursor-pointer">
-  <div
-    class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
-  >
-    <span
-      class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"
-    ></span>
-    <span
-      class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        fill="none"
-        class="w-5 h-5 text-white"
-      >
-        <path
-          d="M14 5l7 7m0 0l-7 7m7-7H3"
-          stroke-width="2"
-          stroke-linejoin="round"
-          stroke-linecap="round"
-        ></path>
-      </svg>
-    </span>
-    <span
-      class="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        fill="none"
-        class="w-5 h-5 text-blue-400"
-      >
-        <path
-          d="M14 5l7 7m0 0l-7 7m7-7H3"
-          stroke-width="2"
-          stroke-linejoin="round"
-          stroke-linecap="round"
-        ></path>
-      </svg>
-    </span>
-    <span
-      class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400"
-      >Sign Up Now!</span>
-  </div>
-</div>
+        <Link class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
+        to="/signin">
+            <span
+            class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"
+            ></span>
+            <span
+            class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
+            >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none"
+                class="w-5 h-5 text-white"
+            >
+                <path
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                stroke-width="2"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                ></path>
+            </svg>
+            </span>
+            <span
+            class="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200"
+            >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                fill="none"
+                class="w-5 h-5 text-blue-400"
+            >
+                <path
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+                stroke-width="2"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                ></path>
+            </svg>
+            </span>
+            <span
+            class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400"
+            >Sign Up Now!
+            </span>
+        </Link>
+    </div>
     </div>
     </section>
     );
