@@ -140,8 +140,8 @@ const Content = ({user, setUser}) => {
     const isEmptyPlan = plans.length === 0
     
     return(
-        <>
-        <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
+        <main className="flex-grow">
+            <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
                 <div className="text-text font-poppins font-bold">
                     <p className="text-l">Good Afternoon</p>
                     <p className="text-3xl">{name}</p>
@@ -189,7 +189,7 @@ const Content = ({user, setUser}) => {
                     </div>
                 </div>
             </div>
-        </>
+        </main>
     )
 }
 
@@ -197,7 +197,7 @@ function Home(){
     const [user, setUser] = useState(TemplateUser);
 
     return (
-        <div className="relative">
+        <div className="relative flex flex-col min-h-screen">
             <Background />
             <div className="relative z-10">
                 <Header></Header>

@@ -9,6 +9,8 @@ const templates = [
 
 const TemplateUser = {
     name:"Gilchris Nathaniel",
+    email:"gilchris@gmail.com",
+    password:"i like trains",
     plans: DEFAULT_PLANS,
     templates: templates,
 }

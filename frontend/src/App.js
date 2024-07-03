@@ -9,7 +9,6 @@ import SignIn from './pages/sign_in.jsx';
 import PlanningGroup from './pages/planning_group.jsx';
 import PlanningYear from './pages/planning_year.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PlanDetails from './pages/plandetailsexample.jsx';
 
 function App() {
     // const [currentPage, setCurrentPage] = useState('Home');
@@ -27,14 +26,27 @@ function App() {
     //         {currentPage === 'SignIn' && <SignIn />}
     //     </div>
     // );
+
+    // const [loading, setLoading] = useState(true);
+
+    // // Simulate loading for 3 seconds
+    // React.useEffect(() => {
+    //     setTimeout(() => setLoading(false), 3000);
+    // }, []);
+
+    // if (loading) {
+    //     return <Loading />;
+    // }
+
     return (
         <Router>
             <Routes>
-                <Route exact path="/" element={ <Home />} />
-                {/* <Route exact path="/" element={ <Landing />} /> */}
+                <Route path="/home" element={ <Home />} />
+                <Route exact path="/" element={ <Landing />} />
                 <Route path="/new-plan" element={ <NewPlan />} />
-                <Route path="/plan/:id" element={<PlanDetails />} />
-                <Route path="/plan/2" element={<Planning />} />
+                <Route path="/plan/:id" element={<Planning />} />
+                {/* <Route path="/plan/2" element={<Planning />} /> */}
+                <Route path="/signin" element={<SignIn />} />
             </Routes>
         </Router>
     );

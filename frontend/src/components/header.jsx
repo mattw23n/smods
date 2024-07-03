@@ -10,7 +10,7 @@ function Avatar({ src, alt }) {
 function Logo({ src, title }) {
     return (
         <div className='flex-1 md:flex md:items-center md:gap-12'>
-            <Link className="block text-teal-600" to={"/"}>
+            <Link className="block text-teal-600" to={"/home"}>
                 <span className="sr-only">Home</span>
                 <div className="flex gap-3">
                     <img loading="lazy" src={src} alt={`${title} logo`} className="shrink-0 self-start max-w-full aspect-[2.36] w-[160px]" />
@@ -39,7 +39,6 @@ function Header({ isSignIn }) {
                         <div className="md:flex md:items-center md:gap-12">
                             <nav className="hidden md:block">
                                 <ul className="flex items-center gap-6 text-sm text-text">
-                                    <NavItem title={"Summary"} link={"#"} />
                                     <NavItem title={"About Us"} link={"#"} />
                                     <NavItem title={"Contact Us"} link={"#"} />
                                 </ul>

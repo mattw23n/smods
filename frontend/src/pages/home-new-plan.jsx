@@ -66,7 +66,7 @@ const Content = ({ user, setUser }) => {
     const selectedMajorTracks = majors.find((m) => m.Title === selectedMajor)?.Tracks || [];
     
     return(
-        <div>
+        <main>
             <div className="mx-16 my-8 max-h-none max-w-screen flex-col gap-10">
                 <div className="text-text font-poppins font-bold">
                         <p className="text-l">Good Afternoon</p>
@@ -77,7 +77,7 @@ const Content = ({ user, setUser }) => {
                         <Link
                             className="flex rounded-xl w-32 bg-gray-500 px-6 py-3 justify-between align-center font-bold font-poppins text-l text-background transition 
                             hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
-                            to="/"
+                            to="/home"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
@@ -160,7 +160,7 @@ const Content = ({ user, setUser }) => {
                 </div>
             </div>
             
-        </div>
+        </main>
     )
 }
 

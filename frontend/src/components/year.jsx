@@ -179,7 +179,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDragEnd}
-            className={` w-full px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
+            className={` min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
                 
                 {filteredMods.map((m) => {

@@ -1,4 +1,6 @@
 import React from "react";
+import modulesData from "./modsData";
+import DEFAULT_CS_MODULES from "./csdefault";
 
 const DEFAULT_PLANS = [
     {
@@ -11,6 +13,7 @@ const DEFAULT_PLANS = [
         view:4,
         isEditMode:false,
         isGPAOn:false,
+        mods: DEFAULT_CS_MODULES,
     },
     {
         id: 2,
@@ -22,6 +25,7 @@ const DEFAULT_PLANS = [
         view:4,
         isEditMode:false,
         isGPAOn:false,
+        mods: modulesData,
     },
     {
         id: 3,
@@ -33,6 +37,7 @@ const DEFAULT_PLANS = [
         view:4,
         isEditMode:false,
         isGPAOn:false,
+        mods: DEFAULT_CS_MODULES,
     },
     {
         id: 4,
@@ -44,6 +49,7 @@ const DEFAULT_PLANS = [
         view:4,
         isEditMode:false,
         isGPAOn:false,
+        mods: modulesData,
     },
     
 ];
