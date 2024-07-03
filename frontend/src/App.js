@@ -6,6 +6,8 @@ import Loading from './pages/loading.jsx';
 import NewPlan from './pages/home-new-plan.jsx';
 import SignIn from './pages/sign_in.jsx';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import AboutUs from './pages/aboutUs.jsx';
+import ContactUs from './pages/contactUs.jsx';
 
 function App() {
     // const [currentPage, setCurrentPage] = useState('Home');
@@ -44,6 +46,8 @@ function App() {
                 <Route path="/plan/:id" element={<Planning />} />
                 {/* <Route path="/plan/2" element={<Planning />} /> */}
                 <Route path="/signin" element={<SignIn />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/contact" element={<ContactUs />} />
             </Routes>
         </Router>
     );

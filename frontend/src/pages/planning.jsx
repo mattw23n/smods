@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect, useContext} from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Year from "../components/year";
@@ -8,7 +8,7 @@ import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 
 import { useParams } from 'react-router-dom';
-import TemplateUser from "../data/user";
+import { UserContext } from "../data/user";
 
 const DEFAULT_MODS = modulesData
 
@@ -87,8 +87,8 @@ const PlanDetails = ({plan, setPlan}) => {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                 </svg>
-                <a href={`${plan.handbookLink}`}>
-                    CSAcademicHandbook
+                <a href={`${plan.handbook.link}`}>
+                    {plan.handbook.name}
                 </a>
             </div>
 
@@ -278,11 +278,12 @@ function Content({plan, setPlan, mods, setMods}){
 }
 
 function Planning(){
+    const { user } = useContext(UserContext);
     //get plan ID
     const { id } = useParams();
 
     //get selectedPlan
-    const selectedPlan = TemplateUser.plans.find((p) => p.id ===  parseInt(id))
+    const selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
     console.log(selectedPlan)
     
     const [plan, setPlan] = useState(selectedPlan);

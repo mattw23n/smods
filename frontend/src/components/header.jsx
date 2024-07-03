@@ -23,7 +23,7 @@ function Logo({ src, title }) {
 function NavItem({ title, link }) {
     return (
         <li>
-            <a className="font-poppins font-bold transition hover:text-accent" href={link}> {title} </a>
+            <Link className="font-poppins font-bold transition hover:text-accent" to={link}> {title} </Link>
         </li>
     );
 }
@@ -39,8 +39,8 @@ function Header({ isSignIn }) {
                         <div className="md:flex md:items-center md:gap-12">
                             <nav className="hidden md:block">
                                 <ul className="flex items-center gap-6 text-sm text-text">
-                                    <NavItem title={"About Us"} link={"#"} />
-                                    <NavItem title={"Contact Us"} link={"#"} />
+                                    <NavItem title={"About Us"} link={"/about"} />
+                                    <NavItem title={"Contact Us"} link={"/contact"} />
                                 </ul>
                             </nav>
 

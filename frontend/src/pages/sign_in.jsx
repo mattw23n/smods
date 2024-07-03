@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useNavigate } from 'react-router-dom';
 import TemplateUser from "../data/user";
 import Loading from "./loading";
+import { UserContext } from "../data/user";
+
+
 
 function Form() {
+    const { user } = useContext(UserContext);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
-    const user = TemplateUser
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);

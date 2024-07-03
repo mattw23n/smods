@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
-import TemplateUser from "../data/user";
+import { UserContext } from "../data/user";
+import defaultMods from "../data/defaultMods";
 
 
 const Content = ({ user, setUser }) => {
-
+    const navigate = useNavigate();
     const { name, plans, templates } = user
 
     const majors = [
@@ -18,18 +19,18 @@ const Content = ({ user, setUser }) => {
     ]
 
     const [selectedTitle, setSelectedTitle] = useState("");
-    const [selectedMajor, setSelectedMajor] = useState("");
+    const [selectedDegree, setSelectedDegree] = useState("");
     const [selectedTrack, setSelectedTrack] = useState("");
 
     const [errors, setErrors] = useState({
         title: "",
-        major: "",
+        degree: "",
         track: "",
     });
 
 
-    const handleMajorChange = (event) => {
-        setSelectedMajor(event.target.value);
+    const handleDegreeChange = (event) => {
+        setSelectedDegree(event.target.value);
         
       };
 
@@ -44,26 +45,55 @@ const Content = ({ user, setUser }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        {console.log(selectedMajor + selectedTrack + selectedTitle)}
+        {console.log(selectedDegree + selectedTrack + selectedTitle)}
 
         // Validate form
         const newErrors = {
             title: selectedTitle ? '' : 'Title is required',
-            major: selectedMajor ? '' : 'Major is required',
+            degree: selectedDegree ? '' : 'Degree is required',
             track: selectedTrack ? '' : 'Track is required',
         };
 
         setErrors(newErrors);
 
         // Check if there are no errors
-        if (!newErrors.title && !newErrors.major && !newErrors.track) {
+        if (!newErrors.title && !newErrors.degree && !newErrors.track) {
             // Form is valid, proceed with form submission
             console.log('Form submitted');
-            // Your form submission logic here
+
+            const degree = defaultMods.find(degree => degree.name === selectedDegree);
+
+            const { modules, handbook } = degree
+
+            const newTracks = [selectedTrack]
+
+            const newPlan = {
+                id: plans.length + 1,
+                title:selectedTitle,
+                date: "30 June 2024",
+                degree:selectedDegree,
+                tracks:newTracks,
+                handbook:handbook,
+                view:4,
+                isEditMode:false,
+                isGPAOn:false,
+                mods: modules,
+            }
+
+            const updatedPlans = [...plans, newPlan];
+
+            console.log(updatedPlans)
+
+            setUser((prevUser) => ({
+            ...prevUser,
+            plans: updatedPlans,
+            }));
+
+            navigate(`/plan/${newPlan.id}`);
         }
     };
 
-    const selectedMajorTracks = majors.find((m) => m.Title === selectedMajor)?.Tracks || [];
+    const selectedDegreeTracks = majors.find((m) => m.Title === selectedDegree)?.Tracks || [];
     
     return(
         <main>
@@ -107,14 +137,14 @@ const Content = ({ user, setUser }) => {
 
                             </div>
                             <div>
-                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Major </label>
+                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Degree </label>
 
                                 <select 
                                 className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
-                                value={selectedMajor}
-                                onChange={handleMajorChange}>
+                                value={selectedDegree}
+                                onChange={handleDegreeChange}>
                                 
-                                <option disabled value="">Your Major</option>
+                                <option disabled value="">Your Degree</option>
 
                                     {majors.map((m, index) => (
                                         <option key={index} value={m.Title}>
@@ -122,7 +152,7 @@ const Content = ({ user, setUser }) => {
                                         </option>
                                     ))}
                                 </select>
-                                {errors.major && <p className="text-red-500 text-xs mt-1">{errors.major}</p>}
+                                {errors.degree && <p className="text-red-500 text-xs mt-1">{errors.degree}</p>}
 
                             </div>
                             <div>
@@ -132,10 +162,10 @@ const Content = ({ user, setUser }) => {
                                 className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
                                 value={selectedTrack}
                                 onChange={handleTrackChange}
-                                disabled={!selectedMajor} >
+                                disabled={!selectedDegree} >
 
                                 <option disabled value="">Your Track</option>
-                                    {selectedMajorTracks.map((track, index) => (
+                                    {selectedDegreeTracks.map((track, index) => (
                                         <option key={index} value={track}>
                                         {track}
                                         </option>
@@ -148,6 +178,7 @@ const Content = ({ user, setUser }) => {
                                 type="submit"
                                 className="flex rounded-xl w-24 bg-secondary px-6 py-3 justify-center align-center font-bold font-poppins text-l text-background transition
                                 hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
+                                
                             >
                                 Create
                             </button>
@@ -166,9 +197,7 @@ const Content = ({ user, setUser }) => {
 
 function NewPlan(){
 
-    const [user, setUser] = useState(
-        TemplateUser
-    );
+    const {user, setUser} = useContext(UserContext)
     
     return (
         <div className="relative">
