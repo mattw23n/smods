@@ -13,17 +13,17 @@ import java.util.List;
 @Repository
 public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, PlanModuleGPAKey> {
 
-    @Query("SELECT p FROM PlanModuleGPA p " +
+    @Query("SELECT p.module FROM PlanModuleGPA p " +
             "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} " +
             "AND p.term < :term")
     public List<Module> findAllPlanModulesByIdBeforeTerm(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId, @Param("term") int term);
 
-    @Query("SELECT p FROM PlanModuleGPA p " +
+    @Query("SELECT p.module FROM PlanModuleGPA p " +
             "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} " +
             "AND p.term = :term")
     public List<Module> findAllModulesByPlanIdAndTerm(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId, @Param("term") int term);
 
-    @Query("SELECT p FROM PlanModuleGPA p " +
+    @Query("SELECT p.module FROM PlanModuleGPA p " +
             "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} ")
     public List<Module> findAllModulesByPlanId(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId);
 }
