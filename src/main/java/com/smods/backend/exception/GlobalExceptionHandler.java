@@ -2,13 +2,13 @@ package com.smods.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,5 +62,35 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PreRequisiteNotSatisfiedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handlePrerequisiteNotSatisfiedException(PreRequisiteNotSatisfiedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CoRequisiteNotSatisfiedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleCoRequisiteNotSatisfiedException(CoRequisiteNotSatisfiedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(MutuallyExclusiveConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleMutuallyExclusiveConflictException(MutuallyExclusiveConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PlanNameConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handlePlanNameConflictException(PlanNameConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(VerificationTokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleVerificationTokenNotFoundException(VerificationTokenNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

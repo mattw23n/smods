@@ -1,5 +1,6 @@
 package com.smods.backend.service;
 
+import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -34,8 +35,16 @@ public class PlanService {
 
     @Transactional
     public Plan createPlan(Long userId, Plan plan) {
-        plan.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
-        plan.setPlanId(new PlanKey((long) 1, userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check for duplicate plan name
+        if (planRepository.existsByUserAndPlanName(user, plan.getPlanName())) {
+            throw new PlanNameConflictException("A plan with the name '" + plan.getPlanName() + "' already exists.");
+        }
+
+        Long nextPlanId = planRepository.findMaxPlanIdByUserId(userId) + 1;
+        plan.setPlanId(new PlanKey(nextPlanId, userId));
+        plan.setUser(user);
         return planRepository.save(plan);
     }
 
