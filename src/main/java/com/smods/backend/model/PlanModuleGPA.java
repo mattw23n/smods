@@ -35,17 +35,22 @@ public class PlanModuleGPA {
     // Default constructor
     public PlanModuleGPA() {}
 
+
+
     // Constructor with parameters
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, Float gpa, int term) {
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Float gpa, int term) {
         this.planModuleGPAId = planModuleGPAId;
-        this.plan = plan;
-        this.module = module;
         this.gpa = gpa;
         this.term = term;
     }
 
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
+        this.planModuleGPAId = planModuleGPAId;
+        this.term = term;
+    }
+
     // Getters and Setters
-    public PlanModuleGPAKey getId() {
+    public PlanModuleGPAKey getPlanModuleGPAId() {
         return planModuleGPAId;
     }
 

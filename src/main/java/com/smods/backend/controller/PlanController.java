@@ -2,6 +2,7 @@ package com.smods.backend.controller;
 
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
+import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.service.PlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class PlanController {
             @RequestParam Long userId,
             @RequestParam String moduleId,
             @RequestParam int term) {
-        PlanModuleGPA updatedModule = planService.addModule(planId, userId, moduleId, term);
+        PlanModuleGPA updatedModule = planService.addModule(new PlanKey(planId, userId), moduleId, term);
         return ResponseEntity.ok(updatedModule);
     }
 }
