@@ -1,5 +1,6 @@
 package com.smods.backend.service;
 
+import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
 import com.smods.backend.model.composite_key.PlanKey;
