@@ -60,13 +60,13 @@ public class PlanController {
     }
 
     @PutMapping("/{planId}/modules/{moduleId}/gpa")
-    public ResponseEntity<Void> updateGPA(@PathVariable Long userId, @PathVariable Long planId, @PathVariable String moduleId, @RequestParam Float gpa) {
-        planService.updateGPA(new PlanKey(planId, userId), moduleId, gpa);
+    public ResponseEntity<Void> updateGPA(@PathVariable Long planId, @PathVariable Long userId, @PathVariable String moduleId, @RequestParam Float gpa) {
+        planService.updateGPA(planId, userId, moduleId, gpa);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{planId}/gpa")
-    public ResponseEntity<Float> getAverageGPA(@PathVariable Long userId, @PathVariable Long planId) {
+    public ResponseEntity<Float> getAverageGPA(@PathVariable Long planId, @PathVariable Long userId) {
         Float averageGPA = planService.calculateAverageGPA(planId, userId);
         return ResponseEntity.ok(averageGPA);
     }

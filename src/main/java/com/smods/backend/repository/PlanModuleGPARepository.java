@@ -16,7 +16,7 @@ public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, Pl
 
     boolean existsById(@NonNull PlanModuleGPAKey id);
 
-    @Query("SELECT pmg FROM PlanModuleGPA pmg WHERE pmg.plan.planId = :planId AND pmg.plan.user.userId = :userId")
+    @Query("SELECT pmg FROM PlanModuleGPA pmg WHERE pmg.plan.planId.planId = :planId AND pmg.plan.planId.userId = :userId")
     List<PlanModuleGPA> findByPlanIdAndUserId(@Param("planId") Long planId, @Param("userId") Long userId);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
