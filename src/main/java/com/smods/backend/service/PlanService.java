@@ -54,19 +54,16 @@ public class PlanService {
     @Transactional
     public PlanModuleGPA addModule(PlanKey planId, String moduleId, int term) {
         // check if plan & module exists.
-        if (!planRepository.existsById(planId)){
-            throw new RuntimeException("plan doesn't exist");
-        }
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
-        if (!moduleRepository.existsById(moduleId)){
-            throw new RuntimeException("module doesn't exist");
-        }
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
         // check if module is already in plan
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(new PlanModuleGPAKey(planId, moduleId), term);
-
-        if (planModuleGPARepository.existsById(planModuleGPA.getPlanModuleGPAId())){
-            throw new RuntimeException("module is already in plan");
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planId, moduleId);
+        if (planModuleGPARepository.existsById(planModuleGPAKey)) {
+            throw new RuntimeException("Module is already in plan");
         }
 
         // validate module
@@ -74,6 +71,7 @@ public class PlanService {
         validateCoRequisites(planId, moduleId, term);
         validateMutuallyExclusives(planId, moduleId);
 
+        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
         return planModuleGPARepository.save(planModuleGPA);
     }
 
