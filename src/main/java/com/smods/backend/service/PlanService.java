@@ -123,7 +123,7 @@ public class PlanService {
 
             for (Module preReq : preRequisites) {
                 if (!takenModulesBeforeTerm.contains(preReq)) {
-                    unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId());
+                    unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
                 }
             }
 
@@ -132,7 +132,7 @@ public class PlanService {
 
             for (Module coReq : coRequisites) {
                 if (!takenModulesInTerm.contains(coReq)) {
-                    unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId());
+                    unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
                 }
             }
 
@@ -141,7 +141,7 @@ public class PlanService {
 
             for (Module conflict : mutuallyExclusives) {
                 if (takenModules.contains(conflict)) {
-                    mutuallyExclusiveConflicts.add(moduleId + " conflicts with " + conflict.getModuleId());
+                    mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
                 }
             }
         }
