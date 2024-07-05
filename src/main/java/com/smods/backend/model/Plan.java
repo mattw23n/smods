@@ -22,6 +22,9 @@ public class Plan {
     @Column(name = "TRACK")
     private String track;
 
+    @Column(name = "GPA_ENABLED")
+    private boolean gpaEnabled;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
@@ -103,6 +106,14 @@ public class Plan {
 
     public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGPA> planModulePreassignedGPAs) {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    }
+
+    public boolean isGPAEnabled() {
+        return gpaEnabled;
+    }
+
+    public void setGPAEnabled(boolean gpaEnabled) {
+        this.gpaEnabled = gpaEnabled;
     }
 
     // Equals and hashCode methods
