@@ -1,5 +1,6 @@
 package com.smods.backend.service;
 
+import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.CoRequisiteNotSatisfiedException;
 import com.smods.backend.exception.MutuallyExclusiveConflictException;
 import com.smods.backend.exception.PlanNameConflictException;
@@ -57,8 +58,12 @@ public class PlanService {
         planRepository.delete(plan);
     }
 
+    public List<PlanModuleGPA> getPlanModulesByPlan(Long planId, Long userId) {
+        return planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
+    }
+
     @Transactional
-    public PlanModuleGPA addModule(Long planId, Long userId, String moduleId, int term) {
+    public ModuleValidationResponse addModule(Long planId, Long userId, String moduleId, int term) {
         PlanKey planKey = new PlanKey(planId, userId);
 
         // check if plan exists
@@ -75,67 +80,73 @@ public class PlanService {
             throw new RuntimeException("Module is already in plan");
         }
 
-        // validate module
-        validatePreRequisites(planId, userId, moduleId, term);
-        validateCoRequisites(planId, userId, moduleId, term);
-        validateMutuallyExclusives(planId, userId, moduleId);
-
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
-        return planModuleGPARepository.save(planModuleGPA);
+        planModuleGPARepository.save(planModuleGPA);
+
+        return validatePlanModules(planId, userId);
     }
 
-    private void validatePreRequisites(Long planId, Long userId, String moduleId, int term){
-        List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
+    @Transactional
+    public ModuleValidationResponse deleteModule(Long planId, Long userId, String moduleId) {
+        PlanKey planKey = new PlanKey(planId, userId);
 
-        List<Module> takenModules = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
+        // check if plan exists
+        Plan plan = planRepository.findById(planKey)
+                .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
-        List<Module> unsatisfiedModules = new ArrayList<>();
+        // check if module exists
+        Module module = moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
-        for (Module module : preRequisites){
-            if (!takenModules.contains(module)){
-                unsatisfiedModules.add(module);
+        // check if module is in the plan
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
+        PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+
+        planModuleGPARepository.delete(planModuleGPA);
+
+        return validatePlanModules(planId, userId);
+    }
+
+    public ModuleValidationResponse validatePlanModules(Long planId, Long userId) {
+        List<PlanModuleGPA> planModules = planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
+        List<String> unsatisfiedPreRequisites = new ArrayList<>();
+        List<String> unsatisfiedCoRequisites = new ArrayList<>();
+        List<String> mutuallyExclusiveConflicts = new ArrayList<>();
+
+        for (PlanModuleGPA planModule : planModules) {
+            String moduleId = planModule.getModule().getModuleId();
+            int term = planModule.getTerm();
+
+            List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
+            List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
+
+            for (Module preReq : preRequisites) {
+                if (!takenModulesBeforeTerm.contains(preReq)) {
+                    unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId());
+                }
+            }
+
+            List<Module> coRequisites = moduleRepository.findCoRequisitesById(moduleId);
+            List<Module> takenModulesInTerm = planModuleGPARepository.findAllModulesByPlanIdAndTerm(planId, userId, term);
+
+            for (Module coReq : coRequisites) {
+                if (!takenModulesInTerm.contains(coReq)) {
+                    unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId());
+                }
+            }
+
+            List<Module> mutuallyExclusives = moduleRepository.findMutuallyExclusivesById(moduleId);
+            List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(planId, userId);
+
+            for (Module conflict : mutuallyExclusives) {
+                if (takenModules.contains(conflict)) {
+                    mutuallyExclusiveConflicts.add(moduleId + " conflicts with " + conflict.getModuleId());
+                }
             }
         }
 
-        if (!unsatisfiedModules.isEmpty()){
-            throw new PreRequisiteNotSatisfiedException("Pre-requisites not met: " + unsatisfiedModules);
-        }
-    }
-
-    private void validateCoRequisites(Long planId, Long userId, String moduleId, int term){
-        List<Module> coRequisites = moduleRepository.findCoRequisitesById(moduleId);
-
-        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanIdAndTerm(planId, userId, term);
-
-        List<Module> unsatisfiedModules = new ArrayList<>();
-
-        for (Module module : coRequisites){
-            if (!takenModules.contains(module)){
-                unsatisfiedModules.add(module);
-            }
-        }
-
-        if (!unsatisfiedModules.isEmpty()){
-            throw new CoRequisiteNotSatisfiedException("Co-requisites not met: " + unsatisfiedModules);
-        }
-    }
-
-    public void validateMutuallyExclusives(Long planId, Long userId, String moduleId) {
-        List<Module> mutuallyExclusives = moduleRepository.findMutuallyExclusivesById(moduleId);
-
-        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(planId, userId);
-
-        List<Module> conflicts = new ArrayList<>();
-
-        for (Module module : mutuallyExclusives) {
-            if (!takenModules.contains(module)) {
-                conflicts.add(module);
-            }
-        }
-
-        if (!conflicts.isEmpty()) {
-            throw new MutuallyExclusiveConflictException("You are not allowed to take" + moduleId + " because you have already taken " + conflicts);
-        }
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
     @Transactional

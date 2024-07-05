@@ -1,5 +1,6 @@
 package com.smods.backend.controller;
 
+import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -43,16 +44,30 @@ public class PlanController {
         return ResponseEntity.ok("Plan successfully deleted.");
     }
 
-    @PutMapping("/{planId}/edit")
-    public ResponseEntity<PlanModuleGPA> addModule(
-            @PathVariable Long userId,
-            @PathVariable Long planId,
-            @RequestParam String moduleId,
-            @RequestParam int term) {
-        PlanModuleGPA updatedModule = planService.addModule(planId, userId, moduleId, term);
-        return ResponseEntity.ok(updatedModule);
+    @GetMapping("/{planId}/modules")
+    public ResponseEntity<List<PlanModuleGPA>> getPlanModulesByPlan(@PathVariable Long planId, @PathVariable Long userId) {
+        List<PlanModuleGPA> planModules = planService.getPlanModulesByPlan(planId, userId);
+        return ResponseEntity.ok(planModules);
     }
 
+    @PutMapping("/{planId}/edit")
+    public ResponseEntity<ModuleValidationResponse> addModule(
+            @PathVariable Long planId,
+            @PathVariable Long userId,
+            @RequestParam String moduleId,
+            @RequestParam int term) {
+        ModuleValidationResponse response = planService.addModule(planId, userId, moduleId, term);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{planId}/edit")
+    public ResponseEntity<ModuleValidationResponse> deleteModule(
+            @PathVariable Long planId,
+            @PathVariable Long userId,
+            @RequestParam String moduleId) {
+        ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
+        return ResponseEntity.ok(response);
+    }
     @PutMapping("/{planId}/gpa")
     public ResponseEntity<String> setGPAEnabled(@PathVariable Long planId, @PathVariable Long userId, @RequestParam boolean enabled) {
         String message = planService.setGPAEnabled(planId, userId, enabled);
