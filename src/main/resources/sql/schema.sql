@@ -81,6 +81,7 @@ CREATE TABLE users (
     PRIMARY KEY (user_id)
 ) ENGINE=InnoDB;
 
+# Testing purposes only
 delete from users;
 select * from users;
 
@@ -95,6 +96,9 @@ SELECT * FROM `plan_module_gpa`;
 SELECT * FROM `pre_requisite`;
 
 DELETE FROM `plan_module_gpa`;
+
+select * from `plan`;
+delete from `plan`;
 
 insert into PRE_REQUISITE (module_id, module_id2)
 VALUES ('CS102', 'CS101');
