@@ -54,9 +54,9 @@ public class PlanController {
     }
 
     @PutMapping("/{planId}/gpa")
-    public ResponseEntity<Void> setGPAEnabled(@PathVariable Long userId, @PathVariable Long planId, @RequestParam boolean enabled) {
-        planService.setGPAEnabled(new PlanKey(planId, userId), enabled);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> setGPAEnabled(@PathVariable Long planId, @PathVariable Long userId, @RequestParam boolean enabled) {
+        String message = planService.setGPAEnabled(planId, userId, enabled);
+        return ResponseEntity.ok(message);
     }
 
     @PutMapping("/{planId}/modules/{moduleId}/gpa")
@@ -67,7 +67,7 @@ public class PlanController {
 
     @GetMapping("/{planId}/gpa")
     public ResponseEntity<Float> getAverageGPA(@PathVariable Long userId, @PathVariable Long planId) {
-        Float averageGPA = planService.calculateAverageGPA(new PlanKey(planId, userId));
+        Float averageGPA = planService.calculateAverageGPA(planId, userId);
         return ResponseEntity.ok(averageGPA);
     }
 }

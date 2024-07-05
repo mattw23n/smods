@@ -139,11 +139,13 @@ public class PlanService {
     }
 
     @Transactional
-    public void setGPAEnabled(PlanKey planId, boolean gpaEnabled) {
-        Plan plan = planRepository.findById(planId)
+    public String setGPAEnabled(Long planId, Long userId, boolean gpaEnabled) {
+        PlanKey planKey = new PlanKey(planId, userId);
+        Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
         plan.setGPAEnabled(gpaEnabled);
         planRepository.save(plan);
+        return "GPA has been " + (gpaEnabled ? "enabled." : "disabled.");
     }
 
     @Transactional
@@ -155,8 +157,8 @@ public class PlanService {
         planModuleGPARepository.save(planModuleGPA);
     }
 
-    public Float calculateAverageGPA(PlanKey planId) {
-        List<PlanModuleGPA> modules = planModuleGPARepository.findByPlanIdAndUserId(planId.getPlanId(), planId.getUserId());
+    public Float calculateAverageGPA(Long planId, Long userId) {
+        List<PlanModuleGPA> modules = planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
         if (modules.isEmpty()) {
             return null;
         }
