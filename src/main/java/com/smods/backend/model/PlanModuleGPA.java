@@ -38,9 +38,10 @@ public class PlanModuleGPA {
 
 
     // Constructor with parameters
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Float gpa, int term) {
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, int term) {
         this.planModuleGPAId = planModuleGPAId;
-        this.gpa = gpa;
+        this.plan = plan;
+        this.module = module;
         this.term = term;
     }
 
