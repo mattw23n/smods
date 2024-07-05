@@ -149,8 +149,8 @@ public class PlanService {
     }
 
     @Transactional
-    public void updateGPA(PlanKey planId, String moduleId, Float gpa) {
-        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planId, moduleId);
+    public void updateGPA(Long planId, Long userId, String moduleId, Float gpa) {
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(new PlanKey(planId, userId), moduleId);
         PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                 .orElseThrow(() -> new RuntimeException("Module not found in plan"));
         planModuleGPA.setGPA(gpa);
