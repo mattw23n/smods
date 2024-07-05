@@ -51,6 +51,12 @@ public class PlanService {
         return planRepository.save(plan);
     }
 
+    public void deletePlan(Long userId, Long planId) {
+        PlanKey planKey = new PlanKey(planId, userId);
+        Plan plan = planRepository.findById(planKey).orElseThrow(() -> new RuntimeException("Plan not found"));
+        planRepository.delete(plan);
+    }
+
     @Transactional
     public PlanModuleGPA addModule(PlanKey planId, String moduleId, int term) {
         // check if plan & module exists.
