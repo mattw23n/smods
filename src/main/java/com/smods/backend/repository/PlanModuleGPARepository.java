@@ -16,16 +16,19 @@ public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, Pl
     boolean existsById(PlanModuleGPAKey id);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} " +
+            "WHERE p.planModuleGPAId.planId.planId = :#{#planModuleGPAId.planId.planId} " +
+            "AND p.planModuleGPAId.planId.userId = :#{#planModuleGPAId.planId.userId} " +
             "AND p.term < :term")
     public List<Module> findAllPlanModulesByIdBeforeTerm(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId, @Param("term") int term);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} " +
+            "WHERE p.planModuleGPAId.planId.planId = :#{#planModuleGPAId.planId.planId} " +
+            "AND p.planModuleGPAId.planId.userId = :#{#planModuleGPAId.planId.userId} " +
             "AND p.term = :term")
     public List<Module> findAllModulesByPlanIdAndTerm(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId, @Param("term") int term);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} ")
+            "WHERE p.planModuleGPAId.planId.planId = :#{#planModuleGPAId.planId.planId} " +
+            "AND p.planModuleGPAId.planId.userId = :#{#planModuleGPAId.planId.userId} ")
     public List<Module> findAllModulesByPlanId(@Param("planModuleGPAId") PlanModuleGPAKey planModuleGPAId);
 }
