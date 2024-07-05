@@ -58,34 +58,36 @@ public class PlanService {
     }
 
     @Transactional
-    public PlanModuleGPA addModule(PlanKey planId, String moduleId, int term) {
-        // check if plan & module exists.
-        Plan plan = planRepository.findById(planId)
+    public PlanModuleGPA addModule(Long planId, Long userId, String moduleId, int term) {
+        PlanKey planKey = new PlanKey(planId, userId);
+
+        // check if plan exists
+        Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
+        // check if module exists
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
         // check if module is already in plan
-        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planId, moduleId);
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
         if (planModuleGPARepository.existsById(planModuleGPAKey)) {
             throw new RuntimeException("Module is already in plan");
         }
 
         // validate module
-        validatePreRequisites(planId, moduleId, term);
-        validateCoRequisites(planId, moduleId, term);
-        validateMutuallyExclusives(planId, moduleId);
+        validatePreRequisites(planId, userId, moduleId, term);
+        validateCoRequisites(planId, userId, moduleId, term);
+        validateMutuallyExclusives(planId, userId, moduleId);
 
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
         return planModuleGPARepository.save(planModuleGPA);
     }
 
-    private void validatePreRequisites(PlanKey planId, String moduleId, int term){
+    private void validatePreRequisites(Long planId, Long userId, String moduleId, int term){
         List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
 
-        List<Module> takenModules = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(
-                new PlanModuleGPAKey(planId, moduleId), term);
+        List<Module> takenModules = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
 
         List<Module> unsatisfiedModules = new ArrayList<>();
 
@@ -100,10 +102,10 @@ public class PlanService {
         }
     }
 
-    private void validateCoRequisites(PlanKey planId, String moduleId, int term){
+    private void validateCoRequisites(Long planId, Long userId, String moduleId, int term){
         List<Module> coRequisites = moduleRepository.findCoRequisitesById(moduleId);
 
-        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanIdAndTerm(new PlanModuleGPAKey(planId, moduleId), term);
+        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanIdAndTerm(planId, userId, term);
 
         List<Module> unsatisfiedModules = new ArrayList<>();
 
@@ -118,10 +120,10 @@ public class PlanService {
         }
     }
 
-    public void validateMutuallyExclusives(PlanKey planId, String moduleId) {
+    public void validateMutuallyExclusives(Long planId, Long userId, String moduleId) {
         List<Module> mutuallyExclusives = moduleRepository.findMutuallyExclusivesById(moduleId);
 
-        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(new PlanModuleGPAKey(planId, moduleId));
+        List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(planId, userId);
 
         List<Module> conflicts = new ArrayList<>();
 
@@ -134,5 +136,40 @@ public class PlanService {
         if (!conflicts.isEmpty()) {
             throw new MutuallyExclusiveConflictException("You are not allowed to take" + moduleId + " because you have already taken " + conflicts);
         }
+    }
+
+    @Transactional
+    public void setGPAEnabled(PlanKey planId, boolean gpaEnabled) {
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+        plan.setGPAEnabled(gpaEnabled);
+        planRepository.save(plan);
+    }
+
+    @Transactional
+    public void updateGPA(PlanKey planId, String moduleId, Float gpa) {
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planId, moduleId);
+        PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+        planModuleGPA.setGPA(gpa);
+        planModuleGPARepository.save(planModuleGPA);
+    }
+
+    public Float calculateAverageGPA(PlanKey planId) {
+        List<PlanModuleGPA> modules = planModuleGPARepository.findByPlanIdAndUserId(planId.getPlanId(), planId.getUserId());
+        if (modules.isEmpty()) {
+            return null;
+        }
+
+        Float totalGPA = 0f;
+        int count = 0;
+        for (PlanModuleGPA module : modules) {
+            if (module.getGPA() != null) {
+                totalGPA += module.getGPA();
+                count++;
+            }
+        }
+
+        return count > 0 ? totalGPA / count : null;
     }
 }
