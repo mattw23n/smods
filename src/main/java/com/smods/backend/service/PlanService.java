@@ -1,6 +1,9 @@
 package com.smods.backend.service;
 
+import com.smods.backend.exception.CoRequisiteNotSatisfiedException;
+import com.smods.backend.exception.MutuallyExclusiveConflictException;
 import com.smods.backend.exception.PlanNameConflictException;
+import com.smods.backend.exception.PreRequisiteNotSatisfiedException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -62,7 +65,7 @@ public class PlanService {
         // check if module is already in plan
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(new PlanModuleGPAKey(planId, moduleId), term);
 
-        if (!planModuleGPARepository.existsById(planModuleGPA.getPlanModuleGPAId())){
+        if (planModuleGPARepository.existsById(planModuleGPA.getPlanModuleGPAId())){
             throw new RuntimeException("module is already in plan");
         }
 
@@ -89,7 +92,7 @@ public class PlanService {
         }
 
         if (!unsatisfiedModules.isEmpty()){
-            throw new RuntimeException("pre-requisites not met: " + unsatisfiedModules);
+            throw new PreRequisiteNotSatisfiedException("Pre-requisites not met: " + unsatisfiedModules);
         }
     }
 
@@ -107,7 +110,7 @@ public class PlanService {
         }
 
         if (!unsatisfiedModules.isEmpty()){
-            throw new RuntimeException("co-requisites not met: " + unsatisfiedModules);
+            throw new CoRequisiteNotSatisfiedException("Co-requisites not met: " + unsatisfiedModules);
         }
     }
 
@@ -125,7 +128,7 @@ public class PlanService {
         }
 
         if (!conflicts.isEmpty()) {
-            throw new RuntimeException("you are not allowed to take" + moduleId + " because you have already taken " + conflicts);
+            throw new MutuallyExclusiveConflictException("You are not allowed to take" + moduleId + " because you have already taken " + conflicts);
         }
     }
 }
