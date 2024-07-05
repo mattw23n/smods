@@ -23,11 +23,14 @@ public class PlanController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Plan>> getAllPlans(@RequestParam Long userId) {
+    public ResponseEntity<?> getAllPlans(@RequestParam Long userId) {
         List<Plan> plans = planService.getAllPlansByUser(userId);
+        if (plans.isEmpty()) {
+            return ResponseEntity.ok("No plans found for this user.");
+        }
         return ResponseEntity.ok(plans);
     }
-
+    
     @PostMapping
     public ResponseEntity<Plan> createPlan(@RequestParam Long userId, @RequestBody Plan plan) {
         if (userId == null) {
@@ -35,6 +38,12 @@ public class PlanController {
         }
         Plan createdPlan = planService.createPlan(userId, plan);
         return ResponseEntity.ok(createdPlan);
+    }
+
+    @DeleteMapping("/{planId}")
+    public ResponseEntity<String> deletePlan(@PathVariable Long planId, @RequestParam Long userId) {
+        planService.deletePlan(userId, planId);
+        return ResponseEntity.ok("Plan successfully deleted.");
     }
 
     @PutMapping("/{planId}/edit")
