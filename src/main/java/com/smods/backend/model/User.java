@@ -1,6 +1,6 @@
 package com.smods.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -38,7 +38,7 @@ public class User {
     private Date tokenExpiryDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference(value = "user-plan")
+    @JsonManagedReference(value = "user-plan")
     private List<Plan> plans;
 
     // Default constructor

@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, PlanModuleGPAKey> {
 
+    boolean existsById(PlanModuleGPAKey id);
+
     @Query("SELECT p.module FROM PlanModuleGPA p " +
             "WHERE p.planModuleGPAId.planId = :#{#planModuleGPAId.planId} " +
             "AND p.term < :term")
