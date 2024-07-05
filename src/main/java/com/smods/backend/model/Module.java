@@ -191,18 +191,9 @@ public class Module {
     @Override
     public String toString() {
         return "Module{" +
-                "id='" + moduleId + '\'' +
+                "moduleId='" + moduleId + '\'' +
                 ", name='" + name + '\'' +
-                ", cu=" + courseUnit +
-                ", planModuleGPAs=" + planModuleGPAs +
-                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
-                ", preRequisites=" + preRequisites +
-                ", preRequisiteDependents=" + preRequisiteDependents +
-                ", coRequisites=" + coRequisites +
-                ", corequisiteDependents=" + corequisiteDependents +
-                ", mutuallyExclusives=" + mutuallyExclusives +
-                ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
-                ", requirements=" + requirements +
+                ", courseUnit=" + courseUnit +
                 '}';
     }
 }
