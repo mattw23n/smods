@@ -14,7 +14,7 @@ public class Module {
     private String moduleId;
 
     @Column(name = "MODULE_NAME")
-    private String name;
+    private String moduleName;
 
     @Column(name = "COURSE_UNIT")
     private Float courseUnit;
@@ -49,7 +49,7 @@ public class Module {
 
     @ManyToMany(mappedBy = "coRequisites")
     @JsonBackReference(value = "coRequisiteDependents")
-    private List<Module> corequisiteDependents;
+    private List<Module> coRequisiteDependents;
 
     @ManyToMany
     @JoinTable(
@@ -72,9 +72,9 @@ public class Module {
     public Module() {}
 
     // Constructor
-    public Module(String moduleId, String name, Float courseUnit) {
+    public Module(String moduleId, String moduleName, Float courseUnit) {
         this.moduleId = moduleId;
-        this.name = name;
+        this.moduleName = moduleName;
         this.courseUnit = courseUnit;
     }
 
@@ -87,12 +87,12 @@ public class Module {
         this.moduleId = moduleId;
     }
 
-    public String getName() {
-        return name;
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
     }
 
     public Float getCourseUnit() {
@@ -135,20 +135,20 @@ public class Module {
         this.preRequisiteDependents = preRequisiteDependents;
     }
 
-    public List<Module> getCorequisites() {
+    public List<Module> getCoRequisites() {
         return coRequisites;
     }
 
-    public void setCorequisites(List<Module> coRequisites) {
+    public void setCoRequisites(List<Module> coRequisites) {
         this.coRequisites = coRequisites;
     }
 
-    public List<Module> getCorequisiteDependents() {
-        return corequisiteDependents;
+    public List<Module> getCoRequisiteDependents() {
+        return coRequisiteDependents;
     }
 
-    public void setCorequisiteDependents(List<Module> corequisiteDependents) {
-        this.corequisiteDependents = corequisiteDependents;
+    public void setCoRequisiteDependents(List<Module> coRequisiteDependents) {
+        this.coRequisiteDependents = coRequisiteDependents;
     }
 
     public List<Module> getMutuallyExclusives() {
@@ -192,7 +192,7 @@ public class Module {
     public String toString() {
         return "Module{" +
                 "moduleId='" + moduleId + '\'' +
-                ", name='" + name + '\'' +
+                ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
                 '}';
     }
