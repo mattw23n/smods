@@ -11,11 +11,14 @@ import java.util.List;
 @Repository
 public interface ModuleRepository extends JpaRepository<Module, String> {
     @Query("SELECT m.preRequisites FROM Module m WHERE m.moduleId = :moduleId")
-    public List<Module> findPreRequisitesById(@Param("moduleId") String moduleId);
+    List<Module> findPreRequisitesById(@Param("moduleId") String moduleId);
 
     @Query("SELECT m.coRequisites FROM Module m WHERE m.moduleId = :moduleId")
-    public List<Module> findCoRequisitesById(@Param("moduleId")String moduleId);
+    List<Module> findCoRequisitesById(@Param("moduleId")String moduleId);
 
     @Query("SELECT m.mutuallyExclusives FROM Module m WHERE m.moduleId = :moduleId")
-    public List<Module> findMutuallyExclusivesById(@Param("moduleId") String moduleId);
+    List<Module> findMutuallyExclusivesById(@Param("moduleId") String moduleId);
+
+    @Query("SELECT m FROM Module m WHERE LOWER(m.moduleId) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(m.moduleName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<Module> searchModules(@Param("searchTerm") String searchTerm);
 }
