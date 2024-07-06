@@ -64,24 +64,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PreRequisiteNotSatisfiedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handlePrerequisiteNotSatisfiedException(PreRequisiteNotSatisfiedException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(CoRequisiteNotSatisfiedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleCoRequisiteNotSatisfiedException(CoRequisiteNotSatisfiedException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(MutuallyExclusiveConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleMutuallyExclusiveConflictException(MutuallyExclusiveConflictException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
     @ExceptionHandler(PlanNameConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handlePlanNameConflictException(PlanNameConflictException ex) {
