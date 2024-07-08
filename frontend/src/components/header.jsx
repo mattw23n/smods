@@ -23,7 +23,10 @@ function Logo({ src, title }) {
 function NavItem({ title, link }) {
     return (
         <li>
-            <Link className="font-poppins font-bold transition hover:text-accent" to={link}> {title} </Link>
+            <Link
+                className="font-poppins font-bold transition-transform transform hover:text-blue-400 "
+                to={link}
+            > {title} </Link>
         </li>
     );
 }

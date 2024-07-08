@@ -315,6 +315,7 @@ function Content({plan, setPlan, mods, setMods}){
             </div>
             
             
+            
         </div>
         
     );
@@ -326,8 +327,13 @@ function Planning(){
     const { id } = useParams();
 
     //get selectedPlan
-    const selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
+    let selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
     console.log(selectedPlan)
+
+    //get Template instead of plan
+    if(!selectedPlan){
+        selectedPlan = user.templates.find((t) => t.id === id)
+    }
     
     const [plan, setPlan] = useState(selectedPlan);
 

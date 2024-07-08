@@ -2,7 +2,7 @@ import React from "react";
 import modulesData from "./modsData";
 import DEFAULT_CS_MODULES from "./csdefault";
 
-const DEFAULT_PLANS = [
+export const DEFAULT_PLANS = [
     {
         id: 1,
         title:"Academic Weapon fr fr",
@@ -66,4 +66,20 @@ const DEFAULT_PLANS = [
     
 ];
 
-export default DEFAULT_PLANS
+export const DEFAULT_TEMPLATES = [
+    {
+        id: "t1",
+        title:"Skynet",
+        date: "30 June 2024",
+        degree:"Computer Science",
+        tracks:["Artificial Intelligence", "Cybersecurity"],
+        handbook:{
+            name:"CSAcademicHandbook",
+            link:"https://computing.smu.edu.sg/bsc-computer-science",
+        },
+        view:4,
+        isEditMode:false,
+        isGPAOn:false,
+        mods: DEFAULT_CS_MODULES,
+    },
+];

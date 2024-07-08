@@ -184,12 +184,17 @@ const Content = ({user, setUser}) => {
                             <p className="text-l font-poppins font-bold">🪹Templates</p>
                             <div className="isolate px-2 py-2 flex flex-col gap-2 ">
                                 {templates.map((templates, index) => (
-                                    <Card key={index} plan={templates} user={user} setUser={setUser} isTemplate={true}/>
+                                    <Link key={templates.id} to={`/plan/${templates.id}`}>
+                                        <Card key={index} plan={templates} user={user} setUser={setUser} isTemplate={true}/>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="my-20 py-10">
+                
             </div>
         </main>
     )
