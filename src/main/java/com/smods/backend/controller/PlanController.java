@@ -69,11 +69,11 @@ public class PlanController {
         ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
         return ResponseEntity.ok(response);
     }
-    @PutMapping("/{planId}/gpa")
-    public ResponseEntity<String> setGPAEnabled(@PathVariable Long planId, @PathVariable Long userId, @RequestParam boolean enabled) {
-        String message = planService.setGPAEnabled(planId, userId, enabled);
-        return ResponseEntity.ok(message);
-    }
+//    @PutMapping("/{planId}/gpa")
+//    public ResponseEntity<String> setGPAEnabled(@PathVariable Long planId, @PathVariable Long userId, @RequestParam boolean enabled) {
+//        String message = planService.setGPAEnabled(planId, userId, enabled);
+//        return ResponseEntity.ok(message);
+//    }
 
     @PutMapping("/{planId}/modules/{moduleId}/gpa")
     public ResponseEntity<Void> updateGPA(@PathVariable Long planId, @PathVariable Long userId, @PathVariable String moduleId, @RequestParam Float gpa) {
@@ -81,9 +81,9 @@ public class PlanController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{planId}/gpa")
-    public ResponseEntity<Float> getAverageGPA(@PathVariable Long planId, @PathVariable Long userId) {
-        Float averageGPA = planService.calculateAverageGPA(planId, userId);
-        return ResponseEntity.ok(averageGPA);
-    }
+//    @GetMapping("/{planId}/gpa")
+//    public ResponseEntity<Float> getAverageGPA(@PathVariable Long planId, @PathVariable Long userId) {
+//        Float averageGPA = planService.calculateAverageGPA(planId, userId);
+//        return ResponseEntity.ok(averageGPA);
+//    }
 }
