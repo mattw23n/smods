@@ -1,10 +1,11 @@
 import React, { createContext, useState } from 'react';
-import DEFAULT_PLANS from "./plans";
+import {DEFAULT_PLANS, DEFAULT_TEMPLATES} from "./plans";
 
 
 const templates = [
     { title: "Double", date: "30 June 2024", degree: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity"] },
     { title: "Skynet", date: "30 June 2024", degree: "Computer Science", tracks: ["Artificial Intelligence"] },
+    
   ];
 
 export const TemplateUser = {
@@ -12,7 +13,7 @@ export const TemplateUser = {
     email:"gilchris@gmail.com",
     password:"i like trains",
     plans: DEFAULT_PLANS,
-    templates: templates,
+    templates: DEFAULT_TEMPLATES,
 }
 
 

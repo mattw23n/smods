@@ -146,7 +146,7 @@ const Testimonials = () => {
 
   return (
     <section>
-      <div className="mx-auto max-w-[1340px] px-4 py-12 sm:px-6 lg:me-0 lg:py-16 lg:pe-0 lg:ps-8 xl:py-24">
+      <div className="mx-auto max-w-[1340px] px-4 py-12">
         <div className="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
           <p className="max-w-xl text-3xl font-bold font-poppins tracking-tight text-gray-900 ">
             Dont take our word for it. Take theirs.

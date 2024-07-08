@@ -190,6 +190,9 @@ const Content = ({ user, setUser }) => {
                     
                 </div>
             </div>
+            <div className="my-20 py-10">
+                
+            </div>
             
         </main>
     )
