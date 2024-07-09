@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 
 import { useParams } from 'react-router-dom';
 import { UserContext } from "../data/user";
+import modValidation from "../scripts/validation";
 
 const DEFAULT_MODS = modulesData
 
@@ -28,32 +29,6 @@ const DEFAULT_MODS = modulesData
 //     GPA: 0.0,
 //     isError: false,
 // }
-const Modal = () => {
-    const openModal = () => {
-      document.getElementById('my_modal_3').showModal();
-    };
-  
-    const closeModal = () => {
-      document.getElementById('my_modal_3').close();
-    };
-  
-    return (
-      <div>
-        <button className="btn" onClick={openModal}>open modal</button>
-        <dialog id="my_modal_3" className="modal rounded-xl">
-          <div className="bg-gray-100 rounded-xl p-4 relative">
-            <button onClick={closeModal} className="absolute right-2 top-2">✕</button>
-            <p className="font-bold text font-poppins">Share this plan!</p>
-            <div className="rounded-lg border-2 border-black bg-white">
-                link
-            </div>
-            <p className="py-4">Press ESC key or click on ✕ button to close</p>
-          </div>
-        </dialog>
-      </div>
-    );
-  };
-
 
 const PlanDetails = ({plan, setPlan}) => {
     const {title, degree, tracks, view} = plan
@@ -65,7 +40,7 @@ const PlanDetails = ({plan, setPlan}) => {
         { value: 1, label: 'G' },
       ];
 
-    console.log(view)
+    // console.log(view)
 
     return (
         <div className="px-6 py-4 w-fit rounded-3xl bg-white/50 flex flex-col gap-2">
@@ -132,12 +107,12 @@ const ButtonGroup = ({plan, setPlan}) => {
     const [isDownload, setIsDownload] = useState(false);
 
     const openShareMode = () => {
-        document.getElementById('my_modal_3').showModal();
+        document.getElementById('share_modal').showModal();
         setIsShareOn(true)
     };
     
     const closeShareMode = () => {
-        document.getElementById('my_modal_3').close();
+        document.getElementById('share_modal').close();
         setIsShareOn(false)
     };
 
@@ -204,7 +179,7 @@ const ButtonGroup = ({plan, setPlan}) => {
                     </svg>
                     
                 </button>
-                <dialog id="my_modal_3" className="modal rounded-xl">
+                <dialog id="share_modal" className="modal rounded-xl">
                     <div className="bg-white/30 rounded-xl p-4 relative">
                         <button onClick={closeShareMode} className="absolute right-4 top-4">✕</button>
                         <p className="font-bold text font-poppins mb-2">Share this plan!</p>
@@ -282,6 +257,98 @@ function Content({plan, setPlan, mods, setMods}){
     const viewTailwind = viewModes[view][0]
     const viewTailwindChild = viewModes[view][1]
 
+    //TODO VALIDATION
+    const [isValid, setIsValid] = useState(false);
+    const [errorDescription, setErrorDescription] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
+
+
+    const prevModsRef = useRef()
+    const validationChecked = useRef(false); // Track if validation has been checked
+
+    const arraysEqual = (a, b) => {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
+                console.log("array not same")
+                return false;
+            }
+        }
+        console.log("array same")
+        return true;
+    };
+
+    const getErrorMods = (mods) => {
+        return mods.filter(mod => mod.isError === true);
+    };
+
+    useEffect(() => {
+        // Compare current mods with previous mods
+        if (prevModsRef.current !== undefined && !arraysEqual(prevModsRef.current, mods) && (validationChecked.current === false || !isModalOpen)) {
+            checkValidation();
+            
+        }
+
+        // Update the ref with the current mods for the next render
+        prevModsRef.current = mods;
+    }, [mods]);
+    
+    
+
+
+    const checkValidation = () => {
+        const check = modValidation({ mods, setMods });
+        let errors = [];
+
+        check.results.forEach((vr) => {
+            if (vr.message !== "") {
+                errors.push(vr.message);
+            }
+        });
+
+        if (errors.length > 0) {
+            setErrorDescription(errors);
+            setIsValid(false);
+            if (!isModalOpen) setIsModalOpen(true); // Open modal on error
+        } else {
+            setErrorDescription([]);
+            setIsValid(true);
+            if (isModalOpen) setIsModalOpen(false); // Close modal if no errors
+        }
+
+
+        validationChecked.current = true
+    };
+
+    useEffect(() => {
+        // Toggle modal visibility based on isModalOpen state
+        const dialog = document.getElementById('validation_modal');
+        if (dialog) {
+            if (isModalOpen) {
+                dialog.showModal();
+            } else {
+                dialog.close();
+            }
+        }
+    }, [isModalOpen]);
+
+    const closeValidationModal = () => {
+        setIsValid(true);
+        setIsModalOpen(false); // Close modal
+    };
+
+    // console.log(getErrorMods(mods))
+
+
+    const errorArray = getErrorMods(mods)
+    let errorMod = ""
+    if(errorArray.length >= 1 ){
+        errorMod = errorArray[0].courseCode
+    }
+     
+    console.log(errorMod)
+
+
     return(
         <div className="flex-grow">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
@@ -313,9 +380,20 @@ function Content({plan, setPlan, mods, setMods}){
                 )}
                     
             </div>
-            
-            
-            
+
+            <dialog id="validation_modal" className="modal rounded-xl">
+                <div className="bg-white/30 rounded-xl p-4 relative">
+                    <button  onClick={closeValidationModal} className="absolute right-4 top-4">✕</button>
+                    <p className="font-bold text font-poppins mb-2">Error with : {errorMod}</p>
+
+                    <div className="rounded-lg bg-gray-100 max-w-72 items-center justify-between py-2 px-4 font-archivo">
+                        {errorDescription.map(str => (
+                        <p className="my-2">{str}</p>
+                        ))}
+                                                
+                    </div>                
+                </div>
+            </dialog>  
         </div>
         
     );
@@ -328,7 +406,7 @@ function Planning(){
 
     //get selectedPlan
     let selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
-    console.log(selectedPlan)
+    // console.log(selectedPlan)
 
     //get Template instead of plan
     if(!selectedPlan){

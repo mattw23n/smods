@@ -11,6 +11,8 @@ import html2canvas from 'html2canvas';
 
 import { useParams } from 'react-router-dom';
 import { TemplateUser, UserContext } from "../data/user";
+import { DEFAULT_PLANS } from "../data/plans";
+import modValidation from "../scripts/validation";
 
 
 // const TemplateMod = {
@@ -196,7 +198,7 @@ const ButtonGroup = ({plan, setPlan}) => {
                     </svg>
                 </button>
 
-                <button className={`rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isShareOn ? 'bg-blue-300' : 'bg-white/70 '}`}
+                <button className={`ml-20 rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isShareOn ? 'bg-blue-300' : 'bg-white/70 '}`}
                 onClick={openShareMode}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
@@ -281,6 +283,97 @@ function Content({plan, setPlan, mods, setMods}){
     const viewTailwind = viewModes[view][0]
     const viewTailwindChild = viewModes[view][1]
 
+    //TODO VALIDATION
+    const [isValid, setIsValid] = useState(false);
+    const [errorDescription, setErrorDescription] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
+
+
+    const prevModsRef = useRef()
+    const validationChecked = useRef(false); // Track if validation has been checked
+
+    const arraysEqual = (a, b) => {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) {
+                console.log("array not same")
+                return false;
+            }
+        }
+        console.log("array same")
+        return true;
+    };
+
+    const getErrorMods = (mods) => {
+        return mods.filter(mod => mod.isError === true);
+    };
+
+    useEffect(() => {
+        // Compare current mods with previous mods
+        if (prevModsRef.current !== undefined && !arraysEqual(prevModsRef.current, mods) && (validationChecked.current === false || !isModalOpen)) {
+            checkValidation();
+            
+        }
+
+        // Update the ref with the current mods for the next render
+        prevModsRef.current = mods;
+    }, [mods]);
+    
+    
+
+
+    const checkValidation = () => {
+        const check = modValidation({ mods, setMods });
+        let errors = [];
+
+        check.results.forEach((vr) => {
+            if (vr.message !== "") {
+                errors.push(vr.message);
+            }
+        });
+
+        if (errors.length > 0) {
+            setErrorDescription(errors);
+            setIsValid(false);
+            if (!isModalOpen) setIsModalOpen(true); // Open modal on error
+        } else {
+            setErrorDescription([]);
+            setIsValid(true);
+            if (isModalOpen) setIsModalOpen(false); // Close modal if no errors
+        }
+
+
+        validationChecked.current = true
+    };
+
+    useEffect(() => {
+        // Toggle modal visibility based on isModalOpen state
+        const dialog = document.getElementById('validation_modal');
+        if (dialog) {
+            if (isModalOpen) {
+                dialog.showModal();
+            } else {
+                dialog.close();
+            }
+        }
+    }, [isModalOpen]);
+
+    const closeValidationModal = () => {
+        setIsValid(true);
+        setIsModalOpen(false); // Close modal
+    };
+
+    // console.log(getErrorMods(mods))
+
+
+    const errorArray = getErrorMods(mods)
+    let errorMod = ""
+    if(errorArray.length >= 1 ){
+        errorMod = errorArray[0].courseCode
+    }
+     
+    console.log(errorMod)
+
     return(
         <div className="flex-grow mt-20">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
@@ -322,6 +415,19 @@ function Content({plan, setPlan, mods, setMods}){
                 )}
                     
             </div>
+            <dialog id="validation_modal" className="modal rounded-xl">
+                <div className="bg-white/30 rounded-xl p-4 relative">
+                    <button  onClick={closeValidationModal} className="absolute right-4 top-4">✕</button>
+                    <p className="font-bold text font-poppins mb-2">Error with : {errorMod}</p>
+
+                    <div className="rounded-lg bg-gray-100 max-w-72 items-center justify-between py-2 px-4 font-archivo">
+                        {errorDescription.map(str => (
+                        <p className="my-2">{str}</p>
+                        ))}
+                                                
+                    </div>                
+                </div>
+            </dialog>  
             
             
         </div>
@@ -379,7 +485,7 @@ const modulesData = [
         courseCode: "CS102", courseTitle: "Intro to Programming II", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
-            prerequisites: [],
+            prerequisites: ["CS101"],
             corequisites: [],
         }, 
         term:3, GPA: 0.0,
@@ -430,7 +536,97 @@ const modulesData = [
         term:4, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS301", courseTitle: "IT Solution Architecture", courseType: "tm", courseLink: "",
+        courseCode: "CS204", courseTitle: "Interconnection of CPS", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:3, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS203", courseTitle: "Collaborative Software Dev.", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:3, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS201", courseTitle: "Data Structures & Algo", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:4, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS205", courseTitle: "OS Concepts with Android", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:4, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS206", courseTitle: "Software Product Management", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:4, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS301", courseTitle: "IT Solution Architecture", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS302", courseTitle: "IT Solution Lifecycle Management", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS401", courseTitle: "Intro to AI", courseType: "tm", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS402", courseTitle: "Image Perception", courseType: "tm", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS403", courseTitle: "Intro to Machine Learning", courseType: "tm", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS404", courseTitle: "Natural Language Communication", courseType: "tm", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -463,7 +659,34 @@ const modulesData = [
             prerequisites: [],
             corequisites: [],
         },
-        term:3, GPA: 0.0,
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "LAW101", courseTitle: "Law Mod", courseType: "fe", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "PSYCH101", courseTitle: "Psych Mod", courseType: "fe", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "ACCT101", courseTitle: "Accounting Mod", courseType: "fe", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:5, GPA: 0.0,
         isError: false,
     },
   ];
@@ -479,8 +702,10 @@ function Anims(){
     //get selectedPlan
     const selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
     console.log(selectedPlan)
+
+    const defaultPlan = DEFAULT_PLANS[1]
     
-    const [plan, setPlan] = useState(selectedPlan);
+    const [plan, setPlan] = useState(defaultPlan);
 
     const [mods, setMods] = useState(modulesData);
 

@@ -48,7 +48,7 @@ const modulesData = [
         courseCode: "CS102", courseTitle: "Intro to Programming II", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
-            prerequisites: [],
+            prerequisites: ["CS101"],
             corequisites: [],
         }, 
         term:2, GPA: 0.0,

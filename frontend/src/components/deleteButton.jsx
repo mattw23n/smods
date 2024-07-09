@@ -17,12 +17,12 @@ const DeleteButton = ({ setMods, module }) => {
         // const courseCode = e.dataTransfer.getData("courseCode")
         // const courseCode = courseCode
 
-        console.log(courseCode)
+        // console.log(courseCode)
         
         // setMods((pv) => pv.filter((m) => m.courseCode !== courseCode));
         setMods((prevMods) => {
             const newMods = prevMods.filter((mod) => mod.courseCode !== courseCode);
-            console.log("after filter", newMods);
+            // console.log("after filter", newMods);
             return newMods;
         })
 
