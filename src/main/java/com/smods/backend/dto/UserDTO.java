@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.time.Year;
+
 public class UserDTO {
 
     @NotBlank(message = "Username is required")
@@ -22,6 +24,10 @@ public class UserDTO {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
+
+    private String degree;
+
+    private Year admissionYear;
 
     // Getters and setters
 
@@ -47,5 +53,21 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public Year getAdmissionYear() {
+        return admissionYear;
+    }
+
+    public void setAdmissionYear(Year admissionYear) {
+        this.admissionYear = admissionYear;
     }
 }
