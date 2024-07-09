@@ -3,6 +3,7 @@ package com.smods.backend.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.time.Year;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,12 @@ public class User {
 
     @Column(name = "TOKEN_EXPIRY_DATE")
     private Date tokenExpiryDate;
+
+    @Column(name = "ADMISSION_YEAR")
+    private Year admissionYear;
+
+    @Column(name = "DEGREE")
+    private String degree;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "user-plan")
@@ -125,6 +132,22 @@ public class User {
 
     public void setPlans(List<Plan> plans) {
         this.plans = plans;
+    }
+
+    public Year getAdmissionYear() {
+        return admissionYear;
+    }
+
+    public void setAdmissionYear(Year admissionYear) {
+        this.admissionYear = admissionYear;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     @Override

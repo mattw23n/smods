@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smods.backend.model.composite_key.PlanKey;
 import jakarta.persistence.*;
+
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity
@@ -22,9 +24,6 @@ public class Plan {
     @Column(name = "TRACK")
     private String track;
 
-    @Column(name = "GPA_ENABLED", nullable = false)
-    private boolean gpaEnabled = false;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
@@ -38,6 +37,9 @@ public class Plan {
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
     private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
+
+    @Column(name = "CREATION_DATE")
+    private ZonedDateTime creationDateTime;
 
     // Default constructor
     public Plan() {
@@ -108,13 +110,21 @@ public class Plan {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 
-    public boolean isGPAEnabled() {
-        return gpaEnabled;
+    public ZonedDateTime getCreationDateTime() {
+        return creationDateTime;
     }
 
-    public void setGPAEnabled(boolean gpaEnabled) {
-        this.gpaEnabled = gpaEnabled;
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
+
+    //    public boolean isGPAEnabled() {
+//        return gpaEnabled;
+//    }
+//
+//    public void setGPAEnabled(boolean gpaEnabled) {
+//        this.gpaEnabled = gpaEnabled;
+//    }
 
     // Equals and hashCode methods
 

@@ -54,6 +54,14 @@ public class UserService {
         user.setVerificationToken(generateVerificationToken());
         user.setTokenExpiryDate(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_DURATION));
 
+        if (userDTO.getAdmissionYear() != null){
+            user.setAdmissionYear(userDTO.getAdmissionYear());
+        }
+
+        if (userDTO.getDegree() != null){
+            user.setDegree(userDTO.getDegree());
+        }
+
         // Send verification email
         emailService.sendVerificationEmail(user);
 
