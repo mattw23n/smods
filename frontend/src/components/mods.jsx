@@ -3,12 +3,12 @@ import {m, motion} from "framer-motion";
 import DeleteButton from "./deleteButton";
 import DropIndicator from "./dropIndicator";
 
-const GPASelect = () => {
-}
-
 const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
     const { courseTitle, courseCode, courseType, courseLink, term, GPA, isError } = module;
-    const { isEditMode, isGPAOn } = plan;
+    const { isEditMode, isGPAOn, view } = plan;
+    const isGroupView = view === 1
+    const isSearchMode = term === -1
+    
 
     const grades = [
         {letter:"A+", value:4.3},
@@ -17,7 +17,12 @@ const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
         {letter:"B+", value:3.3},
         {letter:"B", value:3.0},
         {letter:"B-", value:2.7},
+        {letter:"C+", value:2.4},
+        {letter:"C", value:2.1},
+        {letter:"C-", value:1.8},
     ]
+
+    const terms = [1, 2, 3, 4, 5, 6, 7, 8]
 
     const getGradeValue = (letter) => {
         const grade = grades.find(g => g.letter === letter);
@@ -30,6 +35,27 @@ const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
     };
 
     const [selectedGPA, setGPA] = useState("");
+    const [selectedTerm, setTerm] = useState(term);
+
+    const handleTermChange = (event) => {
+        const updatedTerm = parseInt(event.target.value)
+
+        const tempCopy = mods.filter(m => m.courseCode !== courseCode)
+
+        // console.log(tempCopy)
+
+        const modToChange = module
+        modToChange.term = updatedTerm
+
+        tempCopy.push(module)
+        // console.log("tempcopy")
+        // console.log(tempCopy)
+
+        setMods(tempCopy)
+        // console.log("updated Term")
+        // console.log(tempCopy)
+        setTerm(updatedTerm)
+    }
     
     const handleGPAChange = (event) => {
         const updatedGPA = event.target.value
@@ -60,38 +86,73 @@ const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
         <DropIndicator beforeId={courseCode} term={term}/>
             <motion.div layout
             layoutId = {courseCode}
-            draggable="true" 
-            onDragStart={(e) => handleDragStart(e, module)}
-            className={`px-3 py-1 ${isGPAOn ? 'min-w-80' : 'min-w-64' }  ${isError ? 'bg-red-500' : `bg-${courseType}-l`}
+            draggable={isGroupView && !isSearchMode ? "false" : "true"} 
+            onDragStart={isGroupView && !isSearchMode ? null : (e) => handleDragStart(e, module)}
+            className={`px-3 py-1 
+                ${isGPAOn && isEditMode ? 'min-w-80' : 'min-w-64' } 
+                ${isGPAOn ? 'min-w-72' : 'min-w-64' } 
+                ${isGPAOn && isGroupView ? 'min-w-[320px]' : 'min-w-64' } 
+                ${isGroupView ? 'min-w-80' : 'min-w-64' } 
+                ${isError ? 'bg-red-500' : `bg-${courseType}-l`}
             rounded-full items-center font-archivo 
             text-xs flex gap-1 justify-between
             cursor-grab active:cursor-grabbing`}
             >
-                {isEditMode && (
-                    <DeleteButton setMods={setMods} module={module} />
-                )}
-                <div>
-                    {course} {code} {courseTitle} 
-                </div>
-
-                <div className="flex items-center justify-between gap-1">
-                    {isGPAOn && 
+                <div className="flex items-center justify-left gap-2">
+                    {isEditMode && !isSearchMode && (
+                        <DeleteButton setMods={setMods} module={module} />
+                    )}
                     <div>
+                        {course} {code} {courseTitle} 
+                    </div>
+                </div>
+                
 
-                        <select
-                        className="select rounded-xl bg-white/50 border-gray-100  font-archivo text-xs"
-                        value={selectedGPA}
-                        onChange={handleGPAChange}>
-
-                        <option>{getLetterValue(GPA)}</option>
+                <div className="flex items-center justify-between gap-2">
+                    {isGroupView && !isSearchMode && (
+                    <div>
+                        {!isEditMode && (
+                            <span>Term {term}</span>)}
+                        {isEditMode && (
+                            <select
+                            className="select rounded-xl bg-white/50 border-gray-100  font-archivo text-xs"
+                            value={selectedTerm}
+                            onChange={handleTermChange}>
+    
+                            <option>Term {term}</option>
+                            
+                            {terms.map((t, index) => (
+                                <option key={index} value={t}>
+                                    Term {t}
+                                </option>
+                            ))}
+    
+                            </select>
+                        )}
+                    </div>
+                    )}
+                    {isGPAOn && !isSearchMode &&
+                    <div>
+                        {!isEditMode && (
+                            getLetterValue(GPA)
+                        )}
+                        {isEditMode && (
+                            <select
+                            className="select rounded-xl bg-white/50 border-gray-100  font-archivo text-xs"
+                            value={selectedGPA}
+                            onChange={handleGPAChange}>
+    
+                            <option>{getLetterValue(GPA)}</option>
+                            
+                            {grades.map((g, index) => (
+                                <option key={index} value={g.letter}>
+                                    {g.letter}
+                                </option>
+                            ))}
+    
+                            </select>
+                        )}
                         
-                        {grades.map((g, index) => (
-                            <option key={index} value={g.letter}>
-                                {g.letter}
-                            </option>
-                        ))}
-
-                        </select>
                     </div>}
                     
                     <a href={`${courseLink}`}>

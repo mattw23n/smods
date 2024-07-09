@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { useNavigate } from 'react-router-dom';
+import TemplateUser from "../data/user";
+import Loading from "./loading";
+import { UserContext } from "../data/user";
+
+
 
 function Form() {
-    const [user, setUser] = useState("");
+    const { user } = useContext(UserContext);
+
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
@@ -23,7 +33,28 @@ function Form() {
         event.preventDefault();
         console.log("User:", user);
         console.log("Password:", password);
+
+         // Start loading
+        setLoading(true);
+
+        // Mock validation and loading delay
+        setTimeout(() => {
+            if (email === user.email && password === user.password) {
+                navigate('/home'); // Redirect to home page
+            } else {
+                alert('Invalid email or password');
+            }
+            setLoading(false); // End loading
+        }, 2000); // 2 seconds delay for demonstration
+
     };
+
+    if (loading) {
+        console.log("loading")
+        return (
+            <Loading />
+        )
+    }
 
     return (
         <div className="mx-auto p-4 w-full max-w-md">

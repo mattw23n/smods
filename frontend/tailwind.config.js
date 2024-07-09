@@ -47,14 +47,29 @@ module.exports = {
         'bold': 700
       },
       animation: {
+        gradient: "gradient 10s alternate infinite",
         blob: "blob 7s infinite",
         first: "moveVertical 30s ease infinite",
         second: "moveInCircle 20s reverse infinite",
         third: "moveInCircle 40s linear infinite",
         fourth: "moveHorizontal 40s ease infinite",
         fifth: "moveInCircle 20s ease infinite",
+        scrollLeft: 'scrollLeft 20s linear infinite',
+        loopscroll: "loop-scroll 50s linear infinite",
       },
       keyframes: {
+        loopscroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        scrollLeft: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        gradient:{
+          '0%': { backgroundPosition: '0%' },
+          '100%': { backgroundPosition: '100%' },
+        },
         blob:{
           "0%" : {
             transform: "translate(0px, 0px) scale(1)",
@@ -103,6 +118,9 @@ module.exports = {
           },
         },
         
+      },
+      backgroundSize: {
+        '300': '300% 300%',
       },
     },
   },

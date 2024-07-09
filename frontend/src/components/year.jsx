@@ -1,11 +1,31 @@
 import React, { useState } from "react"
 import Mod from "./mods";
 import DropIndicator from "./dropIndicator";
+import allMods from "../data/allMods";
 
-const Term = ({term, plan, mods, setMods}) => {
+const Term = ({term, plan, mods, setMods, type}) => {
     const [active, setActive] = useState(false);
-    const { isGPAOn } = plan
+    const { isGPAOn, view } = plan
+    const isGroupView = view === 1
 
+    const typeDict = {
+        "uc":"UNI CORE",
+        "mc":"MAJOR CORE",
+        "tm":"TRACK MODULE",
+        "me":"MAJOR ELECTIVE",
+        "fe":"FREE ELECTIVE",
+    }
+
+    const findValue = (dict, targetKey) => {
+        for (const key in dict) {
+          if (key === targetKey) {
+            return dict[key];
+          }
+        }
+        return null; // If the key is not found
+    };
+
+    const typeFull = findValue(typeDict, type)
 
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("courseCode", module.courseCode);
@@ -79,16 +99,21 @@ const Term = ({term, plan, mods, setMods}) => {
         if(before !== courseCode) {
             let copy = [...mods];
 
+            let searchMods = allMods
+
             // console.log(copy)
 
             let modToTransfer = copy.find((m) => m.courseCode === courseCode);
 
-            if(!modToTransfer) return;
-
+            //From search bar
+            if(!modToTransfer){
+                modToTransfer = searchMods.find((m) => m.courseCode === courseCode);
+            }else{
+                copy = copy.filter((m) => m.courseCode !== courseCode);
+            }
 
             modToTransfer = {...modToTransfer, term};
-
-            copy = copy.filter((m) => m.courseCode !== courseCode);
+            
 
             const moveToBack = before === "-1";
 
@@ -111,19 +136,42 @@ const Term = ({term, plan, mods, setMods}) => {
         }
     }
     // console.log(mods)
-    const filteredMods = mods.filter((m) => m.term === term);
+    let filteredMods = []
+    if(isGroupView){
+        filteredMods = mods.filter((m) => m.courseType === type);
+
+    }else{
+        filteredMods = mods.filter((m) => m.term === term);
+    }
+
+    filteredMods.sort((f1, f2) => {
+        if (f1.courseCode < f2.courseCode) {
+            return -1;
+        }
+        if (f1.courseCode > f2.courseCode) {
+            return 1;
+        }
+        return 0;
+    });
+    
     const totalTermGPA = filteredMods.reduce((accumulator, mod) => {
         return accumulator + mod.GPA
     }, 0)
     const termGPA = totalTermGPA / parseFloat(filteredMods.length)
 
     return(
-        <div className="px-4 py-4 bg-white bg-opacity-30 rounded-3xl justify-center items-center">
+        <div className={`px-4 py-4 rounded-3xl justify-center items-center h-fit 
+        ${isGroupView ? `bg-${type}-l`: "bg-white/50"}`}>
             <div className="flex justify-between text-xs font-poppins">
-                <p className="pb-2">Term {term}</p>
+                {isGroupView && (
+                    <p className="font-bold text-sm pb-2">{typeFull}</p>
+                )}
+                {!isGroupView && (
+                    <p className="pb-2">Term {term}</p>
+                )}
                 <div className="flex gap-x-5">
                     <span className="rounded font-poppins">{filteredMods.length} mods</span>
-                    {isGPAOn && (<p>{termGPA}/4.0</p>)}
+                    {isGPAOn && (<p>{termGPA.toFixed(2)}/4.0</p>)}
                 </div>
             </div>
             
@@ -131,12 +179,12 @@ const Term = ({term, plan, mods, setMods}) => {
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDragEnd}
-            className={` w-full px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
+            className={` min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
                 
                 {filteredMods.map((m) => {
                     return <Mod key={m.courseCode} module={m} plan={plan}
-                    handleDragStart={handleDragStart} mods={mods} setMods={setMods}/>
+                    handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods}/>
                 })}
                 <DropIndicator beforeId={-1} term={term}/>
 
@@ -150,7 +198,8 @@ const Term = ({term, plan, mods, setMods}) => {
 
 function Year({num, plan, mods, setMods}){
     mods.sort((m1, m2) => m1.term - m2.term)
-    const { isGPAOn } = plan
+    const { isGPAOn, isEditMode, view } = plan
+    const isGroupView = view === 1
 
     const term1 = mods.filter((m) => m.term === (num * 2 - 1));
     const term2 = mods.filter((m) => m.term === (num * 2));
@@ -162,16 +211,31 @@ function Year({num, plan, mods, setMods}){
     }, 0)
     const yearGPA = totalYearGPA / parseFloat(yearMods.length)
 
+    const groups = ["uc", "mc", "me", "tm", "fe"]
+
     return(
-        <div className="h-fit px-4 py-4 bg-gray-200 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2">
+        <>
+        {!isGroupView && (
+        <div className="h-fit p-4 bg-white/30 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2 transition all">
             <div className="flex justify-between">
                 <p className="font-poppins font-bold text-sm">Year {num}</p>
-                {isGPAOn && (<p className="font-poppins text-sm">{yearGPA}/4.0</p>)}
+                {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
             </div>
             
             <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods}></Term>
             <Term term={num * 2} plan={plan} mods={mods} setMods={setMods}></Term>
         </div>
+        )}
+        {isGroupView && (
+        <div className={`${isEditMode ? "grid grid-cols-2 " :"flex mr-20 pr-20" } gap-5 transition all`}>
+            {groups.map(g => (
+                <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g}></Term>
+            ))}
+        </div>
+        )}
+        </>
+        
+        
     );
 }
 

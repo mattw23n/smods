@@ -18,7 +18,61 @@ const modulesData = [
         term:1, GPA: 0.0,
         isError: false,
     },{
+        courseCode: "CS101", courseTitle: "Programming Fundamentals I", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:1, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "COR1202", courseTitle: "Calculus", courseType: "uc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:1, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "IS211", courseTitle: "Interactive Design Prot.", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        },
+        term:1, GPA: 0.0,
+        isError: false,
+    },{
         courseCode: "CS102", courseTitle: "Intro to Programming II", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        }, 
+        term:2, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS106", courseTitle: "Comp. Hardware", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        }, 
+        term:2, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "CS105", courseTitle: "Stats for Data Science", courseType: "mc", courseLink: "",
+        requirements:{
+            mutuallyExclusive: [],
+            prerequisites: [],
+            corequisites: [],
+        }, 
+        term:2, GPA: 0.0,
+        isError: false,
+    },{
+        courseCode: "IS112", courseTitle: "Data Management", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -45,7 +99,7 @@ const modulesData = [
         term:4, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS301", courseTitle: "IT Solution Architecture", courseType: "mc", courseLink: "",
+        courseCode: "CS301", courseTitle: "IT Solution Architecture", courseType: "tm", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -82,5 +136,8 @@ const modulesData = [
         isError: false,
     },
   ];
+
+
+
 
 export default modulesData

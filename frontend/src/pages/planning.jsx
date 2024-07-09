@@ -1,9 +1,16 @@
-import React, { useState, useRef, useEffect} from "react";
+import React, { useState, useRef, useEffect, useContext} from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Year from "../components/year";
 import PlanBar from "../components/planBar";
 import modulesData from "../data/modsData";
+import CourseSearch from "../components/courseSearch";
+import Background from "../components/background";
+import html2canvas from 'html2canvas';
+
+
+import { useParams } from 'react-router-dom';
+import { UserContext } from "../data/user";
 
 const DEFAULT_MODS = modulesData
 
@@ -21,62 +28,94 @@ const DEFAULT_MODS = modulesData
 //     GPA: 0.0,
 //     isError: false,
 // }
+const Modal = () => {
+    const openModal = () => {
+      document.getElementById('my_modal_3').showModal();
+    };
+  
+    const closeModal = () => {
+      document.getElementById('my_modal_3').close();
+    };
+  
+    return (
+      <div>
+        <button className="btn" onClick={openModal}>open modal</button>
+        <dialog id="my_modal_3" className="modal rounded-xl">
+          <div className="bg-gray-100 rounded-xl p-4 relative">
+            <button onClick={closeModal} className="absolute right-2 top-2">✕</button>
+            <p className="font-bold text font-poppins">Share this plan!</p>
+            <div className="rounded-lg border-2 border-black bg-white">
+                link
+            </div>
+            <p className="py-4">Press ESC key or click on ✕ button to close</p>
+          </div>
+        </dialog>
+      </div>
+    );
+  };
+
 
 const PlanDetails = ({plan, setPlan}) => {
-    const {name, degree, track} = plan
+    const {title, degree, tracks, view} = plan
+
+    const buttonData = [
+        { value: 4, label: '4Y' },
+        { value: 3, label: 'Y' },
+        { value: 2, label: 'T' },
+        { value: 1, label: 'G' },
+      ];
+
+    console.log(view)
 
     return (
-        <div className="px-6 py-4 w-64 rounded-3xl bg-gray-200 flex flex-col gap-2">
+        <div className="px-6 py-4 w-fit rounded-3xl bg-white/50 flex flex-col gap-2">
             <div className="flex flex-col">
-                <p className="font-poppins font-bold text-text text-lg">{name}</p>
+                <p className="font-poppins font-bold text-text text-lg">{title}</p>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Degree:</p>
                     <p>{degree}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Track:</p>
-                    <p>{track}</p>
+                    <div className="flex flex-col">
+                    {tracks.map((track, index) => (
+                        <p key={index}>{track}</p>
+                    ))}
+                    </div>
                 </div>
             </div>
             
-            <div className="bg-gray-300 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-gray-400 transition-all">
+            <div className="bg-blue-100 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-blue-300 hover:scale-105 transition all">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                 </svg>
-                <a href={`${plan.handbookLink}`}>
-                    CSAcademicHandbook.pdf
+                <a href={`${plan.handbook.link}`}>
+                    {plan.handbook.name}
                 </a>
             </div>
 
-            <div className="bg-gray-300 rounded-lg pl-2 w-fit flex justify-between items-center gap-4">
+            <div className="rounded-lg w-fit flex justify-between items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                 </svg>
 
-                <span className="inline-flex -space-x-px overflow-hidden rounded-lg border bg-white shadow-sm">
+                <span className="inline-flex -space-x-px overflow-hidden rounded-lg border bg-blue-100">
+                {buttonData.map(button => (
                     <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
+                    key={button.value}
+                    className={`inline-block px-4 py-1 text-sm font-medium focus:relative ${
+                        view === button.value ? 'bg-blue-300 text-white' : 'hover:bg-blue-300'
+                    }`}
+                    value={button.value}
+                    onClick={() => setPlan(prevPlan => ({
+                        ...prevPlan,
+                        view: button.value, // Update view based on state
+                    }))}
                     >
-                        4Y
+                    {button.label}
                     </button>
-
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        Y
-                    </button>
-
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        T
-                    </button>
-                    <button
-                        className="inline-block px-4 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:relative"
-                    >
-                        G
-                    </button>
+                ))}
                 </span>
             </div>
         </div>
@@ -84,13 +123,52 @@ const PlanDetails = ({plan, setPlan}) => {
 }
 
 const ButtonGroup = ({plan, setPlan}) => {
-    const { isEditMode } = plan
+    const { isEditMode, title } = plan
+
+    const link = "smods.com/1234"
+
+    const [isShareOn, setIsShareOn] = useState(false);
+    const [copyStatus, setCopyStatus] = useState(false);
+    const [isDownload, setIsDownload] = useState(false);
+
+    const openShareMode = () => {
+        document.getElementById('my_modal_3').showModal();
+        setIsShareOn(true)
+    };
+    
+    const closeShareMode = () => {
+        document.getElementById('my_modal_3').close();
+        setIsShareOn(false)
+    };
 
     const handleEditButton = () => {
         setPlan(prevPlan => ({
             ...prevPlan,
             isEditMode: !prevPlan.isEditMode, // Update isEditMode
         }));   
+    }
+
+    const handleDownloadButton = () => {
+        setIsDownload(true)
+
+        html2canvas(document.body).then((canvas) => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `${title}.png`;
+            link.click();
+          });
+
+        setTimeout(() => setIsDownload(false), 2000);
+
+    }
+
+    const copyToClipboard = (text) => {
+        const result = navigator.clipboard.writeText(text)
+
+        result.then(() => {
+            setCopyStatus(true);
+            setTimeout(() => setCopyStatus(false), 2000);
+        })
     }
 
     const handleCheckboxChange = (e) => {
@@ -105,26 +183,58 @@ const ButtonGroup = ({plan, setPlan}) => {
     return(
         <div className="flex flex-col gap-4">
             <div className="flex gap-x-2">
-                <button className={`bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-100 ${plan.isEditMode ? 'bg-primary' : ''}`}
+                <button className={`rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isEditMode ? 'bg-blue-300' : 'bg-white/70 '}`}
                 onClick={handleEditButton}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                     </svg>
                 </button>
 
-                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+                <button className={`rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isDownload ? 'bg-blue-300' : 'bg-white/70 '}`}
+                onClick={handleDownloadButton}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                 </button>
-                <button className="bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center hover:bg-gray-300">
+
+                <button className={`rounded-full h-12 w-12 flex items-center justify-center hover:bg-blue-300 hover:scale-110 transition all ${isShareOn ? 'bg-blue-300' : 'bg-white/70 '}`}
+                onClick={openShareMode}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                     </svg>
+                    
                 </button>
+                <dialog id="my_modal_3" className="modal rounded-xl">
+                    <div className="bg-white/30 rounded-xl p-4 relative">
+                        <button onClick={closeShareMode} className="absolute right-4 top-4">✕</button>
+                        <p className="font-bold text font-poppins mb-2">Share this plan!</p>
+
+                        <div className="flex rounded-lg bg-gray-100 min-w-72 items-center justify-between py-2 px-4 font-archivo">
+                            {link}
+
+                            <button onClick={() => copyToClipboard(link)} className="rounded-lg p-1 bg-blue-100">
+                            
+                                {copyStatus ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                                </svg>
+                                ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+                                </svg>
+                                )}
+                            
+
+
+                            </button>
+                        </div>
+                        
+                    </div>
+                </dialog>
+                
             </div>
             {isEditMode && (
-            <div className="rounded-3xl bg-gray-200 flex justify-between items-center px-5 py-2 font-archivo font-bold">
+            <div className="rounded-3xl bg-white/70 flex justify-between items-center px-5 py-2 font-archivo font-bold">
                 GPA
                 <label
                 htmlFor="AcceptConditions"
@@ -155,104 +265,89 @@ const Dashboard = ({plan, setPlan, mods}) => {
 }
 
 function Content({plan, setPlan, mods, setMods}){
-    const { isEditMode} = plan
+    const { isEditMode, view } = plan
     const yearNums = [1, 2, 3, 4];
 
-    const containerRef = useRef(null);
-    const isDragging = useRef(false);
-    const pos = useRef({ top: 0, left: 0, x: 0, y: 0 });
+    const isGroupView = view === 1
 
-    useEffect(() => {
-        const ele = containerRef.current;
+    const groups = ["uc", "mc", "me", "tm", "fe"]
 
-        const mouseDownHandler = (e) => {
-            pos.current = {
-                left: ele.scrollLeft,
-                top: ele.scrollTop,
-                x: e.clientX,
-                y: e.clientY,
-            };
-            isDragging.current = true;
-            ele.style.cursor = 'grabbing';
-            ele.style.userSelect = 'none';
+    const viewModes = {
+        4:["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
+        3:["container h-[580px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
+        2:["container h-[330px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
+        1:["h-fit pb-10 overflow-x-auto", "inline-block"],
+    }
 
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        };
-
-        const mouseMoveHandler = (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - pos.current.x;
-            const dy = e.clientY - pos.current.y;
-
-            ele.scrollTop = pos.current.top - dy;
-            ele.scrollLeft = pos.current.left - dx;
-        };
-
-        const mouseUpHandler = () => {
-            isDragging.current = false;
-            ele.style.cursor = 'grab';
-            ele.style.removeProperty('user-select');
-
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-
-        if (ele) {
-            ele.addEventListener('mousedown', mouseDownHandler);
-        }
-
-        return () => {
-            if (ele) {
-                ele.removeEventListener('mousedown', mouseDownHandler);
-            }
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-    }, [isDragging]);
+    const viewTailwind = viewModes[view][0]
+    const viewTailwindChild = viewModes[view][1]
 
     return(
-        <>
+        <div className="flex-grow">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
-            <div className="flex gap-5">
-                <div ref={containerRef}
-                    className={`${isEditMode ? `ml-20 grid grid-cols-2 gap-5` 
-                    : `container ml-20 mb-10 pb-10 flex gap-x-4 overflow-x-scroll scroll-auto focus:cursor-grab`}`}
-                    style={{ cursor: isDragging ? 'grabbing' : 'grab' }}>
+            <div className={`${isEditMode ? `px-20 mb-10 flex gap-5`: "px-20 mb-10"}`}>
+                <div >
+                {!isGroupView && (
+                    <div className={viewTailwind}>
+                    <div  className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
                     {yearNums.map(num => (
                     <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
                     ))}
+                    </div>
+                    
+                    </div>
+                )}
+                {isGroupView && (
+                    <div className={viewTailwind}>
+                        <div className={viewTailwindChild}>
+                            <Year plan={plan} mods={mods} setMods={setMods}></Year>
+                        </div>
+                    </div>
+                    
+                    )}
                 </div>
+                
+                
                 {isEditMode && (
-                    <div className="bg-gray-300">CourseSearch</div>
+                    <CourseSearch plan={plan}></CourseSearch>
                 )}
                     
             </div>
             
-        </>
+            
+            
+        </div>
         
     );
 }
 
 function Planning(){
-    const [mods, setMods] = useState(DEFAULT_MODS);
+    const { user } = useContext(UserContext);
+    //get plan ID
+    const { id } = useParams();
 
-    const [plan, setPlan] = useState({
-        name:"Gilchris' Master Plan",
-        degree:"Computer Science",
-        track:["Artificial Intelligence"],
-        handbookLink:"www.smu.edu.sg",
-        modsArray:[mods, setMods],
-        view:4,
-        isEditMode:false,
-        isGPAOn:false,
-    });
+    //get selectedPlan
+    let selectedPlan = user.plans.find((p) => p.id ===  parseInt(id))
+    console.log(selectedPlan)
+
+    //get Template instead of plan
+    if(!selectedPlan){
+        selectedPlan = user.templates.find((t) => t.id === id)
+    }
+    
+    const [plan, setPlan] = useState(selectedPlan);
+
+    const [mods, setMods] = useState(plan.mods);
 
     return(
-        <div className="bg-background">
+        <div className="relative flex flex-col min-h-screen">
+            <Background/>
+            <div className="relative z-10">
             <Header></Header>
             <Content plan={plan} setPlan={setPlan} mods={mods} setMods={setMods}></Content>
             <Footer></Footer>
+            </div>
+            
         </div>
 
     );
