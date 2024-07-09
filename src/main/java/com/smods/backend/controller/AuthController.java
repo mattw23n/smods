@@ -2,6 +2,7 @@ package com.smods.backend.controller;
 
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
+import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.UserNotFoundException;
 import com.smods.backend.model.User;
 import com.smods.backend.service.UserService;
@@ -22,14 +23,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        String loginStatus = userService.loginUser(loginRequest);
+        LoginStatus loginStatus = userService.loginUser(loginRequest);
         switch (loginStatus) {
-            case "Login successful":
-                return ResponseEntity.ok(loginStatus);
-            case "Please verify your email":
-                return ResponseEntity.status(403).body(loginStatus);
+            case SUCCESS:
+                return ResponseEntity.ok(loginStatus.getMessage());
+            case EMAIL_NOT_VERIFIED:
+                return ResponseEntity.status(403).body(loginStatus.getMessage());
+            case INVALID_CREDENTIALS:
+                return ResponseEntity.status(401).body(loginStatus.getMessage());
             default:
-                return ResponseEntity.status(401).body(loginStatus);
+                throw new IllegalStateException("Unexpected value: " + loginStatus);
         }
     }
 
