@@ -56,6 +56,21 @@ public class PlanService {
         planRepository.delete(plan);
     }
 
+    @Transactional
+    public Plan renamePlan(Long userId, Long planId, String newPlanName) {
+        PlanKey planKey = new PlanKey(planId, userId);
+        Plan plan = planRepository.findById(planKey)
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
+        // Check for duplicate plan name
+        if (planRepository.existsByUserAndPlanName(plan.getUser(), newPlanName)) {
+            throw new PlanNameConflictException("A plan with the name '" + newPlanName + "' already exists.");
+        }
+
+        plan.setPlanName(newPlanName);
+        return planRepository.save(plan);
+    }
+
     public List<PlanModuleGPA> getPlanModulesByPlan(Long planId, Long userId) {
         return planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
     }
