@@ -118,14 +118,6 @@ public class Plan {
         this.creationDateTime = creationDateTime;
     }
 
-    //    public boolean isGPAEnabled() {
-//        return gpaEnabled;
-//    }
-//
-//    public void setGPAEnabled(boolean gpaEnabled) {
-//        this.gpaEnabled = gpaEnabled;
-//    }
-
     // Equals and hashCode methods
 
     @Override
