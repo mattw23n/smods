@@ -128,22 +128,6 @@ public class UserService {
         return LoginStatus.SUCCESS;
     }
 
-    // Update user details
-    public User updateUser(Long id, UserDTO userDTO) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setUsername(userDTO.getUsername());
-            user.setEmail(userDTO.getEmail());
-            if (!userDTO.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-            }
-            return userRepository.save(user);
-        } else {
-            throw new RuntimeException("User not found with id: " + id);
-        }
-    }
-
     // Find user by ID
     public User findById(Long id) {
         return userRepository.findById(id).orElse(null);
