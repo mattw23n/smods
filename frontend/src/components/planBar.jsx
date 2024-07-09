@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import defaultMods from "../data/defaultMods";
 
 const asiaStudiesCourses = ["COR3031"]
 const singaporeStudiesCourses = ["COR3001"]
@@ -76,36 +77,28 @@ const Tabs = ({ tabData }) => {
 
 const PlanBar = ({plan, setPlan, mods}) => {
     const { isGPAOn } = plan
-    const { track, degree} = plan
+    const { tracks, degree} = plan
+    console.log("track", tracks)
+    const degreeInfo = defaultMods
 
-    const typeDict = {
-        "uc":"UNI CORE",
-        "mc":"MAJOR CORE",
-        "tm":"TRACK MODULE",
-        "me":"MAJOR ELECTIVE",
-        "fe":"FREE ELECTIVE",
-    }
+    const planDegree = degreeInfo.find(d => d.name === degree)
+    const { modLimit } = planDegree
 
-    const findValue = (dict, targetKey) => {
-        for (const key in dict) {
-          if (key === targetKey) {
-            return dict[key];
-          }
-        }
-        return null; // If the key is not found
-    };
+    const trackType = tracks.length
+    const modTrackLimit = modLimit[trackType]
+    
 
     const completesAsiaStudies = () => {
         const found = mods.some(m => asiaStudiesCourses.includes(m.courseCode));
         if (found) {
-            console.log("found asia!");
+            // console.log("found asia!");
         }
         return found;
     }
     const completesSingaporeStudies = () => {
         const found = mods.some(m => singaporeStudiesCourses.includes(m.courseCode));
         if (found) {
-            console.log("found singapore!");
+            // console.log("found singapore!");
         }
         return found;
     }
@@ -129,11 +122,32 @@ const PlanBar = ({plan, setPlan, mods}) => {
     const Tab1 = (
       <div class="bg-white rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto" 
       style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
-        <ActiveCounter Current={uniCore.length} Max={6} Category="UNI CORE" type="uc" />
-        <ActiveCounter Current={majorCore.length} Max={17} Category="MAJOR CORE" type="mc"/>
-        <ActiveCounter Current={majorElective.length} Max={3} Category="MAJOR ELECTIVE" type="me"/>
-        <ActiveCounter Current={trackModule.length} Max={4} Category="TRACK MODULE" type="tm"/>
-        <ActiveCounter Current={freeElective.length} Max={6} Category="FREE ELECTIVE" type="fe"/>
+        {trackType === 0 && (
+          <>
+            <ActiveCounter Current={uniCore.length} Max={modTrackLimit.uc} Category="UNI CORE" type="uc" />
+            <ActiveCounter Current={majorCore.length} Max={modTrackLimit.mc} Category="MAJOR CORE" type="mc"/>
+            <ActiveCounter Current={majorElective.length} Max={modTrackLimit.me} Category="MAJOR ELECTIVE" type="me"/>
+            <ActiveCounter Current={freeElective.length} Max={modTrackLimit.fe} Category="FREE ELECTIVE" type="fe"/>
+          </>
+        )}
+        {trackType === 1 && (
+          <>
+            <ActiveCounter Current={uniCore.length} Max={modTrackLimit.uc} Category="UNI CORE" type="uc" />
+            <ActiveCounter Current={majorCore.length} Max={modTrackLimit.mc} Category="MAJOR CORE" type="mc"/>
+            <ActiveCounter Current={majorElective.length} Max={modTrackLimit.me} Category="MAJOR ELECTIVE" type="me"/>
+            <ActiveCounter Current={trackModule.length} Max={modTrackLimit.tm} Category="TRACK MODULE" type="tm"/>
+            <ActiveCounter Current={freeElective.length} Max={modTrackLimit.fe} Category="FREE ELECTIVE" type="fe"/>
+          </>
+        )}
+        {trackType === 2 && (
+          <>
+            <ActiveCounter Current={uniCore.length} Max={modTrackLimit.uc} Category="UNI CORE" type="uc" />
+            <ActiveCounter Current={majorCore.length} Max={modTrackLimit.mc} Category="MAJOR CORE" type="mc"/>
+            <ActiveCounter Current={trackModule.length} Max={modTrackLimit.tm} Category="TRACK MODULE" type="tm"/>
+            <ActiveCounter Current={freeElective.length} Max={modTrackLimit.fe} Category="FREE ELECTIVE" type="fe"/>
+          </>
+        )}
+        
       </div>
     );
 

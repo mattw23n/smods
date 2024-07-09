@@ -64,14 +64,14 @@ const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
         //use setMods to set that mod's specific GPA to that
         const tempCopy = mods.filter(m => m.courseCode !== courseCode)
 
-        console.log(tempCopy)
+        // console.log(tempCopy)
 
         const modToChange = module
         modToChange.GPA = getGradeValue(updatedGPA)
 
         tempCopy.push(module)
-        console.log("tempcopy")
-        console.log(tempCopy)
+        // console.log("tempcopy")
+        // console.log(tempCopy)
 
         setMods(tempCopy)
         setGPA(updatedGPA);

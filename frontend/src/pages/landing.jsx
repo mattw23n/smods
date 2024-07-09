@@ -5,6 +5,7 @@ import Footer from "../components/footer";
 import calendar from "../images/calendar.png";
 import Demo from "../images/demo.gif";
 import searchDemo from "../images/searchDemo.gif";
+import validationDemo from "../images/validationDemo.gif";
 import { Link } from 'react-router-dom';
 import Background from "../components/background";
 
@@ -216,7 +217,7 @@ function Hero() {
                 </div>
 
                 <div className="flex mt-20">
-                    <img src={calendar} className="bg-blue-200 rounded-3xl px-4 py-4 max-w-[400px]"></img>
+                    <img src={validationDemo} className="bg-blue-200 rounded-3xl px-4 py-4 max-w-[700px]"></img>
                     <div className="flex justify-left items-center ml-20 pl-20">
                         <p className="font-poppins font-bold text-4xl leading-relaxed">Unsure of requirements?<br /> We got your back.</p>
                     </div>
