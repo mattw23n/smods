@@ -24,9 +24,6 @@ public class Plan {
     @Column(name = "TRACK")
     private String track;
 
-    @Column(name = "GPA_ENABLED", nullable = false)
-    private boolean gpaEnabled = false;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
