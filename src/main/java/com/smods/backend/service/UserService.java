@@ -2,10 +2,7 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
-import com.smods.backend.exception.EmailAlreadyExistsException;
-import com.smods.backend.exception.InvalidCharacterException;
-import com.smods.backend.exception.UsernameAlreadyExistsException;
-import com.smods.backend.exception.VerificationTokenNotFoundException;
+import com.smods.backend.exception.*;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +46,9 @@ public class UserService {
             throw new EmailAlreadyExistsException("Email already exists: " + userDTO.getEmail());
         }
 
-        User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
+        User user = new User(userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()),
+                userDTO.getEmail(), "USER");
         user.setEmailVerified(false);
-        user.setRole("USER");
         user.setVerificationToken(generateVerificationToken());
         user.setTokenExpiryDate(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_DURATION));
 
@@ -78,6 +72,17 @@ public class UserService {
 
     private String generateVerificationToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public void generateVerificationToken(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.setVerificationToken(generateVerificationToken());
+        user.setTokenExpiryDate(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_DURATION));
+
+        // Send verification email
+        emailService.sendVerificationEmail(user);
     }
 
     // Verify the user's email
@@ -107,6 +112,7 @@ public class UserService {
             return "Invalid username or password";
         }
         if (!user.getEmailVerified()) {
+            generateVerificationToken(user.getUsername());
             return "Please verify your email";
         }
         return "Login successful";
