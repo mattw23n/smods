@@ -48,6 +48,15 @@ public class PlanController {
         return ResponseEntity.ok("Plan successfully deleted.");
     }
 
+    @PutMapping("/{planId}/rename")
+    public ResponseEntity<Plan> renamePlan(
+            @PathVariable Long userId,
+            @PathVariable Long planId,
+            @RequestParam String newPlanName) {
+        Plan renamedPlan = planService.renamePlan(userId, planId, newPlanName);
+        return ResponseEntity.ok(renamedPlan);
+    }
+
     @GetMapping("/{planId}/modules")
     public ResponseEntity<List<PlanModuleGPA>> getPlanModulesByPlan(@PathVariable Long planId, @PathVariable Long userId) {
         List<PlanModuleGPA> planModules = planService.getPlanModulesByPlan(planId, userId);
@@ -71,11 +80,5 @@ public class PlanController {
             @RequestParam String moduleId) {
         ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
         return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{planId}/modules/{moduleId}/gpa")
-    public ResponseEntity<Void> updateGPA(@PathVariable Long planId, @PathVariable Long userId, @PathVariable String moduleId, @RequestParam Float gpa) {
-        planService.updateGPA(planId, userId, moduleId, gpa);
-        return ResponseEntity.ok().build();
     }
 }
