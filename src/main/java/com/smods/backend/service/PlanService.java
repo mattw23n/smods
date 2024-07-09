@@ -147,16 +147,6 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-//    @Transactional
-//    public String setGPAEnabled(Long planId, Long userId, boolean gpaEnabled) {
-//        PlanKey planKey = new PlanKey(planId, userId);
-//        Plan plan = planRepository.findById(planKey)
-//                .orElseThrow(() -> new RuntimeException("Plan not found"));
-//        plan.setGPAEnabled(gpaEnabled);
-//        planRepository.save(plan);
-//        return "GPA has been " + (gpaEnabled ? "enabled." : "disabled.");
-//    }
-
     @Transactional
     public void updateGPA(Long planId, Long userId, String moduleId, Float gpa) {
         PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(new PlanKey(planId, userId), moduleId);
@@ -165,22 +155,4 @@ public class PlanService {
         planModuleGPA.setGPA(gpa);
         planModuleGPARepository.save(planModuleGPA);
     }
-
-//    public Float calculateAverageGPA(Long planId, Long userId) {
-//        List<PlanModuleGPA> modules = planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
-//        if (modules.isEmpty()) {
-//            return null;
-//        }
-//
-//        Float totalGPA = 0f;
-//        int count = 0;
-//        for (PlanModuleGPA module : modules) {
-//            if (module.getGPA() != null) {
-//                totalGPA += module.getGPA();
-//                count++;
-//            }
-//        }
-//
-//        return count > 0 ? totalGPA / count : null;
-//    }
 }
