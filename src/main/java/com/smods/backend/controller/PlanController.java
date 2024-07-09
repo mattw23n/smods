@@ -38,7 +38,6 @@ public class PlanController {
     @PostMapping
     public ResponseEntity<Plan> createPlan(@PathVariable Long userId, @RequestBody Plan plan) {
         Plan createdPlan = planService.createPlan(userId, plan);
-        createdPlan.setCreationDateTime(ZonedDateTime.now());
         return ResponseEntity.ok(createdPlan);
     }
 

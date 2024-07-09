@@ -39,7 +39,6 @@ CREATE TABLE mutually_exclusive (
 CREATE TABLE plan (
     plan_id BIGINT NOT NULL,
     degree VARCHAR(255),
-    gpa_enabled BIT NOT NULL,
     plan_name VARCHAR(255),
     track VARCHAR(255),
     user_id BIGINT NOT NULL,
