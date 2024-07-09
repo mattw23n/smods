@@ -1,5 +1,6 @@
 package com.smods.backend.controller;
 
+import com.smods.backend.dto.JwtResponse;
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
@@ -34,24 +35,25 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        UserDetails userDetails;
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-            );
-            userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Invalid username or password.");
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        LoginStatus loginStatus = userService.loginUser(loginRequest);
+
+        if (loginStatus != LoginStatus.SUCCESS) {
+            switch (loginStatus) {
+                case EMAIL_NOT_VERIFIED:
+                    return ResponseEntity.status(403).body(loginStatus.getMessage());
+                case INVALID_CREDENTIALS:
+                    return ResponseEntity.status(401).body(loginStatus.getMessage());
+                default:
+                    throw new IllegalStateException("Unexpected value: " + loginStatus);
+            }
         }
 
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
+        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
-        if (!userDetails.isAccountNonLocked()) {
-            return ResponseEntity.status(403).body("Please verify your email");
-        }
-
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername()));
     }
 
     @PostMapping("/register")
