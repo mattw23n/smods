@@ -2,9 +2,11 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
+import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.*;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -82,8 +84,9 @@ public class UserService {
         return UUID.randomUUID().toString();
     }
 
-    public void generateVerificationToken(String username){
-        User user = userRepository.findByUsername(username)
+    @Transactional
+    public void resendVerificationToken(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setVerificationToken(generateVerificationToken());
@@ -114,16 +117,15 @@ public class UserService {
     }
 
     // Login a user
-    public String loginUser(LoginRequest loginRequest) {
+    public LoginStatus loginUser(LoginRequest loginRequest) {
         User user = findByUsername(loginRequest.getUsername());
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return "Invalid username or password";
+            return LoginStatus.INVALID_CREDENTIALS;
         }
         if (!user.getEmailVerified()) {
-            generateVerificationToken(user.getUsername());
-            return "Please verify your email";
+            return LoginStatus.EMAIL_NOT_VERIFIED;
         }
-        return "Login successful";
+        return LoginStatus.SUCCESS;
     }
 
     // Update user details
