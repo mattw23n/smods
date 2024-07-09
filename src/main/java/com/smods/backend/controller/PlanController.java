@@ -6,11 +6,13 @@ import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.service.PlanService;
+import org.hibernate.internal.util.ZonedDateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -36,6 +38,7 @@ public class PlanController {
     @PostMapping
     public ResponseEntity<Plan> createPlan(@PathVariable Long userId, @RequestBody Plan plan) {
         Plan createdPlan = planService.createPlan(userId, plan);
+        createdPlan.setCreationDateTime(ZonedDateTime.now());
         return ResponseEntity.ok(createdPlan);
     }
 
