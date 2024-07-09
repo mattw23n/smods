@@ -112,13 +112,13 @@ public class UserService {
     }
 
     // Find a user by username
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     // Login a user
     public LoginStatus loginUser(LoginRequest loginRequest) {
-        User user = findByUsername(loginRequest.getUsername());
+        User user = findByUsername(loginRequest.getUsername()).orElse(null);
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return LoginStatus.INVALID_CREDENTIALS;
         }
@@ -126,6 +126,22 @@ public class UserService {
             return LoginStatus.EMAIL_NOT_VERIFIED;
         }
         return LoginStatus.SUCCESS;
+    }
+
+    // Update user details
+    public User updateUser(Long id, UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setUsername(userDTO.getUsername());
+            user.setEmail(userDTO.getEmail());
+            if (!userDTO.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+            }
+            return userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found with id: " + id);
+        }
     }
 
     // Find user by ID

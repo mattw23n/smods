@@ -4,15 +4,17 @@ import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.model.Module;
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.model.composite_key.PlanKey;
+import com.smods.backend.model.User;
 import com.smods.backend.service.PlanService;
-import org.hibernate.internal.util.ZonedDateTimeComparator;
+import com.smods.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -20,14 +22,28 @@ import java.util.List;
 public class PlanController {
 
     private final PlanService planService;
+    private final UserService userService;
 
     @Autowired
-    public PlanController(PlanService planService) {
+    public PlanController(PlanService planService, UserService userService) {
         this.planService = planService;
+        this.userService = userService;
+    }
+
+    private void checkUserAuthorization(Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        User currentUser = userService.findByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!currentUser.getUserId().equals(userId)) {
+            throw new AccessDeniedException("Forbidden");
+        }
     }
 
     @GetMapping
     public ResponseEntity<?> getAllPlans(@PathVariable Long userId) {
+        checkUserAuthorization(userId);
         List<Plan> plans = planService.getAllPlansByUser(userId);
         if (plans.isEmpty()) {
             return ResponseEntity.ok("No plans found for this user.");
@@ -37,12 +53,14 @@ public class PlanController {
 
     @PostMapping
     public ResponseEntity<Plan> createPlan(@PathVariable Long userId, @RequestBody Plan plan) {
+        checkUserAuthorization(userId);
         Plan createdPlan = planService.createPlan(userId, plan);
         return ResponseEntity.ok(createdPlan);
     }
 
     @DeleteMapping("/{planId}")
     public ResponseEntity<String> deletePlan(@PathVariable Long userId, @PathVariable Long planId) {
+        checkUserAuthorization(userId);
         planService.deletePlan(userId, planId);
         return ResponseEntity.ok("Plan successfully deleted.");
     }
@@ -52,12 +70,14 @@ public class PlanController {
             @PathVariable Long userId,
             @PathVariable Long planId,
             @RequestParam String newPlanName) {
+        checkUserAuthorization(userId);
         Plan renamedPlan = planService.renamePlan(userId, planId, newPlanName);
         return ResponseEntity.ok(renamedPlan);
     }
 
     @GetMapping("/{planId}/modules")
     public ResponseEntity<List<PlanModuleGPA>> getPlanModulesByPlan(@PathVariable Long planId, @PathVariable Long userId) {
+        checkUserAuthorization(userId);
         List<PlanModuleGPA> planModules = planService.getPlanModulesByPlan(planId, userId);
         return ResponseEntity.ok(planModules);
     }
@@ -68,6 +88,7 @@ public class PlanController {
             @PathVariable Long userId,
             @RequestParam String moduleId,
             @RequestParam int term) {
+        checkUserAuthorization(userId);
         ModuleValidationResponse response = planService.addModule(planId, userId, moduleId, term);
         return ResponseEntity.ok(response);
     }
@@ -77,6 +98,7 @@ public class PlanController {
             @PathVariable Long planId,
             @PathVariable Long userId,
             @RequestParam String moduleId) {
+        checkUserAuthorization(userId);
         ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
         return ResponseEntity.ok(response);
     }
