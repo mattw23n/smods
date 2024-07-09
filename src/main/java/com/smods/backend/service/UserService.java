@@ -2,6 +2,7 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.LoginRequest;
 import com.smods.backend.dto.UserDTO;
+import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.*;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
@@ -108,15 +109,15 @@ public class UserService {
     }
 
     // Login a user
-    public String loginUser(LoginRequest loginRequest) {
+    public LoginStatus loginUser(LoginRequest loginRequest) {
         User user = findByUsername(loginRequest.getUsername());
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            return "Invalid username or password.";
+            return LoginStatus.INVALID_CREDENTIALS;
         }
         if (!user.getEmailVerified()) {
-            return "Please verify your email.";
+            return LoginStatus.EMAIL_NOT_VERIFIED;
         }
-        return "Login successful!";
+        return LoginStatus.SUCCESS;
     }
 
     // Update user details
