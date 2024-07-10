@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Loading from "./loading";
-import { UserContext } from "../data/userContext"; // Import UserContext
+import { UserContext } from "../data/user";
 import axios from "axios";
 import {UserProvider} from "../data/user";
 
