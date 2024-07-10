@@ -35,8 +35,14 @@ public class User {
     @Column(name = "VERIFICATION_TOKEN", unique = true)
     private String verificationToken;
 
-    @Column(name = "TOKEN_EXPIRY_DATE")
+    @Column(name = "VERIFICATION_TOKEN_EXPIRY_DATE")
     private Date tokenExpiryDate;
+
+    @Column(name = "PASSWORD_RESET_TOKEN", unique = true)
+    private String passwordResetToken;
+
+    @Column(name = "PASSWORD_RESET_TOKEN_EXPIRY_DATE")
+    private Date passwordResetTokenExpiryDate;
 
     @Column(name = "ADMISSION_YEAR")
     private Year admissionYear;
@@ -126,6 +132,22 @@ public class User {
         this.tokenExpiryDate = tokenExpiryDate;
     }
 
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public Date getPasswordResetTokenExpiryDate() {
+        return passwordResetTokenExpiryDate;
+    }
+
+    public void setPasswordResetTokenExpiryDate(Date passwordResetTokenExpiryDate) {
+        this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
+    }
+
     public List<Plan> getPlans() {
         return plans;
     }
@@ -174,6 +196,8 @@ public class User {
                 ", emailVerified=" + emailVerified +
                 ", verificationToken='" + verificationToken + '\'' +
                 ", tokenExpiryDate=" + tokenExpiryDate +
+                ", passwordResetToken='" + passwordResetToken + '\'' +
+                ", passwordResetTokenExpiryDate=" + passwordResetTokenExpiryDate +
                 ", plans=" + plans +
                 '}';
     }

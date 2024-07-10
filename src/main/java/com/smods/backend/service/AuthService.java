@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -40,7 +41,7 @@ public class AuthService {
     }
 
     public LoginStatus loginUser(LoginRequest loginRequest) {
-        User user = userService.findByUsername(loginRequest.getUsername()).orElse(null);
+        User user = userService.findByUsernameOrEmail(loginRequest.getUsername()).orElse(null);
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             return LoginStatus.INVALID_CREDENTIALS;
         }
@@ -102,6 +103,40 @@ public class AuthService {
         user.setVerificationToken(null);
         user.setTokenExpiryDate(null);
         userRepository.save(user);
+    }
+
+    public void requestPasswordReset(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        String token = generateVerificationToken();
+        user.setPasswordResetToken(token);
+        user.setPasswordResetTokenExpiryDate(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_DURATION));
+        userRepository.save(user);
+
+        emailService.sendPasswordResetEmail(user, token);
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new VerificationTokenNotFoundException("Invalid password reset token"));
+
+        if (user.getPasswordResetTokenExpiryDate().before(new Date())) {
+            throw new VerificationTokenNotFoundException("Password reset token has expired");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiryDate(null);
+        userRepository.save(user);
+    }
+
+    private User findByUsernameOrEmail(String identifier) {
+        Optional<User> userOpt = userRepository.findByUsername(identifier);
+        if (userOpt.isEmpty()) {
+            userOpt = userRepository.findByEmail(identifier);
+        }
+        return userOpt.orElse(null);
     }
 
     private void validateInput(UserDTO userDTO) {
