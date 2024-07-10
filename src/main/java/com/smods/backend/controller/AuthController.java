@@ -2,6 +2,7 @@ package com.smods.backend.controller;
 
 import com.smods.backend.dto.JwtResponse;
 import com.smods.backend.dto.LoginRequest;
+import com.smods.backend.dto.PasswordResetRequest;
 import com.smods.backend.dto.RefreshTokenRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,12 @@ public class AuthController {
             }
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        User user = userService.findByUsernameOrEmail(loginRequest.getUsername()).orElse(null);
+        if (user == null) {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
@@ -106,6 +113,26 @@ public class AuthController {
             return ResponseEntity.ok("Verification email sent");
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found.");
+        }
+    }
+
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        try {
+            authService.requestPasswordReset(email);
+            return ResponseEntity.ok("Password reset email sent");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found.");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        try {
+            authService.resetPassword(passwordResetRequest.getToken(), passwordResetRequest.getNewPassword());
+            return ResponseEntity.ok("Password reset successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

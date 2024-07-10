@@ -1,10 +1,16 @@
 package com.smods.backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequest {
-    private String username;
+
+    @NotBlank(message = "Username or Email is required")
+    private String username;  // This field can now hold either username or email
+
+    @NotBlank(message = "Password is required")
     private String password;
 
-    // Getters and setters
+    // Getters and Setters
 
     public String getUsername() {
         return username;
