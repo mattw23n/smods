@@ -33,17 +33,33 @@ public class PlanModulePreassignedGPA {
     @Column(name = "TERM")
     private int term;
 
+    // null if not a major module
+    @Column(name = "MAJOR")
+    private String major;
+
+    // null if not a track module
+    @Column(name = "TRACK")
+    private String track;
+
+    @Column(name = "REQUIREMENT")
+    private String requirement;
+
+    @Column(name = "SUBREQUIREMENT")
+    private String subrequirement;
+
     // Default constructor
     public PlanModulePreassignedGPA() {}
 
     // Constructor with parameters
 
-    public PlanModulePreassignedGPA(PlanModulePreassignedGPAKey planModulePreassignedGPAId, Plan plan, Module module, Float gpa, int term) {
+
+    public PlanModulePreassignedGPA(PlanModulePreassignedGPAKey planModulePreassignedGPAId, Plan plan, Module module, int term) {
         this.planModulePreassignedGPAId = planModulePreassignedGPAId;
         this.plan = plan;
         this.module = module;
-        this.gpa = gpa;
         this.term = term;
+
+        // fill in the rest of the attributes based on degree and track of module and plan
     }
 
     public PlanModulePreassignedGPAKey getPlanModulePreassignedGPAId() {
@@ -70,11 +86,11 @@ public class PlanModulePreassignedGPA {
         this.module = module;
     }
 
-    public Float getGPA() {
+    public Float getGpa() {
         return gpa;
     }
 
-    public void setGPA(Float gpa) {
+    public void setGpa(Float gpa) {
         this.gpa = gpa;
     }
 
@@ -85,6 +101,39 @@ public class PlanModulePreassignedGPA {
     public void setTerm(int term) {
         this.term = term;
     }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getTrack() {
+        return track;
+    }
+
+    public void setTrack(String track) {
+        this.track = track;
+    }
+
+    public String getRequirement() {
+        return requirement;
+    }
+
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
+    }
+
+    public String getSubrequirement() {
+        return subrequirement;
+    }
+
+    public void setSubrequirement(String subrequirement) {
+        this.subrequirement = subrequirement;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

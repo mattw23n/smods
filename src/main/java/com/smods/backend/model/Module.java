@@ -19,6 +19,20 @@ public class Module {
     @Column(name = "COURSE_UNIT")
     private Float courseUnit;
 
+    // null if not a major module
+    @Column(name = "MAJOR")
+    private String major;
+
+    // null if not a track module
+    @Column(name = "TRACK")
+    private String track;
+
+    @Column(name = "GRAD_REQUIREMENT")
+    private String gradRequirement;
+
+    @Column(name = "GRAD_SUBREQUIREMENT")
+    private String gradSubrequirement;
+
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     @JsonBackReference(value = "module-planModuleGPA")
     private List<PlanModuleGPA> planModuleGPAs;
@@ -63,19 +77,17 @@ public class Module {
     @JsonBackReference(value = "mutuallyExclusiveWith")
     private List<Module> mutuallyExclusiveWith;
 
-    @ElementCollection
-    @CollectionTable(name = "GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MODULE_ID"))
-    @Column(name = "requirement")
-    private List<String> requirements;
-
     // Default constructor
     public Module() {}
 
-    // Constructor
-    public Module(String moduleId, String moduleName, Float courseUnit) {
+    public Module(String moduleId, String moduleName, Float courseUnit, String major, String track, String gradRequirement, String gradSubrequirement) {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
+        this.major = major;
+        this.track = track;
+        this.gradRequirement = gradRequirement;
+        this.gradSubrequirement = gradSubrequirement;
     }
 
     // Getters and Setters
@@ -101,6 +113,38 @@ public class Module {
 
     public void setCourseUnit(Float courseUnit) {
         this.courseUnit = courseUnit;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getTrack() {
+        return track;
+    }
+
+    public void setTrack(String track) {
+        this.track = track;
+    }
+
+    public String getGradRequirement() {
+        return gradRequirement;
+    }
+
+    public void setGradRequirement(String gradRequirement) {
+        this.gradRequirement = gradRequirement;
+    }
+
+    public String getGradSubrequirement() {
+        return gradSubrequirement;
+    }
+
+    public void setGradSubrequirement(String gradSubrequirement) {
+        this.gradSubrequirement = gradSubrequirement;
     }
 
     public List<PlanModuleGPA> getPlanModuleGPAs() {
@@ -165,14 +209,6 @@ public class Module {
 
     public void setMutuallyExclusiveWith(List<Module> mutuallyExclusiveWith) {
         this.mutuallyExclusiveWith = mutuallyExclusiveWith;
-    }
-
-    public List<String> getRequirements() {
-        return requirements;
-    }
-
-    public void setRequirements(List<String> requirements) {
-        this.requirements = requirements;
     }
 
     @Override
