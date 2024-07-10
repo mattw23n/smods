@@ -9,7 +9,11 @@ import { UserContext } from "../data/user";
 
 
 function Form() {
-    const [user, setUser] = useState("");
+    //global user
+    // const { user } = useContext(UserContext);
+
+    const [user, setUser] = useState("")
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false);
