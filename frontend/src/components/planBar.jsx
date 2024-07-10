@@ -87,7 +87,6 @@ const PlanBar = ({plan, setPlan, mods}) => {
     const trackType = tracks.length
     const modTrackLimit = modLimit[trackType]
     
-
     const completesAsiaStudies = () => {
         const found = mods.some(m => asiaStudiesCourses.includes(m.courseCode));
         if (found) {
@@ -95,6 +94,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
         }
         return found;
     }
+
     const completesSingaporeStudies = () => {
         const found = mods.some(m => singaporeStudiesCourses.includes(m.courseCode));
         if (found) {
@@ -102,6 +102,57 @@ const PlanBar = ({plan, setPlan, mods}) => {
         }
         return found;
     }
+
+    const calculateTermGPA = (mods) => {
+      const termGpaDict = {};
+  
+      // Group mods by term
+      mods.forEach(mod => {
+          if (!termGpaDict[mod.term]) {
+              termGpaDict[mod.term] = [];
+          }
+          termGpaDict[mod.term].push(mod.GPA);
+      });
+  
+      // Calculate GPA for each term
+      const termGpaArray = [];
+      for (const term in termGpaDict) {
+          if (termGpaDict.hasOwnProperty(term)) {
+              const gpas = termGpaDict[term];
+              const termGpa = gpas.reduce((acc, gpa) => acc + gpa, 0) / gpas.length;
+              termGpaArray.push({ term: term, gpa: termGpa });
+          }
+      }
+  
+      return termGpaArray;
+  }
+
+  const findMinMaxGPA = (termGpaArray) => {
+
+    if (termGpaArray.length === 0) {
+        return { highest: null, lowest: null };
+    }
+
+    let highest = termGpaArray[0];
+    let lowest = termGpaArray[0];
+
+    termGpaArray.forEach(termGpa => {
+        if (termGpa.gpa > highest.gpa) {
+            highest = termGpa;
+        }
+        if (termGpa.gpa < lowest.gpa) {
+            lowest = termGpa;
+        }
+    });
+
+    return { max: highest, min: lowest };
+}
+
+    const termGPAArr = calculateTermGPA(mods)
+    const minMax = findMinMaxGPA(termGPAArr)
+
+    console.log("termGPAArr", termGPAArr)
+    console.log("minMax", minMax)
 
     const gradReqs = (completesAsiaStudies() ? 1 : 0) + (completesSingaporeStudies() ? 1 : 0)
 
@@ -187,15 +238,31 @@ const PlanBar = ({plan, setPlan, mods}) => {
     const Tab3 = (
         <div class="bg-white/50 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
-                <p class="text-xl">{totalPoints}</p>
+                <p class="text-xl">{totalPoints.toFixed(2)}</p>
                 Total Grade Points
             </div>
-            <ActiveCounter Current={3.7} Max="4.0" Category="min Term GPA"/>
+            <div className="relative flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+                <p class="text-xl">{minMax.min.gpa.toFixed(2)}</p>
+                min Term GPA
+
+                <div class="absolute left-1/2 min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  Achieved in Term {minMax.min.term}
+                </div>
+
+            </div>
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
                 <p class="text-xl">{totalCUs.toFixed(1)}</p>
                 Total CUs Taken
             </div>
-            <ActiveCounter Current={3.7} Max="4.0" Category="max Term GPA"/>
+            <div className="relative flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+                <p class="text-xl">{minMax.max.gpa.toFixed(2)}</p>
+                max Term GPA
+
+                <div class="absolute left-1/2 min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  Achieved in Term {minMax.max.term}
+                </div>
+                
+            </div>
         </div>
     );
   

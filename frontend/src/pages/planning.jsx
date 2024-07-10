@@ -8,27 +8,11 @@ import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 import html2canvas from 'html2canvas';
 
-
 import { useParams } from 'react-router-dom';
 import { UserContext } from "../data/user";
 import modValidation from "../scripts/validation";
 
 const DEFAULT_MODS = modulesData
-
-// const TemplateMod = {
-//     courseCode: "",
-//     courseTitle: "",
-//     courseType: "",
-//     courseLink: "",
-//     requirements:{
-//         mutuallyExclusive: [],
-//         prerequisites: [],
-//         corequisites: [],
-//     },
-//     term:1,
-//     GPA: 0.0,
-//     isError: false,
-// }
 
 const PlanDetails = ({plan, setPlan}) => {
     const {title, degree, tracks, view} = plan
@@ -244,8 +228,6 @@ function Content({plan, setPlan, mods, setMods}){
     const yearNums = [1, 2, 3, 4];
 
     const isGroupView = view === 1
-
-    const groups = ["uc", "mc", "me", "tm", "fe"]
 
     const viewModes = {
         4:["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
