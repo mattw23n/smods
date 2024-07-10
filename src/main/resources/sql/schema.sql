@@ -85,6 +85,10 @@ CREATE TABLE users (
 delete from users;
 select * from users;
 
+UPDATE USERS
+SET role = 'ADMIN'
+WHERE user_id = 2;
+
 INSERT INTO users (user_id, email, email_verified, password, role, username, verification_token, token_expiry_date)
 VALUES (1, 'user@example.com', 1, '$2a$10$examplehashedpassword', 'USER', 'user1234', 'exampletoken', '2024-12-31 23:59:59');
 
