@@ -7,6 +7,7 @@ import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.UserNotFoundException;
 import com.smods.backend.model.User;
+import com.smods.backend.service.AuthService;
 import com.smods.backend.service.UserService;
 import com.smods.backend.util.JwtUtil;
 import jakarta.validation.Valid;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +33,14 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        LoginStatus loginStatus = userService.loginUser(loginRequest);
+        LoginStatus loginStatus = authService.loginUser(loginRequest);
 
         if (loginStatus != LoginStatus.SUCCESS) {
             switch (loginStatus) {
@@ -58,7 +61,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody  RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         try {
             String refreshToken = refreshTokenRequest.getRefreshToken();
             String username = jwtUtil.extractUsername(refreshToken);
@@ -78,7 +81,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserDTO userDTO) {
-        User user = userService.registerUser(userDTO);
+        User user = authService.registerUser(userDTO);
         if (user != null) {
             return ResponseEntity.ok("Registration successful");
         } else {
@@ -89,7 +92,7 @@ public class AuthController {
     @GetMapping("/verify")
     public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         try {
-            userService.verifyUser(token);
+            authService.verifyUser(token);
             return ResponseEntity.ok("Email verified successfully.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(e.getMessage());
@@ -99,7 +102,7 @@ public class AuthController {
     @PostMapping("/resend-verification")
     public ResponseEntity<String> resendVerificationToken(@RequestParam String email) {
         try {
-            userService.resendVerificationToken(email);
+            authService.resendVerificationToken(email);
             return ResponseEntity.ok("Verification email sent");
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found.");
