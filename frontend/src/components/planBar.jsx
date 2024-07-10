@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import defaultMods from "../data/defaultMods";
 
-const asiaStudiesCourses = ["COR3031"]
+const asiaStudiesCourses = ["COR3021"]
 const singaporeStudiesCourses = ["COR3001"]
 
 const ActiveCounter = ({Current, Max, Category, type}) => {
@@ -76,9 +76,12 @@ const Tabs = ({ tabData }) => {
 };
 
 const PlanBar = ({plan, setPlan, mods}) => {
+    const [asiaStudiesMods, setAsiaStudiesMods] = useState([])
+    const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([])
+
     const { isGPAOn } = plan
     const { tracks, degree} = plan
-    console.log("track", tracks)
+
     const degreeInfo = defaultMods
 
     const planDegree = degreeInfo.find(d => d.name === degree)
@@ -86,22 +89,18 @@ const PlanBar = ({plan, setPlan, mods}) => {
 
     const trackType = tracks.length
     const modTrackLimit = modLimit[trackType]
-    
-    const completesAsiaStudies = () => {
-        const found = mods.some(m => asiaStudiesCourses.includes(m.courseCode));
-        if (found) {
-            // console.log("found asia!");
-        }
-        return found;
-    }
 
-    const completesSingaporeStudies = () => {
-        const found = mods.some(m => singaporeStudiesCourses.includes(m.courseCode));
-        if (found) {
-            // console.log("found singapore!");
-        }
-        return found;
-    }
+    useEffect(() => {
+      setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.courseCode)));
+      console.log("asia studies", asiaStudiesMods);
+
+      setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.courseCode)));
+      console.log("sg studies", singaporeStudiesCourses);
+
+    }, [mods, asiaStudiesCourses, singaporeStudiesCourses]);
+
+    const foundAsiaStudies = asiaStudiesMods.length > 0
+    const foundSingaporeStudies = singaporeStudiesMods.length > 0
 
     const calculateTermGPA = (mods) => {
       const termGpaDict = {};
@@ -154,7 +153,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
     console.log("termGPAArr", termGPAArr)
     console.log("minMax", minMax)
 
-    const gradReqs = (completesAsiaStudies() ? 1 : 0) + (completesSingaporeStudies() ? 1 : 0)
+    const gradReqs = (foundAsiaStudies ? 1 : 0) + (foundSingaporeStudies ? 1 : 0)
 
     const uniCore = mods.filter((m) => m.courseType === "uc")
     const majorCore = mods.filter((m) => m.courseType === "mc")
@@ -204,9 +203,13 @@ const PlanBar = ({plan, setPlan, mods}) => {
 
     const Tab2 = (
         <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 font-bold text-text w-fit">
-          <div className="flex justify-end items-center gap-5 font-archivo">
+          <div className="relative flex justify-end items-center gap-5 font-archivo">
             <p>🌏 Asia Studies </p>
-            <CrossCheck status={completesAsiaStudies()}/>
+            <CrossCheck status={foundAsiaStudies}/>
+            <div class="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                {foundAsiaStudies ? `Cleared by ${asiaStudiesMods[0].courseCode}` : `Not cleared yet` }
+                
+            </div>
 
           </div>
           <div className="flex justify-end items-center gap-5 font-archivo">
@@ -214,7 +217,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
             <CrossCheck/>
 
           </div>
-          <div className="flex justify-end items-center gap-5 font-archivo">
+          <div className="relative flex justify-end items-center gap-5 font-archivo">
             <div className="flex gap-1 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
                     <path d="M1,24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V15H1v9Z" fill="#fff"></path>
@@ -223,7 +226,10 @@ const PlanBar = ({plan, setPlan, mods}) => {
                 </svg>
                 <p>Singapore Studies</p>
             </div>
-            <CrossCheck status={completesSingaporeStudies()}/>
+            <CrossCheck status={foundSingaporeStudies}/>
+            <div class="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+              {foundSingaporeStudies ? `Cleared by ${singaporeStudiesMods[0].courseCode}` : `Not cleared yet`}
+            </div>
             
           </div>
 
