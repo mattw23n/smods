@@ -2,6 +2,7 @@ package com.smods.backend.controller;
 
 import com.smods.backend.dto.JwtResponse;
 import com.smods.backend.dto.LoginRequest;
+import com.smods.backend.dto.RefreshTokenRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.UserNotFoundException;
@@ -57,15 +58,21 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
-        String username = jwtUtil.extractUsername(refreshToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    public ResponseEntity<?> refreshToken(@RequestBody  RefreshTokenRequest refreshTokenRequest) {
+        try {
+            String refreshToken = refreshTokenRequest.getRefreshToken();
+            String username = jwtUtil.extractUsername(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        if (jwtUtil.validateToken(refreshToken, userDetails)) {
-            final String jwt = jwtUtil.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername()));
-        } else {
-            return ResponseEntity.status(401).body("Invalid refresh token");
+            if (jwtUtil.validateToken(refreshToken, userDetails)) {
+                final String jwt = jwtUtil.generateToken(userDetails);
+                final String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
+                return ResponseEntity.ok(new JwtResponse(jwt, newRefreshToken, username));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
     }
 
