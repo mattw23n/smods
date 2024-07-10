@@ -56,6 +56,19 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername()));
     }
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody String refreshToken) {
+        String username = jwtUtil.extractUsername(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (jwtUtil.validateToken(refreshToken, userDetails)) {
+            final String jwt = jwtUtil.generateToken(userDetails);
+            return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername()));
+        } else {
+            return ResponseEntity.status(401).body("Invalid refresh token");
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserDTO userDTO) {
         User user = userService.registerUser(userDTO);
