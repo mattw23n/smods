@@ -71,7 +71,7 @@ function Form() {
                     <p className="text-center text-2xl font-bold font-poppins">Sign In</p>
                     <div>
                         <p className="font-bold pb-1 text-sm font-poppins">
-                            Username
+                            Username or Email
                         </p>
                         <label htmlFor="username" className="sr-only">Username</label>
                         <div className="relative">
