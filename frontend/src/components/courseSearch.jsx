@@ -6,24 +6,43 @@ const ALL_MODULES = allMods
 
 
 const ModuleRepository = ({searchResult, plan}) => {
+    const isEmpty = searchResult.length === 0
+    console.log("isEmpty", isEmpty)
 
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("courseCode", module.courseCode);
     };
 
     return (
-        <div className="bg-white p-2 rounded-3xl">
-            {searchResult.map((m) => {
+        <div className="overflow-y-auto max-h-[400px]">
+            <div className="bg-white p-2 rounded-3xl">
+            {!isEmpty && searchResult.map((m) => {
                 return <Mod key={m.courseCode} module={m} plan={plan} handleDragStart={handleDragStart}/>
             })}
+            {isEmpty && (
+                <div className="p-2 font-archivo text-center my-5">
+
+                    <p className="font-bold">No mods matching that description :(</p>
+                    <p className="text-sm">Try searching with a different filter or keyword</p>
+                </div>
+            )}
+            </div>
         </div>
+        
     )
 }
 
 const SearchBar = ({plan}) => {
     const [selectedFilter, setFilter] = useState("")
-    const [searchTerm, setSearchTerm] = useState(""); // State to hold the input value
+    const [searchTerm, setSearchTerm] = useState("")
     const [searchResult, setSearchResult] = useState([])
+    const [error, setError] = useState("");
+
+
+    //hard-coded backend data
+    //delete when no longer in nuse
+    const cybersecurityMods = ["CS333", "CS334"]
+    const CSMods = ["CS201", "CS203", "CS204"]
 
     const typeDict = [
         {type: "uc", fullType: "Uni Core"},
@@ -56,6 +75,7 @@ const SearchBar = ({plan}) => {
         const updatedFilter = event.target.value
 
         setFilter(updatedFilter)
+        setError("");
     }
     const handleInputChange = (event) => {
         setSearchTerm(event.target.value); // Update state with the input value
@@ -63,7 +83,12 @@ const SearchBar = ({plan}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault(); // Prevent the default form submission behavior
-        console.log('Search term:', searchTerm); // Process the search term (e.g., send it to an API)
+        console.log('Search term:', searchTerm); // Process the search term 
+
+        if (selectedFilter === '') {
+            setError("Please select a filter.");
+            return
+        } 
         
 
         if(selectedFilter === "Course Code"){
@@ -80,6 +105,20 @@ const SearchBar = ({plan}) => {
             setSearchResult(ALL_MODULES.filter(
                 m => m.courseType.includes(getTypeByFullType(searchTerm))
             ))
+        }else if(selectedFilter === "Track"){
+            //check if the searched input is a valid track
+            //if yes, find all mods that are in that track
+            //hard coded for now
+            setSearchResult(ALL_MODULES.filter(
+                m => cybersecurityMods.includes(m.courseCode))
+            )
+        }else if(selectedFilter === "Major"){
+            //check if the searched input is a valid track
+            //if yes, find all mods that are in that track
+            //hard coded for now
+            setSearchResult(ALL_MODULES.filter(
+                m => CSMods.includes(m.courseCode))
+            )
         }
         
         console.log(searchResult)
@@ -92,7 +131,7 @@ const SearchBar = ({plan}) => {
         <div className="mb-2 flex font-archivo text-sm items-center gap-5">
             Search by:
             <select
-                className="select rounded-xl bg-white/50 border-gray-100 font-archivo text-sm"
+                className={`select rounded-xl bg-white/50 font-archivo text-sm ${error ? "border-red-500": " border-gray-100"}`}
                 value={selectedFilter}
                 onChange={handleFilterChange}
                 required
@@ -107,6 +146,7 @@ const SearchBar = ({plan}) => {
             </select>
             E.g. {getExampleByFilter(selectedFilter)}
         </div>
+        {error && <p className="text-red-500 text-sm mb-2 font-archivo">{error}</p>}
         
         <form className="max-w-md mx-auto min-w-[400px] mb-4">
             <label htmlFor="default-search" 
@@ -145,7 +185,7 @@ const SearchBar = ({plan}) => {
 const CourseSearch = ({plan}) => {
 
     return (
-        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit">
+        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[600px] h-fit">
             <div>
                 <p className="font-poppins font-bold text-sm mb-2">Course Search</p>
                 <SearchBar plan={plan} ></SearchBar>
