@@ -89,7 +89,6 @@ const SearchBar = ({plan}) => {
             setError("Please select a filter.");
             return
         } 
-        
 
         if(selectedFilter === "Course Code"){
             setSearchResult(ALL_MODULES.filter(
