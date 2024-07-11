@@ -19,7 +19,8 @@ const Content = ({ user, setUser }) => {
 
     const [selectedTitle, setSelectedTitle] = useState("");
     const [selectedDegree, setSelectedDegree] = useState("");
-    const [selectedTrack, setSelectedTrack] = useState([]);
+    const [selectedTracks, setSelectedTracks] = useState(["", ""]);
+    const [hasTracks, setHasTracks] = useState(true)
 
     const [errors, setErrors] = useState({
         title: "",
@@ -27,16 +28,32 @@ const Content = ({ user, setUser }) => {
         track: "",
     });
 
+    const removeEmptyTracks = (tracks) => {
+        return tracks.filter(track => (track !== "" && track !== "Undeclared"));
+      };
+
 
     const handleDegreeChange = (event) => {
         setSelectedDegree(event.target.value);
-        
+        setSelectedTracks(["", ""])
+
+        if(event.target.value === "Software Engineering" || event.target.value === "Computing & Law"){
+            setHasTracks(false)
+            setSelectedTracks(["Not Applicable"])
+        }
       };
 
-    const handleTrackChange = (event) => {
-        setSelectedTrack(event.target.value);
+    const handleTrackChange = (index, event) => {
+        const value = event.target.value;
+        setSelectedTracks((prevTracks) => {
+          const newTracks = [...prevTracks];
+          newTracks[index] = value;
+
+          console.log("track change", removeEmptyTracks(newTracks))
+          return removeEmptyTracks(newTracks);
+        });
       };
-    
+
     const handleTitleChange = (event) => {
         setSelectedTitle(event.target.value);
       };
@@ -44,13 +61,14 @@ const Content = ({ user, setUser }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        {console.log(selectedDegree + selectedTrack + selectedTitle)}
+
+        const filteredTracks = removeEmptyTracks(selectedTracks);
 
         // Validate form
         const newErrors = {
             title: selectedTitle ? '' : 'Title is required',
             degree: selectedDegree ? '' : 'Degree is required',
-            track: selectedTrack ? '' : 'Track is required',
+            track: filteredTracks.length > 0 ? '' : 'At least one track is required',
         };
 
         setErrors(newErrors);
@@ -64,7 +82,6 @@ const Content = ({ user, setUser }) => {
 
             const { modules, handbook } = degree
 
-            const newTracks = [selectedTrack]
 
             //create new plan
             const newPlan = {
@@ -72,7 +89,7 @@ const Content = ({ user, setUser }) => {
                 title:selectedTitle,
                 date: "30 June 2024",
                 degree:selectedDegree,
-                tracks:newTracks,
+                tracks:selectedTracks.filter(track => track !== "Not Applicable" ),     //to make SE degree and CL degree have 0 tracks and mod limits are updated
                 handbook:handbook,
                 view:4,
                 isEditMode:false,
@@ -96,7 +113,7 @@ const Content = ({ user, setUser }) => {
     };
 
     const selectedDegreeTracks = majors.find((m) => m.Title === selectedDegree)?.Tracks || [];
-    
+
     return(
         <main>
             <div className="mx-16 my-8 max-h-none max-w-screen flex-col gap-10">
@@ -139,7 +156,7 @@ const Content = ({ user, setUser }) => {
 
                             </div>
                             <div>
-                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Degree </label>
+                                <label htmlFor="Degree" className="block text-xs font-bold font-poppins"> Degree </label>
 
                                 <select 
                                 className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
@@ -157,25 +174,53 @@ const Content = ({ user, setUser }) => {
                                 {errors.degree && <p className="text-red-500 text-xs mt-1">{errors.degree}</p>}
 
                             </div>
-                            <div>
-                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Track </label>
-
-                                <select 
-                                className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
-                                value={selectedTrack}
-                                onChange={handleTrackChange}
-                                disabled={!selectedDegree} >
-
-                                <option disabled value="">Your Track</option>
-                                    {selectedDegreeTracks.map((track, index) => (
+                            {hasTracks && (
+                            <div className="flex gap-10">
+                                <div>
+                                    <label htmlFor="Track1" className="block text-xs font-bold font-poppins"> Track 1</label>
+                                    
+                                    <select
+                                        id="Track1"
+                                        className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
+                                        value={selectedTracks[0]}
+                                        onChange={(e) => handleTrackChange(0, e)}
+                                        disabled={!selectedDegree}
+                                    >
+                                        <option disabled value="">Your Track</option>
+                                        {selectedDegreeTracks.map((track, index) => (
                                         <option key={index} value={track}>
-                                        {track}
+                                            {track}
                                         </option>
-                                    ))}
-                            
-                                </select>
-                                {errors.track && <p className="text-red-500 text-xs mt-1">{errors.track}</p>}
+                                        ))}
+                                    </select>
+                                    
+                                    
+                                </div>
+                                <div>
+                                    <label htmlFor="Track2" className="block text-xs font-bold font-poppins"> Track 2 </label>
+
+                                    <select
+                                        id="Track2"
+                                        className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
+                                        value={selectedTracks[1]}
+                                        onChange={(e) => handleTrackChange(1, e)}
+                                        disabled={!selectedDegree}
+                                    >
+                                        <option disabled value="">Your Track</option>
+                                        {selectedDegreeTracks.filter((track => track !== selectedTracks[0])).map((track, index) => (
+                                        <option key={index} value={track}>
+                                            {track}
+                                        </option>
+                                        ))}
+                                    </select>
+
+                                    
+                                </div>
                             </div>
+                                
+                            )}
+                            {errors.track && <p className="text-red-500 text-xs">{errors.track}</p>}
+                            
                             <button
                                 type="submit"
                                 className="flex rounded-xl w-24 bg-secondary px-6 py-3 justify-center align-center font-bold font-poppins text-l text-background transition

@@ -88,6 +88,7 @@ const PlanBar = ({plan, setPlan, mods}) => {
     const { modLimit } = planDegree
 
     const trackType = tracks.length
+    console.log("tracktype", trackType)
     const modTrackLimit = modLimit[trackType]
 
     useEffect(() => {
