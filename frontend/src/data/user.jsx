@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import {DEFAULT_PLANS, DEFAULT_TEMPLATES} from "./plans";
 
 
@@ -9,7 +9,7 @@ const templates = [
   ];
 
 export const TemplateUser = {
-    name:"Gilchris Nathaniel",
+    username:"Gilchris Nathaniel",
     email:"gilchris@gmail.com",
     password:"i like trains",
     plans: DEFAULT_PLANS,
@@ -21,12 +21,37 @@ export const TemplateUser = {
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
 
-  const [user, setUser] = useState(TemplateUser);
+    useEffect(() => {
+        // Load user from local storage if available
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser) {
+            setUser(storedUser);
+        }
+    }, []);
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+    const loginUser = (userData) => {
+        // Set default plans and templates if they don't exist
+        if (!userData.plans) {
+            userData.plans = DEFAULT_PLANS;
+        }
+        if (!userData.templates) {
+            userData.templates = DEFAULT_TEMPLATES;
+        }
+
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData)); // Persist user state
+    };
+
+    const logoutUser = () => {
+        setUser(null);
+        localStorage.removeItem('user'); // Clear user state
+    };
+
+    return (
+        <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+            {children}
+        </UserContext.Provider>
+    );
 };

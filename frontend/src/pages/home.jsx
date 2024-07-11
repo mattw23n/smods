@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Link } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
@@ -135,7 +135,7 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
 const Content = ({user, setUser}) => {
     
-    const {name, plans, templates} = user
+    const {username, plans, templates} = user
 
     console.log(plans)
 
@@ -146,7 +146,7 @@ const Content = ({user, setUser}) => {
             <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
                 <div className="text-text font-poppins font-bold">
                     <p className="text-l">Good Afternoon</p>
-                    <p className="text-3xl">{name}</p>
+                    <p className="text-3xl">{username}</p>
                 </div>
                 <div className="py-4 flex gap-20">
                     <div className="flex flex-col gap-5">
@@ -200,19 +200,30 @@ const Content = ({user, setUser}) => {
     )
 }
 
-function Home(){
-    const {user, setUser} = useContext(UserContext)
+function Home() {
+        const { user } = useContext(UserContext);
+        const navigate = useNavigate();
 
-    return (
-        <div className="relative flex flex-col min-h-screen">
-            <Background />
-            <div className="relative z-10">
-                <Header></Header>
-                <Content user={user} setUser={setUser}></Content>
-                <Footer></Footer>
+        useEffect(() => {
+            if (!user) {
+                navigate('/');
+            }
+        }, [user, navigate]);
+
+        if (!user) {
+            return null;
+        }
+
+        return (
+            <div className="relative flex flex-col min-h-screen">
+                <Background />
+                <div className="relative z-10">
+                    <Header />
+                    <Content user={user} />
+                    <Footer />
+                </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
-export default Home;
+    export default Home;
