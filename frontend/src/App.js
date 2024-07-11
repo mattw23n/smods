@@ -30,7 +30,7 @@ function App() {
                     <Route path="/anims" element={<Anims />} />
                 </Routes>
             </Router>
-        <UserProvider>
+        </UserProvider>
     );
     
 }
