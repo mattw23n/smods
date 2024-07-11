@@ -10,7 +10,7 @@ function Avatar({ src, alt }) {
 function Logo({ src, title }) {
     return (
         <div className='flex-1 md:flex md:items-center md:gap-12'>
-            <Link className="block text-teal-600" to={"/home"}>
+            <Link className="block text-teal-600" to={"/"}>
                 <span className="sr-only">Home</span>
                 <div className="flex gap-3">
                     <img loading="lazy" src={src} alt={`${title} logo`} className="shrink-0 self-start max-w-full aspect-[2.36] w-[160px]" />
