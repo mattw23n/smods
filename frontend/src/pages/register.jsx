@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 
@@ -13,6 +13,7 @@ function Form() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleUserChange = (event) => {
         setUser(event.target.value);
@@ -51,7 +52,7 @@ function Form() {
             setSuccess('Registration successful');
             setError('');
             console.log('Registration successful:', response.data);
-            // Handle success (e.g., redirect to another page)
+            navigate('/verify-email');
         } catch (error) {
             // Improved error handling
             const errorMessage = error.response?.data?.message || error.response?.data || 'Unknown error';

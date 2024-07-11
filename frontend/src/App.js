@@ -11,6 +11,8 @@ import AboutUs from './pages/aboutUs.jsx';
 import ContactUs from './pages/contactUs.jsx';
 import Anims from './pages/justForAnims.jsx';
 import Register from "./pages/register";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResendVerification from "./pages/ResendVerification";
 
 function App() {
     
@@ -28,6 +30,8 @@ function App() {
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/contact" element={<ContactUs />} />
                     <Route path="/anims" element={<Anims />} />
+                    <Route path="/verify-email" element={<VerifyEmail />} />
+                    <Route path="/resend-verification" element={<ResendVerification />} />
                 </Routes>
             </Router>
         </UserProvider>

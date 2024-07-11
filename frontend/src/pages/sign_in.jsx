@@ -53,7 +53,16 @@ function Form() {
                 setError('Invalid username or password');
             }
         } catch (error) {
-            setError(error.response ? error.response.data : 'Login failed');
+            if (error.response.status === 403) {
+                // Email not verified
+                navigate('/verify-email');
+            } else if (error.response.status === 401) {
+                // Invalid credentials
+                setError('Invalid username or password');
+            } else {
+                // Other errors
+                setError('Login failed');
+            }
         } finally {
             setLoading(false);
         }
