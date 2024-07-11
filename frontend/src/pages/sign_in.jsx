@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Loading from "./loading";
@@ -77,7 +77,7 @@ function Form() {
                             <input
                                 type="text"
                                 className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
-                                placeholder="Enter username"
+                                placeholder="Enter username or email"
                                 value={username}
                                 onChange={handleUsernameChange}
                             />
@@ -118,7 +118,7 @@ function Form() {
                     </button>
                     <p className="text-center text-sm text-gray-500 font-poppins">
                         Don't have an account?
-                        <a className="font-bold font-poppins" href="#"> Register</a>
+                        <Link className="font-bold font-poppins" to="/register"> Register</Link>
                     </p>
                 </form>
             </div>
