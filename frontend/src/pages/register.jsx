@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 
@@ -188,7 +189,7 @@ function Form() {
                 </div>
                 <p className="text-center text-sm text-gray-500 font-poppins mt-4">
                     Already have an account?
-                    <a className="font-bold font-poppins" href="#"> Sign In</a>
+                    <Link className="font-bold font-poppins" to="/signin"> Sign In</Link>
                 </p>
             </div>
         </div>
