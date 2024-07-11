@@ -2,8 +2,10 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
-import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
+import com.smods.backend.model.Plan;
+import com.smods.backend.model.PlanModuleGPA;
+import com.smods.backend.model.User;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -22,21 +24,25 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
+    private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
+        this.authorizationService = authorizationService;
     }
 
     public List<Plan> getAllPlansByUser(Long userId) {
+        authorizationService.checkUserAuthorization(userId);
         return planRepository.findByUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
     }
 
     @Transactional
     public Plan createPlan(Long userId, Plan plan) {
+        authorizationService.checkUserAuthorization(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Check for duplicate plan name
@@ -53,6 +59,7 @@ public class PlanService {
 
     @Transactional
     public void deletePlan(Long userId, Long planId) {
+        authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
         Plan plan = planRepository.findById(planKey).orElseThrow(() -> new RuntimeException("Plan not found"));
         planRepository.delete(plan);
@@ -60,6 +67,7 @@ public class PlanService {
 
     @Transactional
     public Plan renamePlan(Long userId, Long planId, String newPlanName) {
+        authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
         Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
@@ -74,11 +82,13 @@ public class PlanService {
     }
 
     public List<PlanModuleGPA> getPlanModulesByPlan(Long planId, Long userId) {
+        authorizationService.checkUserAuthorization(userId);
         return planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
     }
 
     @Transactional
     public ModuleValidationResponse addModule(Long planId, Long userId, String moduleId, int term) {
+        authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
         // check if plan exists
@@ -103,6 +113,7 @@ public class PlanService {
 
     @Transactional
     public ModuleValidationResponse deleteModule(Long planId, Long userId, String moduleId) {
+        authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
         // check if plan exists
@@ -124,6 +135,7 @@ public class PlanService {
     }
 
     public ModuleValidationResponse validatePlanModules(Long planId, Long userId) {
+        authorizationService.checkUserAuthorization(userId);
         List<PlanModuleGPA> planModules = planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
         List<String> unsatisfiedPreRequisites = new ArrayList<>();
         List<String> unsatisfiedCoRequisites = new ArrayList<>();
