@@ -40,40 +40,35 @@ const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
     const handleTermChange = (event) => {
         const updatedTerm = parseInt(event.target.value)
 
+        //generate copy of mods with the updated values
         const tempCopy = mods.filter(m => m.courseCode !== courseCode)
-
-        // console.log(tempCopy)
-
         const modToChange = module
         modToChange.term = updatedTerm
-
         tempCopy.push(module)
-        // console.log("tempcopy")
-        // console.log(tempCopy)
 
+        //update mods array
+        //insert api call here to update the mods array
         setMods(tempCopy)
-        // console.log("updated Term")
-        // console.log(tempCopy)
+
+        //updates the term in real time
         setTerm(updatedTerm)
     }
     
     const handleGPAChange = (event) => {
         const updatedGPA = event.target.value
-        console.log(updatedGPA)
+        // console.log(updatedGPA)
 
-        //use setMods to set that mod's specific GPA to that
+        //generate copy of mods array with updated gpa
         const tempCopy = mods.filter(m => m.courseCode !== courseCode)
-
-        console.log(tempCopy)
-
         const modToChange = module
         modToChange.GPA = getGradeValue(updatedGPA)
-
         tempCopy.push(module)
-        console.log("tempcopy")
-        console.log(tempCopy)
 
+        //updates the mods array
+        //insert api call here to update the mods array
         setMods(tempCopy)
+
+        //updates the GPA realtime 
         setGPA(updatedGPA);
     }
 

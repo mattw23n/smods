@@ -564,6 +564,29 @@ const defaultMods = [
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",
         },
+        modLimit:[
+            {
+                uc: 6,
+                mc:17,
+                me: 7,
+                tm: 0,
+                fe: 6,
+            },
+            {
+                uc: 6,
+                mc:17,
+                me: 3,
+                tm: 4,
+                fe: 6,
+            },
+            {
+                uc: 6,
+                mc:17,
+                me: 0,
+                tm: 8,
+                fe: 5,
+            },
+        ]
     },
     {
         name: "Information Systems",
@@ -572,6 +595,29 @@ const defaultMods = [
             name:"ISAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-information-systems",
         },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            },
+            {
+                uc:12,
+                mc:12,
+                me:2,
+                tm:4,
+                fe:6,
+            },
+            {
+                uc:12,
+                mc:12,
+                me: 0,
+                tm: 8,
+                fe:4,
+            },
+        ]
     },
     {
         name: "Software Engineering",
@@ -580,6 +626,15 @@ const defaultMods = [
             name:"SEAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-software-engineering",
         },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            }
+        ]
     },
     {
         name: "Computing and Law",
@@ -588,6 +643,15 @@ const defaultMods = [
             name:"CLAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computing-law",
         },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            }
+        ]
         
     },
 ];

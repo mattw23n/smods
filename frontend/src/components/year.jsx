@@ -129,7 +129,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
             // console.log(copy)
 
             
-
+            //sets the mods array into the updated one with the updated term positioning from the drag
             setMods(copy);
 
             // console.log(mods)

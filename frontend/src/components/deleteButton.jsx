@@ -14,15 +14,12 @@ const DeleteButton = ({ setMods, module }) => {
     }
 
     const handleClick = () => {
-        // const courseCode = e.dataTransfer.getData("courseCode")
-        // const courseCode = courseCode
 
-        console.log(courseCode)
-        
-        // setMods((pv) => pv.filter((m) => m.courseCode !== courseCode));
+        //sets the mods to the updated version without the deleted mod
+        //replace with api call
         setMods((prevMods) => {
             const newMods = prevMods.filter((mod) => mod.courseCode !== courseCode);
-            console.log("after filter", newMods);
+
             return newMods;
         })
 
