@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react';
 import {DEFAULT_PLANS, DEFAULT_TEMPLATES} from "./plans";
+import axios from "axios";
 
 
 const templates = [
@@ -17,10 +18,15 @@ export const TemplateUser = {
 }
 
 
-
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+
+  
+
+  //add API fetch for user data here
+  //then change the parameter below to accept the new user data from the backend
+  //automatically sets the data for the other pages
 
   const [user, setUser] = useState(TemplateUser);
 

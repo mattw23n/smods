@@ -8,6 +8,9 @@ import searchDemo from "../images/searchDemo.gif";
 import validationDemo from "../images/validationDemo.gif";
 import { Link } from 'react-router-dom';
 import Background from "../components/background";
+import { animate, useMotionValue, motion } from "framer-motion";
+import useMeasure from "react-use-measure"
+import TestimonyCarousel from "../components/testimony";
 
 const VerdioPart = () => {
     return (
@@ -119,28 +122,45 @@ const PlanButton = () => {
 
 const testimonials = [
   {
+    pos: 1,
     text: "TESTIMONY 1.",
     author: "Jane Smith",
     title: "Highly Recommend",
   },
   {
+    pos: 2,
     text: "TESTIMONY 2",
     author: "Alice Johnson",
     title: "Great Experience",
   },
   {
+    pos: 3,
     text: "TESTIMONY 3",
     author: "Michael Scott",
     title: "Stayin' Alive",
   },
   {
+    pos: 4,
     text: "TESTIMONY 4",
+    author: "John Doe",
+    title: "Awesome Service",
+  },
+  {
+    pos: 5,
+    text: "TESTIMONY 5",
+    author: "John Doe",
+    title: "Awesome Service",
+  },
+  {
+    pos: 6,
+    text: "TESTIMONY 6",
     author: "John Doe",
     title: "Awesome Service",
   },
 
   
 ];
+
 
 const Testimonials = () => {
    
@@ -154,25 +174,8 @@ const Testimonials = () => {
           </p>
         </div>
 
-        <div className="-mx-6 mt-8 ">
-          <div className="relative overflow-hidden">
-            <div className="flex animate-loopscroll">
 
-              {testimonials.concat(testimonials).map((testimonial, index) => (
-                <div key={index} className="max-w-none w-full py-2">
-                    <blockquote className="flex flex-col min-h-64 min-w-[400px] justify-between bg-white/70 rounded-3xl p-6 shadow-sm backdrop-blur-sm shadow-lg mx-2">
-                    <p className="mt-4 leading-relaxed font-archivo break-words whitespace-normal">{testimonial.text}</p>
-                    <div className="mt-4 text-sm font-archivo font-bold">
-                        &mdash; {testimonial.author}
-                    </div>
-                    </blockquote>
-                    
-                </div>
-              ))}
-
-            </div>
-          </div>
-        </div>
+          <TestimonyCarousel testimonials={testimonials}></TestimonyCarousel>
       </div>
     </section>
   );
@@ -227,7 +230,7 @@ function Hero() {
                 <Testimonials></Testimonials>
                 </div>
 
-                <div className="flex w-full gap-10 items-center justify-left mb-20 pb-20">
+                <div className="flex w-full gap-10 items-center justify-left mb-20 pb-20 mt-20">
                     <p className="font-poppins font-bold text-4xl">What are you waiting for?</p>
                     <div>
                         <PlanButton />

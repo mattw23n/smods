@@ -12,8 +12,6 @@ import { useParams } from 'react-router-dom';
 import { UserContext } from "../data/user";
 import modValidation from "../scripts/validation";
 
-const DEFAULT_MODS = modulesData
-
 const PlanDetails = ({plan, setPlan}) => {
     const {title, degree, tracks, view} = plan
 
@@ -268,6 +266,9 @@ function Content({plan, setPlan, mods, setMods}){
         // Compare current mods with previous mods
         if (prevModsRef.current !== undefined && !arraysEqual(prevModsRef.current, mods) && (validationChecked.current === false || !isModalOpen)) {
             checkValidation();
+
+            //insert api call here
+            //run validation script from backend
             
         }
 
@@ -275,8 +276,6 @@ function Content({plan, setPlan, mods, setMods}){
         prevModsRef.current = mods;
     }, [mods]);
     
-    
-
 
     const checkValidation = () => {
         const check = modValidation({ mods, setMods });
@@ -396,7 +395,6 @@ function Planning(){
     }
     
     const [plan, setPlan] = useState(selectedPlan);
-
     const [mods, setMods] = useState(plan.mods);
 
     return(
