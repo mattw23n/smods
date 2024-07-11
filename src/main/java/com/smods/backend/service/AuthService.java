@@ -10,15 +10,16 @@ import com.smods.backend.exception.UsernameAlreadyExistsException;
 import com.smods.backend.exception.VerificationTokenNotFoundException;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.UserRepository;
+import com.smods.backend.util.JwtUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -33,13 +34,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
+
 
     @Autowired
-    public AuthService(UserRepository userRepository, EmailService emailService, UserService userService) {
+    public AuthService(UserRepository userRepository, EmailService emailService, UserService userService, UserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     public LoginStatus loginUser(LoginRequest loginRequest) {
@@ -93,7 +99,7 @@ public class AuthService {
         emailService.sendVerificationEmail(user);
     }
 
-    public void verifyUser(String verificationToken) {
+    public User verifyUser(String verificationToken) {
         User user = userRepository.findByVerificationToken(verificationToken)
                 .orElseThrow(() -> new VerificationTokenNotFoundException("Invalid verification token"));
 
@@ -104,7 +110,7 @@ public class AuthService {
         user.setEmailVerified(true);
         user.setVerificationToken(null);
         user.setTokenExpiryDate(null);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void requestPasswordReset(String email) {
@@ -174,5 +180,34 @@ public class AuthService {
 
     private String generateVerificationToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public Map<String, String> verifyUserAndGenerateToken(String verificationToken) {
+        User user = userRepository.findByVerificationToken(verificationToken)
+                .orElseThrow(() -> new VerificationTokenNotFoundException("Invalid verification token"));
+
+        if (user.getTokenExpiryDate().before(new Date())) {
+            throw new VerificationTokenNotFoundException("Verification token has expired");
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationToken(null);
+        user.setTokenExpiryDate(null);
+        userRepository.save(user);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("jwt", jwt);
+        tokens.put("refreshToken", refreshToken);
+        tokens.put("username", user.getUsername());
+        return tokens;
+    }
+
+    public User getUserByVerificationToken(String verificationToken) {
+        return userRepository.findByVerificationToken(verificationToken)
+                .orElseThrow(() -> new VerificationTokenNotFoundException("Invalid verification token"));
     }
 }

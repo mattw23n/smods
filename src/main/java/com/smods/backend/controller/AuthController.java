@@ -7,10 +7,12 @@ import com.smods.backend.dto.RefreshTokenRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.UserNotFoundException;
+import com.smods.backend.exception.VerificationTokenNotFoundException;
 import com.smods.backend.model.User;
 import com.smods.backend.service.AuthService;
 import com.smods.backend.service.UserService;
 import com.smods.backend.util.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -97,14 +104,18 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-        try {
-            authService.verifyUser(token);
-            return ResponseEntity.ok("Email verified successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(400).body(e.getMessage());
-        }
+    public void verifyUser(@RequestParam("token") String verificationToken, HttpServletResponse response) throws IOException {
+        User user = authService.verifyUser(verificationToken);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+
+        // Redirect to the frontend with tokens as query parameters
+        String redirectUrl = String.format("http://localhost:3000/handle-verification?jwt=%s&refreshToken=%s&username=%s", jwt, refreshToken, userDetails.getUsername());
+        response.sendRedirect(redirectUrl);
     }
+
 
     @PostMapping("/resend-verification")
     public ResponseEntity<String> resendVerificationToken(@RequestParam String email) {
