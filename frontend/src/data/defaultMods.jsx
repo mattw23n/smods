@@ -626,6 +626,15 @@ const defaultMods = [
             name:"SEAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-software-engineering",
         },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            }
+        ]
     },
     {
         name: "Computing and Law",
@@ -634,6 +643,15 @@ const defaultMods = [
             name:"CLAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computing-law",
         },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            }
+        ]
         
     },
 ];
