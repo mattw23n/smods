@@ -19,6 +19,9 @@ public class Module {
     @Column(name = "COURSE_UNIT")
     private Float courseUnit;
 
+    @Column(name = "TRACK_NAME")
+    private String trackName;
+
     @Column(name = "GRAD_REQUIREMENT")
     private String gradRequirement;
 

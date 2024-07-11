@@ -21,9 +21,6 @@ public class Major {
     private Map<String, Double> gradRequirements;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<Track> tracks;
-
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<Module> modules;
 
     public Major() {
@@ -49,14 +46,6 @@ public class Major {
         this.gradRequirements = gradRequirements;
     }
 
-    public List<Track> getTracks() {
-        return tracks;
-    }
-
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
-    }
-
     public List<Module> getModules() {
         return modules;
     }
@@ -70,12 +59,12 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return Objects.equals(majorName, major.majorName) && Objects.equals(gradRequirements, major.gradRequirements) && Objects.equals(tracks, major.tracks) && Objects.equals(modules, major.modules);
+        return Objects.equals(majorName, major.majorName) && Objects.equals(gradRequirements, major.gradRequirements) && Objects.equals(modules, major.modules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, gradRequirements, tracks, modules);
+        return Objects.hash(majorName, gradRequirements, modules);
     }
 
     @Override
@@ -83,7 +72,6 @@ public class Major {
         return "Major{" +
                 "majorName='" + majorName + '\'' +
                 ", gradRequirements=" + gradRequirements +
-                ", tracks=" + tracks +
                 ", modules=" + modules +
                 '}';
     }
