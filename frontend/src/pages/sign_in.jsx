@@ -13,6 +13,7 @@ function Form() {
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
@@ -49,11 +50,10 @@ function Form() {
                 loginUser({ username, email: username });
                 navigate('/home'); // Redirect to home page
             } else {
-                alert('Invalid username or password');
+                setError('Invalid username or password');
             }
         } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
-            alert('Login failed');
+            setError(error.response ? error.response.data : 'Login failed');
         } finally {
             setLoading(false);
         }
@@ -68,6 +68,7 @@ function Form() {
             <div className="bg-white bg-opacity-50 rounded-xl p-8 shadow-lg">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <p className="text-center text-2xl font-bold font-poppins">Sign In</p>
+                    {error && <p className="text-red-500 text-center">{error}</p>}
                     <div>
                         <p className="font-bold pb-1 text-sm font-poppins">
                             Username or Email
@@ -77,7 +78,7 @@ function Form() {
                             <input
                                 type="text"
                                 className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
-                                placeholder="Enter username or email"
+                                placeholder="Enter username"
                                 value={username}
                                 onChange={handleUsernameChange}
                             />

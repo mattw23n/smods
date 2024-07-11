@@ -26,6 +26,8 @@ public class AuthService {
 
     private static final Pattern NON_ENGLISH_PATTERN = Pattern.compile("[^\\p{ASCII}]");
     private static final long TOKEN_EXPIRY_DURATION = 1000 * 60 * 60 * 24; // 24 hours
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d).{8,32}$");
+
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,12 +56,12 @@ public class AuthService {
     public User registerUser(UserDTO userDTO) {
         validateInput(userDTO);
 
-        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            throw new UsernameAlreadyExistsException("Username already exists: " + userDTO.getUsername());
-        }
-
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException("Email already exists: " + userDTO.getEmail());
+        }
+
+        if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already exists: " + userDTO.getUsername());
         }
 
         User user = new User(userDTO.getUsername(), passwordEncoder.encode(userDTO.getPassword()),
@@ -140,12 +142,33 @@ public class AuthService {
     }
 
     private void validateInput(UserDTO userDTO) {
+        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        if (userDTO.getUsername() == null || userDTO.getUsername().isBlank()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+        if (userDTO.getPassword() == null || userDTO.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+        if (!userDTO.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new IllegalArgumentException("Email should be valid");
+        }
+        if (NON_ENGLISH_PATTERN.matcher(userDTO.getEmail()).find()) {
+            throw new InvalidCharacterException("Email contains invalid characters.");
+        }
+        if (userDTO.getUsername().length() < 3 || userDTO.getUsername().length() > 16) {
+            throw new IllegalArgumentException("Username must be between 3 and 16 characters");
+        }
         if (NON_ENGLISH_PATTERN.matcher(userDTO.getUsername()).find()) {
             throw new InvalidCharacterException("Username contains invalid characters.");
         }
 
-        if (NON_ENGLISH_PATTERN.matcher(userDTO.getEmail()).find()) {
-            throw new InvalidCharacterException("Email contains invalid characters.");
+        if (!PASSWORD_PATTERN.matcher(userDTO.getPassword()).matches()) {
+            throw new InvalidCharacterException("Password must contain at least one letter and one number, and be between 8-32 characters long.");
+        }
+        if (NON_ENGLISH_PATTERN.matcher(userDTO.getPassword()).find()) {
+            throw new InvalidCharacterException("Password contains invalid characters.");
         }
     }
 
