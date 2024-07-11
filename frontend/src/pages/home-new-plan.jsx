@@ -6,21 +6,20 @@ import Background from "../components/background";
 import { UserContext } from "../data/user";
 import defaultMods from "../data/defaultMods";
 
+const majors = [
+    {Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
+    {Title: "Information Systems", Tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
+    {Title: "Software Engineering", Tracks: ["Not Applicable"]},
+    {Title: "Computing & Law", Tracks: ["Not Applicable"]},
+]
 
 const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
-    const { name, plans, templates } = user
-
-    const majors = [
-        {Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
-        {Title: "Information Systems", Tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
-        {Title: "Software Engineering", Tracks: ["Not Applicable"]},
-        {Title: "Computing & Law", Tracks: ["Not Applicable"]},
-    ]
+    const { name, plans } = user
 
     const [selectedTitle, setSelectedTitle] = useState("");
     const [selectedDegree, setSelectedDegree] = useState("");
-    const [selectedTrack, setSelectedTrack] = useState("");
+    const [selectedTrack, setSelectedTrack] = useState([]);
 
     const [errors, setErrors] = useState({
         title: "",
@@ -67,6 +66,7 @@ const Content = ({ user, setUser }) => {
 
             const newTracks = [selectedTrack]
 
+            //create new plan
             const newPlan = {
                 id: plans.length + 1,
                 title:selectedTitle,
@@ -88,6 +88,8 @@ const Content = ({ user, setUser }) => {
             ...prevUser,
             plans: updatedPlans,
             }));
+
+            //insert api call to post updated plans array
 
             navigate(`/plan/${newPlan.id}`);
         }

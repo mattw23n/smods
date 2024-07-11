@@ -90,6 +90,7 @@ const SearchBar = ({plan}) => {
             return
         } 
 
+        //EVERYTHING BELOW THIS SHOULD BE CHANGED INTO AN API CALL
         if(selectedFilter === "Course Code"){
             setSearchResult(ALL_MODULES.filter(
                 m => m.courseCode.includes(searchTerm)

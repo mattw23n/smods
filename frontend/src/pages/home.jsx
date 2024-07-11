@@ -5,14 +5,6 @@ import Footer from "../components/footer";
 import Background from "../components/background";
 import { UserContext } from "../data/user";
 
-const majors = [
-    {title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
-    {title: "Information Systems", tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
-    {title: "Software Engineering", tracks: ["Not Applicable"]},
-    {title: "Computing & Law", tracks: ["Not Applicable"]},
-]
-
-
 const Card = ({plan, user, setUser, isTemplate}) => {
 
     const { title, date, degree, tracks} = plan
@@ -32,11 +24,11 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
     const handleRename = (event) => {
         event.stopPropagation();
-        event.preventDefault(); // Prevent default action
+        event.preventDefault();
 
         setIsEditing(true);
         setIsMenuOpen(false);
-        console.log(plan)
+        // console.log(plan)
     };
 
     const handleTitleChange = (event) => {
@@ -45,8 +37,10 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
     const handleTitleBlur = () => {
         setIsEditing(false);
-        // Here you can update the plan title in your state or call an API to save the changes
-        plan.title = editedTitle; // Example of updating the title
+
+        plan.title = editedTitle;
+        
+        //insert api call here to post the updated title
         
     };
 
@@ -61,10 +55,13 @@ const Card = ({plan, user, setUser, isTemplate}) => {
         const updatedPlans = user.plans.filter((plan) => plan.id !== deletedPlan);
         console.log("after filter", updatedPlans);
 
+        //updates the user's plans
         setUser(prevUser => ({
             ...prevUser,
             plans: updatedPlans, 
         }));
+
+        //insert api call here to post the updated plans array
     };
 
     return (
@@ -138,7 +135,6 @@ const Content = ({user, setUser}) => {
     const {name, plans, templates} = user
 
     console.log(plans)
-
     const isEmptyPlan = plans.length === 0
     
     return(
