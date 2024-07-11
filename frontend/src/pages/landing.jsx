@@ -12,170 +12,167 @@ import Background from "../components/background";
 const VerdioPart = () => {
     return (
         <>
-        <div className="flex flex-col items-center mx-6 mt-8">
-            
-            <h1 className="text-center text-4xl font-extrabold font-poppins py-2 mb-16 max-w-2xl">
-                Simplify your learning with us
-            </h1>
-            <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                <div className="flex-1 justify-center px-16">
-                    <h1 className="text-3xl font-bold font-poppins mb-4">
-                        Plan Your Academic Journey
-                    </h1>
-                    <p className="text-lg mb-4 max-w-lg font-archivo">
-                        Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                    </p>
-                </div>
-                <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                    <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
-                </div>
-            </div>
+            <div className="flex flex-col items-center mx-6 mt-8">
 
-            <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                    <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
+                <h1 className="text-center text-4xl font-extrabold font-poppins py-2 mb-16 max-w-2xl">
+                    Simplify your learning with us
+                </h1>
+                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
+                    <div className="flex-1 justify-center px-16">
+                        <h1 className="text-3xl font-bold font-poppins mb-4">
+                            Plan Your Academic Journey
+                        </h1>
+                        <p className="text-lg mb-4 max-w-lg font-archivo">
+                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
+                        </p>
+                    </div>
+                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
+                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
+                    </div>
                 </div>
-                <div className="flex-1 justify-center px-16">
-                    <h1 className="text-3xl font-bold font-poppins mb-4">
-                        Plan Your Academic Journey
-                        
-                    </h1>
-                    <p className="text-lg mb-4 max-w-lg font-archivo">
-                        Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                    </p>
-                </div>
-            </div>
 
-            <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                <div className="flex-1 justify-center px-16">
-                    <h1 className="text-3xl font-bold font-poppins mb-4">
-                        Plan Your Academic Journey
-                    </h1>
-                    <p className="text-lg mb-4 max-w-lg font-archivo">
-                        Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                    </p>
+                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
+                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
+                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
+                    </div>
+                    <div className="flex-1 justify-center px-16">
+                        <h1 className="text-3xl font-bold font-poppins mb-4">
+                            Plan Your Academic Journey
+
+                        </h1>
+                        <p className="text-lg mb-4 max-w-lg font-archivo">
+                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
+                        </p>
+                    </div>
                 </div>
-                <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                    <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
+
+                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
+                    <div className="flex-1 justify-center px-16">
+                        <h1 className="text-3xl font-bold font-poppins mb-4">
+                            Plan Your Academic Journey
+                        </h1>
+                        <p className="text-lg mb-4 max-w-lg font-archivo">
+                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
+                        </p>
+                    </div>
+                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
+                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
+                    </div>
                 </div>
             </div>
-        </div>
         </>
     )
 }
 
 const PlanButton = () => {
     return (
-    <div class="w-full h-40 flex items-center justify-left cursor-pointer">
-        <Link class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
-        to="/signin">
+        <div className="w-full h-40 flex items-center justify-left cursor-pointer">
+            <Link className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
+                  to="/register">
             <span
-            class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"
+                className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"
             ></span>
-            <span
-            class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
-            >
+                <span
+                    className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
+                >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 fill="none"
-                class="w-5 h-5 text-white"
+                className="w-5 h-5 text-white"
             >
                 <path
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-                stroke-width="2"
-                stroke-linejoin="round"
-                stroke-linecap="round"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
                 ></path>
             </svg>
             </span>
-            <span
-            class="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200"
-            >
+                <span
+                    className="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200"
+                >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 fill="none"
-                class="w-5 h-5 text-blue-400"
+                className="w-5 h-5 text-blue-400"
             >
                 <path
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-                stroke-width="2"
-                stroke-linejoin="round"
-                stroke-linecap="round"
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                    strokeLinecap="round"
                 ></path>
             </svg>
             </span>
-            <span
-            class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400"
-            >Sign Up Now!
+                <span
+                    className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400"
+                >Sign Up Now!
             </span>
-        </Link>
-    </div>
+            </Link>
+        </div>
     )
 }
 
 const testimonials = [
-  {
-    text: "TESTIMONY 1.",
-    author: "Jane Smith",
-    title: "Highly Recommend",
-  },
-  {
-    text: "TESTIMONY 2",
-    author: "Alice Johnson",
-    title: "Great Experience",
-  },
-  {
-    text: "TESTIMONY 3",
-    author: "Michael Scott",
-    title: "Stayin' Alive",
-  },
-  {
-    text: "TESTIMONY 4",
-    author: "John Doe",
-    title: "Awesome Service",
-  },
+    {
+        text: "TESTIMONY 1.",
+        author: "Jane Smith",
+        title: "Highly Recommend",
+    },
+    {
+        text: "TESTIMONY 2",
+        author: "Alice Johnson",
+        title: "Great Experience",
+    },
+    {
+        text: "TESTIMONY 3",
+        author: "Michael Scott",
+        title: "Stayin' Alive",
+    },
+    {
+        text: "TESTIMONY 4",
+        author: "John Doe",
+        title: "Awesome Service",
+    },
 
-  
 ];
 
 const Testimonials = () => {
-   
-
-  return (
-    <section>
-      <div className="mx-auto max-w-[1340px] px-4 py-12">
-        <div className="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
-          <p className="max-w-xl text-3xl font-bold font-poppins tracking-tight text-gray-900 ">
-            Dont take our word for it. Take theirs.
-          </p>
-        </div>
-
-        <div className="-mx-6 mt-8 ">
-          <div className="relative overflow-hidden">
-            <div className="flex animate-loopscroll">
-
-              {testimonials.concat(testimonials).map((testimonial, index) => (
-                <div key={index} className="max-w-none w-full py-2">
-                    <blockquote className="flex flex-col min-h-64 min-w-[400px] justify-between bg-white/70 rounded-3xl p-6 shadow-sm backdrop-blur-sm shadow-lg mx-2">
-                    <p className="mt-4 leading-relaxed font-archivo break-words whitespace-normal">{testimonial.text}</p>
-                    <div className="mt-4 text-sm font-archivo font-bold">
-                        &mdash; {testimonial.author}
-                    </div>
-                    </blockquote>
-                    
+    return (
+        <section>
+            <div className="mx-auto max-w-[1340px] px-4 py-12">
+                <div className="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
+                    <p className="max-w-xl text-3xl font-bold font-poppins tracking-tight text-gray-900 ">
+                        Dont take our word for it. Take theirs.
+                    </p>
                 </div>
-              ))}
 
+                <div className="-mx-6 mt-8 ">
+                    <div className="relative overflow-hidden">
+                        <div className="flex animate-loopscroll">
+
+                            {testimonials.concat(testimonials).map((testimonial, index) => (
+                                <div key={index} className="max-w-none w-full py-2">
+                                    <blockquote className="flex flex-col min-h-64 min-w-[400px] justify-between bg-white/70 rounded-3xl p-6 shadow-sm backdrop-blur-sm shadow-lg mx-2">
+                                        <p className="mt-4 leading-relaxed font-archivo break-words whitespace-normal">{testimonial.text}</p>
+                                        <div className="mt-4 text-sm font-archivo font-bold">
+                                            &mdash; {testimonial.author}
+                                        </div>
+                                    </blockquote>
+
+                                </div>
+                            ))}
+
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 
@@ -195,7 +192,7 @@ function Hero() {
                         Plan Now!
                         <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                     </Link> */}
-                    
+
                 </div>
                 <div className="flex max-w-[600px] align-bottom">
                     <img src={Laptop} alt="mockup" className="w-full h-auto " />
@@ -224,7 +221,7 @@ function Hero() {
                 </div>
 
                 <div className="flex my-20">
-                <Testimonials></Testimonials>
+                    <Testimonials></Testimonials>
                 </div>
 
                 <div className="flex w-full gap-10 items-center justify-left mb-20 pb-20">
@@ -232,15 +229,15 @@ function Hero() {
                     <div>
                         <PlanButton />
                     </div>
-                    
-                </div>
-                
-            </div>
-            
-            
 
-    
-    </section>
+                </div>
+
+            </div>
+
+
+
+
+        </section>
     );
 }
 
