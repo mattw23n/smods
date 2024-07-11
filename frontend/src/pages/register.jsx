@@ -10,10 +10,9 @@ function Form() {
     const [password, setPassword] = useState("");
     const [year, setYear] = useState("");
     const [degree, setDegree] = useState("");
-    const [major, setMajor] = useState("");
-    const [exemptions, setExemptions] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleUserChange = (event) => {
         setUser(event.target.value);
@@ -35,14 +34,6 @@ function Form() {
         setDegree(event.target.value);
     };
 
-    const handleMajorChange = (event) => {
-        setMajor(event.target.value);
-    };
-
-    const handleExemptionsChange = (event) => {
-        setExemptions(event.target.value);
-    };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log("Form submitted");
@@ -51,23 +42,25 @@ function Form() {
             username: user,
             email: email,
             password: password,
-            admissionYear: year,
-            degree: degree,
-            major: major,
-            exemptions: exemptions
+            admissionYear: year ? parseInt(year) : null,
+            degree: degree
         };
 
         try {
-            const response = await axios.post('/api/auth/register', userData);
+            const response = await axios.post('http://localhost:8080/api/auth/register', userData);
             setSuccess('Registration successful');
             setError('');
             console.log('Registration successful:', response.data);
             // Handle success (e.g., redirect to another page)
         } catch (error) {
-            setError('Registration failed: ' + (error.response?.data || 'Unknown error'));
+            // Improved error handling
+            const errorMessage = error.response?.data?.message || error.response?.data || 'Unknown error';
+            setError(`Registration failed: ${errorMessage}`);
             setSuccess('');
-            console.error('Error:', error.response?.data || error.message);
+            console.error('Error:', errorMessage);
             // Handle error (e.g., show error message)
+        } finally {
+            setLoading(false); // Ensure loading state is reset
         }
     };
 
@@ -145,38 +138,9 @@ function Form() {
                                     onChange={handleDegreeChange}
                                 >
                                     <option value="" disabled>Select Degree</option>
-                                    <option value="1">Undergraduate</option>
-                                    <option value="2">Postgraduate</option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Postgraduate">Postgraduate</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="font-bold pb-1 text-sm font-poppins">Major/Track</p>
-                            <label htmlFor="Major" className="sr-only">Major</label>
-                            <div className="relative">
-                                <select
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 text-sm shadow-sm"
-                                    value={major}
-                                    onChange={handleMajorChange}
-                                >
-                                    <option value="" disabled>Select Major/Track</option>
-                                    <option value="1">Cybersecurity</option>
-                                    <option value="2">Artificial Intelligence</option>
-                                    <option value="3">Cyber-Physical Systems</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <p className="font-bold pb-1 text-sm font-poppins">Exemptions</p>
-                            <label htmlFor="exemptions" className="sr-only">Exemptions</label>
-                            <div className="relative">
-                                <input
-                                    type="exemptions"
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm shadow-sm"
-                                    placeholder="Enter exemptions"
-                                    value={exemptions}
-                                    onChange={handleExemptionsChange}
-                                />
                             </div>
                         </div>
                         <button
