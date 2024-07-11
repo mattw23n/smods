@@ -49,20 +49,20 @@ function Header({ isSignIn }) {
 
                             <div className="flex items-center gap-4">
                                 <div className="sm:flex sm:gap-4">
-                                    <a
+                                    <Link
                                         className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow"
-                                        href="#"
+                                        to="/signin"
                                     >
                                         Login
-                                    </a>
+                                    </Link>
 
                                     <div className="hidden sm:flex">
-                                        <a
+                                        <Link
                                             className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-poppins font-bold text-primary"
-                                            href="#"
+                                            to="/register"
                                         >
                                             Register
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
