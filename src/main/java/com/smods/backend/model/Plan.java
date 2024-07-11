@@ -24,6 +24,9 @@ public class Plan {
     @Column(name = "TRACK")
     private String track;
 
+    @Column(name = "CREATION_DATE")
+    private ZonedDateTime creationDateTime;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
@@ -38,8 +41,7 @@ public class Plan {
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
     private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
 
-    @Column(name = "CREATION_DATE")
-    private ZonedDateTime creationDateTime;
+
 
     // Default constructor
     public Plan() {
@@ -94,6 +96,14 @@ public class Plan {
         this.user = user;
     }
 
+    public ZonedDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
+    }
+
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
@@ -108,14 +118,6 @@ public class Plan {
 
     public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGPA> planModulePreassignedGPAs) {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
-    }
-
-    public ZonedDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(ZonedDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
     }
 
     // Equals and hashCode methods

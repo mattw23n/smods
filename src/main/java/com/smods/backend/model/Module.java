@@ -19,19 +19,12 @@ public class Module {
     @Column(name = "COURSE_UNIT")
     private Float courseUnit;
 
-    // null if not a major module
-    @Column(name = "MAJOR")
-    private String major;
-
-    // null if not a track module
-    @Column(name = "TRACK")
-    private String track;
-
     @Column(name = "GRAD_REQUIREMENT")
     private String gradRequirement;
 
     @Column(name = "GRAD_SUBREQUIREMENT")
     private String gradSubrequirement;
+
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     @JsonBackReference(value = "module-planModuleGPA")
@@ -77,20 +70,20 @@ public class Module {
     @JsonBackReference(value = "mutuallyExclusiveWith")
     private List<Module> mutuallyExclusiveWith;
 
+    @ManyToOne
+    @JoinColumn(name = "MAJOR_NAME")
+    private Major major;
     // Default constructor
     public Module() {}
 
-    public Module(String moduleId, String moduleName, Float courseUnit, String major, String track, String gradRequirement, String gradSubrequirement) {
+    public Module(String moduleId, String moduleName, Float courseUnit, String gradRequirement, String gradSubrequirement) {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
-        this.major = major;
-        this.track = track;
         this.gradRequirement = gradRequirement;
         this.gradSubrequirement = gradSubrequirement;
     }
 
-    // Getters and Setters
     public String getModuleId() {
         return moduleId;
     }
@@ -113,22 +106,6 @@ public class Module {
 
     public void setCourseUnit(Float courseUnit) {
         this.courseUnit = courseUnit;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getTrack() {
-        return track;
-    }
-
-    public void setTrack(String track) {
-        this.track = track;
     }
 
     public String getGradRequirement() {
@@ -211,17 +188,25 @@ public class Module {
         this.mutuallyExclusiveWith = mutuallyExclusiveWith;
     }
 
+    public Major getMajor() {
+        return major;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(moduleId, module.moduleId);
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(gradRequirement, module.gradRequirement) && Objects.equals(gradSubrequirement, module.gradSubrequirement) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, module.planModulePreassignedGPAs) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(major, module.major);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleId);
+        return Objects.hash(moduleId, moduleName, courseUnit, gradRequirement, gradSubrequirement, planModuleGPAs, planModulePreassignedGPAs, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, major);
     }
 
     @Override
@@ -230,6 +215,17 @@ public class Module {
                 "moduleId='" + moduleId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
+                ", gradRequirement='" + gradRequirement + '\'' +
+                ", gradSubrequirement='" + gradSubrequirement + '\'' +
+                ", planModuleGPAs=" + planModuleGPAs +
+                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
+                ", preRequisites=" + preRequisites +
+                ", preRequisiteDependents=" + preRequisiteDependents +
+                ", coRequisites=" + coRequisites +
+                ", coRequisiteDependents=" + coRequisiteDependents +
+                ", mutuallyExclusives=" + mutuallyExclusives +
+                ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
+                ", major=" + major +
                 '}';
     }
 }
