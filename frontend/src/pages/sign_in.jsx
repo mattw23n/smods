@@ -5,10 +5,9 @@ import Footer from "../components/footer";
 import Loading from "./loading";
 import { UserContext } from "../data/user";
 import axios from "axios";
-import {UserProvider} from "../data/user";
 
 function Form() {
-    const { user, setUser } = useContext(UserContext) || {};
+    const { loginUser } = useContext(UserContext);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -47,7 +46,7 @@ function Form() {
                 // Store tokens in localStorage or context
                 localStorage.setItem("jwt", jwt);
                 localStorage.setItem("refreshToken", refreshToken);
-                if (setUser) setUser({ username, email: username });
+                loginUser({ username, email: username });
                 navigate('/home'); // Redirect to home page
             } else {
                 alert('Invalid username or password');
@@ -137,13 +136,11 @@ function Content() {
 
 function SignIn() {
     return (
-        <UserProvider>
-            <div className="min-h-screen flex flex-col">
-                <Header isSignIn={true} />
-                <Content />
-                <Footer />
-            </div>
-        </UserProvider>
+        <div className="min-h-screen flex flex-col">
+            <Header isSignIn={true} />
+            <Content />
+            <Footer />
+        </div>
     );
 }
 
