@@ -23,6 +23,8 @@ public class Major {
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<Module> modules;
 
+    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    private List<PreassignedModule> preassignedModules;
     public Major() {
     }
 
@@ -54,17 +56,25 @@ public class Major {
         this.modules = modules;
     }
 
+    public List<PreassignedModule> getPreassignedModules() {
+        return preassignedModules;
+    }
+
+    public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
+        this.preassignedModules = preassignedModules;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return Objects.equals(majorName, major.majorName) && Objects.equals(gradRequirements, major.gradRequirements) && Objects.equals(modules, major.modules);
+        return Objects.equals(majorName, major.majorName) && Objects.equals(gradRequirements, major.gradRequirements) && Objects.equals(modules, major.modules) && Objects.equals(preassignedModules, major.preassignedModules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, gradRequirements, modules);
+        return Objects.hash(majorName, gradRequirements, modules, preassignedModules);
     }
 
     @Override
@@ -73,6 +83,7 @@ public class Major {
                 "majorName='" + majorName + '\'' +
                 ", gradRequirements=" + gradRequirements +
                 ", modules=" + modules +
+                ", preassignedModules=" + preassignedModules +
                 '}';
     }
 }

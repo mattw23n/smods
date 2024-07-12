@@ -39,7 +39,7 @@ public class Plan {
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
-    private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
+    private List<PreassignedModule> planModulePreassignedGPAs;
 
 
 
@@ -112,12 +112,12 @@ public class Plan {
         this.planModuleGPAs = planModuleGPAs;
     }
 
-    public List<PlanModulePreassignedGPA> getPlanModulePreassignedGPAs() {
+    public List<PreassignedModule> getPlanModulePreassignedGPAs() {
         return planModulePreassignedGPAs;
     }
 
-    public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGPA> planModulePreassignedGPAs) {
-        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    public void setPlanModulePreassignedGPAs(List<PreassignedModule> preassignedModules) {
+        this.planModulePreassignedGPAs = preassignedModules;
     }
 
     // Equals and hashCode methods
