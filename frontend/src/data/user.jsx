@@ -32,10 +32,10 @@ export const UserProvider = ({ children }) => {
     const loginUser = (userData) => {
         // Set default plans and templates if they don't exist
         if (!userData.plans) {
-            userData.plans = [];
+            userData.plans = DEFAULT_PLANS;
         }
         if (!userData.templates) {
-            userData.templates = [];
+            userData.templates = DEFAULT_TEMPLATES;
         }
 
         setUser(userData);
