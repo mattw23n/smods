@@ -42,21 +42,24 @@ function Form() {
             });
 
             if (response.status === 200) {
-                const { token, refreshToken, type, username } = response.data;
+                const { token, refreshToken, type, username, userId } = response.data;
                 console.log("Login successful:", token);
-                // Store tokens in localStorage or context
+                console.log("userId:", userId)
+                // Store tokens and userId in localStorage or context
                 localStorage.setItem("jwt", token);
                 localStorage.setItem("refreshToken", refreshToken);
-                loginUser({ username, email: username });
+                localStorage.setItem("type", type);
+                localStorage.setItem("userId", userId);
+                loginUser({ username, email: username, userId });
                 navigate('/home'); // Redirect to home page
             } else {
                 setError('Invalid username or password');
             }
         } catch (error) {
-            if (error.response.status === 403) {
+            if (error.response && error.response.status === 403) {
                 // Email not verified
                 navigate('/verify-email');
-            } else if (error.response.status === 401) {
+            } else if (error.response && error.response.status === 401) {
                 // Invalid credentials
                 setError('Invalid username or password');
             } else {
