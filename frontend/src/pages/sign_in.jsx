@@ -42,10 +42,10 @@ function Form() {
             });
 
             if (response.status === 200) {
-                const { jwt, refreshToken, username } = response.data;
-                console.log("Login successful:", jwt);
+                const { token, refreshToken, type, username } = response.data;
+                console.log("Login successful:", token);
                 // Store tokens in localStorage or context
-                localStorage.setItem("jwt", jwt);
+                localStorage.setItem("jwt", token);
                 localStorage.setItem("refreshToken", refreshToken);
                 loginUser({ username, email: username });
                 navigate('/home'); // Redirect to home page
