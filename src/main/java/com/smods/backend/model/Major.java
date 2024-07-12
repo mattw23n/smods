@@ -1,6 +1,7 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,10 @@ public class Major {
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<PreassignedModule> preassignedModules;
+
+    @ManyToMany(mappedBy = "majors", cascade = CascadeType.ALL)
+    private List<Plan> plans;
+
     public Major() {
     }
 
