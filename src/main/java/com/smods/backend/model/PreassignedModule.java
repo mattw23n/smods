@@ -1,17 +1,17 @@
 package com.smods.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.smods.backend.model.composite_key.PlanModulePreassignedGPAKey;
+import com.smods.backend.model.composite_key.PreassignedModuleKey;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "PLAN_MODULE_PREASSIGNED_GPA")
-public class PlanModulePreassignedGPA {
+@Table(name = "PREASSIGNED_MODULE")
+public class PreassignedModule {
 
     @EmbeddedId
-    private PlanModulePreassignedGPAKey planModulePreassignedGPAId;
+    private PreassignedModuleKey preassignedModuleKey;
 
     @ManyToOne
     @MapsId("planId")
@@ -27,6 +27,11 @@ public class PlanModulePreassignedGPA {
     @JoinColumn(name = "MODULE_ID")
     private Module module;
 
+    @ManyToOne
+    @MapsId("majorName")
+    @JoinColumn(name = "MAJOR_NAME")
+    private Major major;
+
     @Column(name = "GPA")
     private Float gpa;
 
@@ -34,24 +39,24 @@ public class PlanModulePreassignedGPA {
     private int term;
 
     // Default constructor
-    public PlanModulePreassignedGPA() {}
+    public PreassignedModule() {}
 
     // Constructor with parameters
 
-    public PlanModulePreassignedGPA(PlanModulePreassignedGPAKey planModulePreassignedGPAId, Plan plan, Module module, Float gpa, int term) {
-        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
+
+    public PreassignedModule(Plan plan, Module module, Major major, int term) {
         this.plan = plan;
         this.module = module;
-        this.gpa = gpa;
+        this.major = major;
         this.term = term;
     }
 
-    public PlanModulePreassignedGPAKey getPlanModulePreassignedGPAId() {
-        return planModulePreassignedGPAId;
+    public PreassignedModuleKey getPreassignedModuleKey() {
+        return preassignedModuleKey;
     }
 
-    public void setPlanModulePreassignedGPAId(PlanModulePreassignedGPAKey planModulePreassignedGPAId) {
-        this.planModulePreassignedGPAId = planModulePreassignedGPAId;
+    public void setPreassignedModuleKey(PreassignedModuleKey preassignedModuleKey) {
+        this.preassignedModuleKey = preassignedModuleKey;
     }
 
     public Plan getPlan() {
@@ -70,11 +75,19 @@ public class PlanModulePreassignedGPA {
         this.module = module;
     }
 
-    public Float getGPA() {
+    public Major getMajor() {
+        return major;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+    }
+
+    public Float getGpa() {
         return gpa;
     }
 
-    public void setGPA(Float gpa) {
+    public void setGpa(Float gpa) {
         this.gpa = gpa;
     }
 
@@ -85,31 +98,29 @@ public class PlanModulePreassignedGPA {
     public void setTerm(int term) {
         this.term = term;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModulePreassignedGPA that = (PlanModulePreassignedGPA) o;
-        return Objects.equals(planModulePreassignedGPAId, that.planModulePreassignedGPAId) &&
-                Objects.equals(plan, that.plan) &&
-                Objects.equals(module, that.module) &&
-                Objects.equals(gpa, that.gpa) &&
-                Objects.equals(term, that.term);
+        PreassignedModule that = (PreassignedModule) o;
+        return term == that.term && Objects.equals(preassignedModuleKey, that.preassignedModuleKey) && Objects.equals(plan, that.plan) && Objects.equals(module, that.module) && Objects.equals(major, that.major) && Objects.equals(gpa, that.gpa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planModulePreassignedGPAId, plan, module, gpa, term);
+        return Objects.hash(preassignedModuleKey, plan, module, major, gpa, term);
     }
 
     @Override
     public String toString() {
-        return "PlanModulePreassignedGPA{" +
-                "id=" + planModulePreassignedGPAId +
+        return "PreassignedModule{" +
+                "preassignedModuleKey=" + preassignedModuleKey +
                 ", plan=" + plan +
                 ", module=" + module +
+                ", major=" + major +
                 ", gpa=" + gpa +
-                ", term='" + term + '\'' +
+                ", term=" + term +
                 '}';
     }
 }

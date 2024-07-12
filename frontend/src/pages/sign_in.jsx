@@ -1,45 +1,40 @@
 import React, { useState, useContext } from "react";
+import { useNavigate, Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
-import { useNavigate } from 'react-router-dom';
-import TemplateUser from "../data/user";
 import Loading from "./loading";
 import { UserContext } from "../data/user";
-
-
+import axios from "axios";
 
 function Form() {
-    //global user
-    // const { user } = useContext(UserContext);
+    const { loginUser } = useContext(UserContext);
 
-    const [user, setUser] = useState("")
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
     };
 
-    const handleUserChange = (event) => {
-        setUser(event.target.value);
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
     };
 
     const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log("User:", user);
+        console.log("Username:", username);
         console.log("Password:", password);
 
-         // Start loading
         setLoading(true);
 
-        // Mock validation and loading delay
         setTimeout(() => {
             if (email === user.email && password === user.password) {
                 navigate('/home'); // Redirect to home page
@@ -49,13 +44,44 @@ function Form() {
             setLoading(false); // End loading
         }, 2000); // 2 seconds delay for demonstration
 
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/login', {
+                username: username,
+                password: password,
+            });
+
+            if (response.status === 200) {
+                const { token, refreshToken, type, username, userId } = response.data;
+                console.log("Login successful:", token);
+                console.log("userId:", userId)
+                // Store tokens and userId in localStorage or context
+                localStorage.setItem("jwt", token);
+                localStorage.setItem("refreshToken", refreshToken);
+                localStorage.setItem("type", type);
+                localStorage.setItem("userId", userId);
+                loginUser({ username, email: username, userId });
+                navigate('/home'); // Redirect to home page
+            } else {
+                setError('Invalid username or password');
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                // Email not verified
+                navigate('/verify-email');
+            } else if (error.response && error.response.status === 401) {
+                // Invalid credentials
+                setError('Invalid username or password');
+            } else {
+                // Other errors
+                setError('Login failed');
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (loading) {
-        console.log("loading")
-        return (
-            <Loading />
-        )
+        return <Loading />;
     }
 
     return (
@@ -63,18 +89,19 @@ function Form() {
             <div className="bg-white bg-opacity-50 rounded-xl p-8 shadow-lg">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <p className="text-center text-2xl font-bold font-poppins">Sign In</p>
+                    {error && <p className="text-red-500 text-center">{error}</p>}
                     <div>
                         <p className="font-bold pb-1 text-sm font-poppins">
-                            Username
+                            Username or Email
                         </p>
-                        <label htmlFor="user" className="sr-only">Username</label>
+                        <label htmlFor="username" className="sr-only">Username</label>
                         <div className="relative">
                             <input
-                                type="user"
+                                type="text"
                                 className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-xs shadow-sm font-poppins"
                                 placeholder="Enter username"
-                                value={user}
-                                onChange={handleUserChange}
+                                value={username}
+                                onChange={handleUsernameChange}
                             />
                         </div>
                     </div>
@@ -112,8 +139,8 @@ function Form() {
                         Sign in
                     </button>
                     <p className="text-center text-sm text-gray-500 font-poppins">
-                        Don't have an account? 
-                        <a className="font-bold font-poppins" href="#"> Register</a>
+                        Don't have an account?
+                        <Link className="font-bold font-poppins" to="/register"> Register</Link>
                     </p>
                 </form>
             </div>

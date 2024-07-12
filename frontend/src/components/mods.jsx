@@ -1,28 +1,27 @@
-import React, { useState } from "react"
-import {m, motion} from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import DeleteButton from "./deleteButton";
 import DropIndicator from "./dropIndicator";
 
-const Mod = ({module, plan, handleDragStart, mods, setMods}) => {
-    const { courseTitle, courseCode, courseType, courseLink, term, GPA, isError } = module;
+const Mod = ({ module, plan, handleDragStart, mods, setMods }) => {
+    const { moduleName, moduleId, courseUnit, gradRequirement, gradSubrequirement, preRequisites, coRequisites, mutuallyExclusives, major, term, GPA, isError, courseType, courseLink } = module;
     const { isEditMode, isGPAOn, view } = plan;
-    const isGroupView = view === 1
-    const isSearchMode = term === -1
-    
+    const isGroupView = view === 1;
+    const isSearchMode = term === -1;
 
     const grades = [
-        {letter:"A+", value:4.3},
-        {letter:"A", value:4.0},
-        {letter:"A-", value:3.7},
-        {letter:"B+", value:3.3},
-        {letter:"B", value:3.0},
-        {letter:"B-", value:2.7},
-        {letter:"C+", value:2.4},
-        {letter:"C", value:2.1},
-        {letter:"C-", value:1.8},
-    ]
+        { letter: "A+", value: 4.3 },
+        { letter: "A", value: 4.0 },
+        { letter: "A-", value: 3.7 },
+        { letter: "B+", value: 3.3 },
+        { letter: "B", value: 3.0 },
+        { letter: "B-", value: 2.7 },
+        { letter: "C+", value: 2.4 },
+        { letter: "C", value: 2.1 },
+        { letter: "C-", value: 1.8 },
+    ];
 
-    const terms = [1, 2, 3, 4, 5, 6, 7, 8]
+    const terms = [1, 2, 3, 4, 5, 6, 7, 8];
 
     const getGradeValue = (letter) => {
         const grade = grades.find(g => g.letter === letter);

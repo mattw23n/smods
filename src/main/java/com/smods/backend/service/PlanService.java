@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlanService {
@@ -175,4 +176,8 @@ public class PlanService {
 
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
+
+//    public static Map<String, Double> getGradRequirements(Plan plan){
+//        // for each module in plan,
+//    }
 }

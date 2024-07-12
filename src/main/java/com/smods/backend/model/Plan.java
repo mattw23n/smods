@@ -24,6 +24,9 @@ public class Plan {
     @Column(name = "TRACK")
     private String track;
 
+    @Column(name = "CREATION_DATE")
+    private ZonedDateTime creationDateTime;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
@@ -36,10 +39,18 @@ public class Plan {
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
-    private List<PlanModulePreassignedGPA> planModulePreassignedGPAs;
+    private List<PreassignedModule> planModulePreassignedGPAs;
 
-    @Column(name = "CREATION_DATE")
-    private ZonedDateTime creationDateTime;
+    @ManyToMany
+    @JoinTable(
+            name = "PLAN_MAJOR",
+            joinColumns = {
+                    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
+                    @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
+            },
+            inverseJoinColumns = @JoinColumn(name = "MAJOR_NAME")
+    )
+    private List<Major> majors;
 
     // Default constructor
     public Plan() {
@@ -94,6 +105,14 @@ public class Plan {
         this.user = user;
     }
 
+    public ZonedDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
+    }
+
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
@@ -102,20 +121,20 @@ public class Plan {
         this.planModuleGPAs = planModuleGPAs;
     }
 
-    public List<PlanModulePreassignedGPA> getPlanModulePreassignedGPAs() {
+    public List<PreassignedModule> getPlanModulePreassignedGPAs() {
         return planModulePreassignedGPAs;
     }
 
-    public void setPlanModulePreassignedGPAs(List<PlanModulePreassignedGPA> planModulePreassignedGPAs) {
-        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    public void setPlanModulePreassignedGPAs(List<PreassignedModule> preassignedModules) {
+        this.planModulePreassignedGPAs = preassignedModules;
     }
 
-    public ZonedDateTime getCreationDateTime() {
-        return creationDateTime;
+    public List<Major> getMajors() {
+        return majors;
     }
 
-    public void setCreationDateTime(ZonedDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
+    public void setMajors(List<Major> majors) {
+        this.majors = majors;
     }
 
     // Equals and hashCode methods
@@ -125,15 +144,26 @@ public class Plan {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(planId, plan.planId) &&
-                Objects.equals(planName, plan.planName) &&
-                Objects.equals(degree, plan.degree) &&
-                Objects.equals(track, plan.track) &&
-                Objects.equals(user, plan.user);
+        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track, plan.track) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, planName, degree, track, user);
+        return Objects.hash(planId, planName, degree, track, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
+    }
+
+    @Override
+    public String toString() {
+        return "Plan{" +
+                "planId=" + planId +
+                ", planName='" + planName + '\'' +
+                ", degree='" + degree + '\'' +
+                ", track='" + track + '\'' +
+                ", creationDateTime=" + creationDateTime +
+                ", user=" + user +
+                ", planModuleGPAs=" + planModuleGPAs +
+                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
+                ", majors=" + majors +
+                '}';
     }
 }

@@ -1,9 +1,17 @@
-import React, { useContext, useState } from "react";
-import { Link } from 'react-router-dom';
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
 import { UserContext } from "../data/user";
+
+const majors = [
+    {title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
+    {title: "Information Systems", tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
+    {title: "Software Engineering", tracks: ["Not Applicable"]},
+    {title: "Computing & Law", tracks: ["Not Applicable"]},
+]
+
 
 const Card = ({plan, user, setUser, isTemplate}) => {
 
@@ -24,11 +32,11 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
     const handleRename = (event) => {
         event.stopPropagation();
-        event.preventDefault();
+        event.preventDefault(); // Prevent default action
 
         setIsEditing(true);
         setIsMenuOpen(false);
-        // console.log(plan)
+        console.log(plan)
     };
 
     const handleTitleChange = (event) => {
@@ -37,10 +45,9 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
     const handleTitleBlur = () => {
         setIsEditing(false);
-
-        plan.title = editedTitle;
-        
         //insert api call here to post the updated title
+        // Here you can update the plan title in your state or call an API to save the changes
+        plan.title = editedTitle; // Example of updating the title
         
     };
 
@@ -55,7 +62,6 @@ const Card = ({plan, user, setUser, isTemplate}) => {
         const updatedPlans = user.plans.filter((plan) => plan.id !== deletedPlan);
         console.log("after filter", updatedPlans);
 
-        //updates the user's plans
         setUser(prevUser => ({
             ...prevUser,
             plans: updatedPlans, 
@@ -132,9 +138,10 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
 const Content = ({user, setUser}) => {
     
-    const {name, plans, templates} = user
+    const {username, plans, templates} = user
 
     console.log(plans)
+
     const isEmptyPlan = plans.length === 0
     
     return(
@@ -142,7 +149,7 @@ const Content = ({user, setUser}) => {
             <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
                 <div className="text-text font-poppins font-bold">
                     <p className="text-l">Good Afternoon</p>
-                    <p className="text-3xl">{name}</p>
+                    <p className="text-3xl">{username}</p>
                 </div>
                 <div className="py-4 flex gap-20">
                     <div className="flex flex-col gap-5">

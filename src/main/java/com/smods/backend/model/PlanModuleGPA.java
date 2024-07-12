@@ -32,17 +32,35 @@ public class PlanModuleGPA {
     @Column(name = "TERM")
     private int term;
 
+    // null if not a major module
+    @Column(name = "MAJOR")
+    private String major;
+
+    // null if not a track module
+    @Column(name = "TRACK")
+    private String track;
+
+    @Column(name = "REQUIREMENT")
+    private String requirement;
+
+    @Column(name = "SUBREQUIREMENT")
+    private String subrequirement;
+
     // Default constructor
     public PlanModuleGPA() {}
 
 
 
     // Constructor with parameters
+
+
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.plan = plan;
         this.module = module;
         this.term = term;
+
+        // fill in the rest of the attributes based on degree and track of module and plan
     }
 
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
@@ -75,11 +93,11 @@ public class PlanModuleGPA {
         this.module = module;
     }
 
-    public Float getGPA() {
+    public Float getGpa() {
         return gpa;
     }
 
-    public void setGPA(Float gpa) {
+    public void setGpa(Float gpa) {
         this.gpa = gpa;
     }
 
@@ -89,6 +107,38 @@ public class PlanModuleGPA {
 
     public void setTerm(int term) {
         this.term = term;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getTrack() {
+        return track;
+    }
+
+    public void setTrack(String track) {
+        this.track = track;
+    }
+
+    public String getRequirement() {
+        return requirement;
+    }
+
+    public void setRequirement(String requirement) {
+        this.requirement = requirement;
+    }
+
+    public String getSubrequirement() {
+        return subrequirement;
+    }
+
+    public void setSubrequirement(String subrequirement) {
+        this.subrequirement = subrequirement;
     }
 
     @Override
