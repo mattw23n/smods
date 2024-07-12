@@ -35,15 +35,6 @@ function Form() {
 
         setLoading(true);
 
-        setTimeout(() => {
-            if (email === user.email && password === user.password) {
-                navigate('/home'); // Redirect to home page
-            } else {
-                alert('Invalid email or password');
-            }
-            setLoading(false); // End loading
-        }, 2000); // 2 seconds delay for demonstration
-
         try {
             const response = await axios.post('http://localhost:8080/api/auth/login', {
                 username: username,
