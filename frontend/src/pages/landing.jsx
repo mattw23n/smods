@@ -123,39 +123,33 @@ const PlanButton = () => {
 const testimonials = [
   {
     pos: 1,
-    text: "TESTIMONY 1.",
-    author: "Jane Smith",
-    title: "Highly Recommend",
+    text: "SMODS is so useful! Previously I had to open up multiple tabs to plan my mods. Now, I can plan my mods with everything I need on the same dashboard. 10/10 don't miss out!",
+    author: "Ryan",
   },
   {
     pos: 2,
-    text: "TESTIMONY 2",
-    author: "Alice Johnson",
-    title: "Great Experience",
+    text: "I am the king of SCIS",
+    author: "Justin DW",
   },
   {
     pos: 3,
-    text: "TESTIMONY 3",
-    author: "Michael Scott",
-    title: "Stayin' Alive",
+    text: "SMODS is very useful! A very life changing app, my gpa is now 4.3/4.3! I got straight A+ and all the profs love me. Thanks, SMODS!!",
+    author: "Sam",
   },
   {
     pos: 4,
     text: "TESTIMONY 4",
     author: "John Doe",
-    title: "Awesome Service",
   },
   {
     pos: 5,
     text: "TESTIMONY 5",
     author: "John Doe",
-    title: "Awesome Service",
   },
   {
     pos: 6,
     text: "TESTIMONY 6",
     author: "John Doe",
-    title: "Awesome Service",
   },
 
   
@@ -168,14 +162,14 @@ const Testimonials = () => {
   return (
     <section>
       <div className="mx-auto max-w-[1340px] px-4 py-12">
-        <div className="max-w-7xl items-end justify-between sm:flex sm:pe-6 lg:pe-8">
-          <p className="max-w-xl text-3xl font-bold font-poppins tracking-tight text-gray-900 ">
-            Dont take our word for it. Take theirs.
+        <div className="max-w-7xl items-end justify-between">
+          <p className="max-w-xl text-4xl font-bold font-poppins leading-normal text-gray-900 ">
+            Dont take our word for it. <br /> Take theirs.
           </p>
         </div>
-
-
-          <TestimonyCarousel testimonials={testimonials}></TestimonyCarousel>
+        <div className="my-10">
+            <TestimonyCarousel testimonials={testimonials}></TestimonyCarousel>
+        </div>
       </div>
     </section>
   );
@@ -194,10 +188,6 @@ function Hero() {
                         Make the most out of your studies with <b>SMODS</b>
                     </p>
                     <PlanButton />
-                    {/* <Link  to="/signin" className="inline-flex ml-10 items-center justify-center px-5 py-3 mr-3 text-base font-bold font-poppins text-center text-white rounded-3xl bg-primary hover:bg-dark focus:ring-4 focus:ring-primary-300">
-                        Plan Now!
-                        <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                    </Link> */}
                     
                 </div>
                 <div className="flex max-w-[600px] align-bottom">
@@ -212,7 +202,7 @@ function Hero() {
                     </div>
                 </div>
 
-                <div className="flex my-20 justify-between">
+                <div className="flex my-15 justify-between">
                     <div className="flex justify-left items-center ml-20 pl-20">
                         <p className="font-poppins font-bold text-4xl leading-relaxed">Search with ease. <br /> Search with speed.</p>
                     </div>
@@ -226,11 +216,11 @@ function Hero() {
                     </div>
                 </div>
 
-                <div className="flex my-20">
-                <Testimonials></Testimonials>
+                <div className="flex my-20 pb-20">
+                    <Testimonials></Testimonials>
                 </div>
 
-                <div className="flex w-full gap-10 items-center justify-left mb-20 pb-20 mt-20">
+                <div className="flex w-full gap-10 items-center justify-left py-20 my-20">
                     <p className="font-poppins font-bold text-4xl">What are you waiting for?</p>
                     <div>
                         <PlanButton />
@@ -259,7 +249,7 @@ function Landing() {
     return (
         <div className="relative flex flex-col min-h-screen">
             <Background/>
-            <div className="relative z-10">
+            <div className="relative z-10 overflow-x-hidden">
                 <Header />
                 <Content />
                 <Footer />

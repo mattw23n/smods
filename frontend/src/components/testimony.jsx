@@ -48,16 +48,17 @@ const testimonials = [
   const TestimonyCarousel = ({testimonials}) => {
   
       const xTranslation = useMotionValue(0);
-      const cardWidth = 400 + 16; // Card width + gap
-      const visibleCards = 3; // Number of cards visible at once
-      const containerWidth = cardWidth * visibleCards;
+    //   const cardWidth = 400 + 32; // Card width + gap
+    //   const visibleCards = 3; // Number of cards visible at once
+    //   const containerWidth = cardWidth * visibleCards;
+        const containerWidth = 2590
   
       useEffect(() => {
           let controls
   
           controls = animate(xTranslation, [0, -containerWidth], {
               ease: "linear",
-              duration: 15,
+              duration: 20,
               repeat: Infinity,
               repeatType: "loop",
               repeatDelay: 0,
@@ -67,7 +68,7 @@ const testimonials = [
       }, [xTranslation, containerWidth])
   
       return(
-          <div className="overflow-hidden mx-auto" style={{ width: '100%', maxWidth: `${containerWidth}px` }}>
+          <div className="mx-auto overflow-x-hidden" style={{ width: '100%', maxWidth: `${containerWidth}px` }}>
               <motion.div className="absolute left-0 flex gap-4" style={{ x: xTranslation}}>
                   {[...testimonials, ...testimonials]
                   .map((card, index) => (
