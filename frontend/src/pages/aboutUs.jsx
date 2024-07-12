@@ -26,7 +26,7 @@ function AboutUs(){
                     <div>
                         <p className="mt-8 font-bold text-4xl font-poppins text-center">Our Team</p>
                     </div>
-                    <div className="flex gap-6 flex-wrap justify-center w-3/5">
+                    <div className="flex gap-6 flex-wrap justify-center w-1/2">
                         <a href="https://github.com/gilchrisn" target="_blank">
                         <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
