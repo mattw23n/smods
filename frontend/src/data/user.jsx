@@ -16,8 +16,6 @@ export const TemplateUser = {
     templates: DEFAULT_TEMPLATES,
 }
 
-
-
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -34,10 +32,10 @@ export const UserProvider = ({ children }) => {
     const loginUser = (userData) => {
         // Set default plans and templates if they don't exist
         if (!userData.plans) {
-            userData.plans = DEFAULT_PLANS;
+            userData.plans = [];
         }
         if (!userData.templates) {
-            userData.templates = DEFAULT_TEMPLATES;
+            userData.templates = [];
         }
 
         setUser(userData);
@@ -50,7 +48,7 @@ export const UserProvider = ({ children }) => {
     };
 
     return (
-        <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+        <UserContext.Provider value={{ user, setUser, loginUser, logoutUser }}>
             {children}
         </UserContext.Provider>
     );

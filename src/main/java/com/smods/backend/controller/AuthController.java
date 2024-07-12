@@ -71,7 +71,7 @@ public class AuthController {
         final String jwt = jwtUtil.generateToken(userDetails);
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(jwt, refreshToken, userDetails.getUsername(), user.getUserId()));
     }
 
     @PostMapping("/refresh-token")
@@ -84,7 +84,10 @@ public class AuthController {
             if (jwtUtil.validateToken(refreshToken, userDetails)) {
                 final String jwt = jwtUtil.generateToken(userDetails);
                 final String newRefreshToken = jwtUtil.generateRefreshToken(userDetails);
-                return ResponseEntity.ok(new JwtResponse(jwt, newRefreshToken, username));
+
+                User user = userService.findByUsernameOrEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+                return ResponseEntity.ok(new JwtResponse(jwt, newRefreshToken, username, user.getUserId()));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
             }

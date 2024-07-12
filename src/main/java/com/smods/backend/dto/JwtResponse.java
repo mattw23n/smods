@@ -6,10 +6,13 @@ public class JwtResponse {
     private String type = "Bearer";
     private String username;
 
-    public JwtResponse(String token, String refreshToken, String username) {
+    private Long userId;
+
+    public JwtResponse(String token, String refreshToken, String username, Long userId) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.username = username;
+        this.userId = userId;
     }
 
     // Getters and setters
@@ -43,5 +46,13 @@ public class JwtResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
