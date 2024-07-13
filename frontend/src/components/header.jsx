@@ -30,8 +30,9 @@ function NavItem({ title, link }) {
     );
 }
 
-function Header() {
+function Header({showLogIn = true}) {
     const { user, logoutUser } = useContext(UserContext);
+
 
     return (
         <header className="top-0 left-0 w-full z-50 bg-white/30 backdrop-blur border-b">
@@ -56,17 +57,21 @@ function Header() {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="sm:flex sm:gap-4">
-                                    <Link className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow" to="/signin">
-                                        Login
-                                    </Link>
+                                <>
+                                    {showLogIn ? (
+                                        <div className="sm:flex sm:gap-4">
+                                            <Link className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow" to="/signin">
+                                                Login
+                                            </Link>
 
-                                    <div className="hidden sm:flex">
-                                        <Link className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-poppins font-bold text-primary" to="/register">
-                                            Register
-                                        </Link>
-                                    </div>
-                                </div>
+                                            <div className="hidden sm:flex">
+                                                <Link className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-poppins font-bold text-primary" to="/register">
+                                                    Register
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </>
                             )}
                         </div>
                     </div>
