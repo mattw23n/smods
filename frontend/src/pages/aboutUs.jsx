@@ -6,7 +6,8 @@ import Footer from "../components/footer";
 function GitHubProfile({ imageUrl, username }) {
     return (
         <a href={`https://github.com/${username}`} target="_blank" rel="noopener noreferrer">
-            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+            <div className="inline-flex gap-4 items-center py-2 bg-primary rounded-full px-4 shadow-lg
+            transform transition-transform hover:-translate-y-1 hover:shadow-accent/50 hover:opacity-80">
                 <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                     <img className="aspect-square h-full w-full" src={imageUrl} alt="Avatar" />
                 </span>
