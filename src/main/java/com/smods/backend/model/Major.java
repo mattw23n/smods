@@ -1,7 +1,6 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 import java.util.Map;
@@ -16,13 +15,13 @@ public class Major {
     private String majorName;
 
     @ElementCollection
-    @CollectionTable(name = "GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MAJOR_NAME"))
+    @CollectionTable(name = "MAJOR_GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MAJOR_NAME"))
     @MapKeyColumn(name = "REQUIREMENT_TYPE")
     @Column(name = "COURSE_UNIT")
-    private Map<String, Double> gradRequirements;
+    private Map<String, Double> majorGradRequirements;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<Module> modules;
+    private List<MajorModule> majorModules;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<PreassignedModule> preassignedModules;
@@ -46,19 +45,31 @@ public class Major {
     }
 
     public Map<String, Double> getGradRequirements() {
-        return gradRequirements;
+        return majorGradRequirements;
     }
 
-    public void setGradRequirements(Map<String, Double> gradRequirements) {
-        this.gradRequirements = gradRequirements;
+    public Map<String, Double> getMajorGradRequirements() {
+        return majorGradRequirements;
     }
 
-    public List<Module> getModules() {
-        return modules;
+    public void setMajorGradRequirements(Map<String, Double> majorGradRequirements) {
+        this.majorGradRequirements = majorGradRequirements;
     }
 
-    public void setModules(List<Module> modules) {
-        this.modules = modules;
+    public List<MajorModule> getMajorModules() {
+        return majorModules;
+    }
+
+    public void setMajorModules(List<MajorModule> majorModules) {
+        this.majorModules = majorModules;
+    }
+
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
     }
 
     public List<PreassignedModule> getPreassignedModules() {
@@ -74,21 +85,22 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return Objects.equals(majorName, major.majorName) && Objects.equals(gradRequirements, major.gradRequirements) && Objects.equals(modules, major.modules) && Objects.equals(preassignedModules, major.preassignedModules);
+        return Objects.equals(majorName, major.majorName) && Objects.equals(majorGradRequirements, major.majorGradRequirements) && Objects.equals(majorModules, major.majorModules) && Objects.equals(preassignedModules, major.preassignedModules) && Objects.equals(plans, major.plans);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, gradRequirements, modules, preassignedModules);
+        return Objects.hash(majorName, majorGradRequirements, majorModules, preassignedModules, plans);
     }
 
     @Override
     public String toString() {
         return "Major{" +
                 "majorName='" + majorName + '\'' +
-                ", gradRequirements=" + gradRequirements +
-                ", modules=" + modules +
+                ", majorGradRequirements=" + majorGradRequirements +
+                ", majorModules=" + majorModules +
                 ", preassignedModules=" + preassignedModules +
+                ", plans=" + plans +
                 '}';
     }
 }

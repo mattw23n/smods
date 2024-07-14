@@ -53,7 +53,6 @@ public class PlanModuleGPA {
 
     // Constructor with parameters
 
-
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.plan = plan;

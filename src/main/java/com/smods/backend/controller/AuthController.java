@@ -7,7 +7,6 @@ import com.smods.backend.dto.RefreshTokenRequest;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.enums.LoginStatus;
 import com.smods.backend.exception.UserNotFoundException;
-import com.smods.backend.exception.VerificationTokenNotFoundException;
 import com.smods.backend.model.User;
 import com.smods.backend.service.AuthService;
 import com.smods.backend.service.UserService;
@@ -18,15 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
