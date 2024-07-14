@@ -13,6 +13,11 @@ import VerifyEmail from './pages/VerifyEmail.jsx';
 import ResendVerification from './pages/ResendVerification.jsx';
 import HandleVerification from './pages/HandleVerification.jsx';
 import { UserProvider } from "./data/user";
+<<<<<<< HEAD
+=======
+import RequestPasswordReset from "./pages/RequestPasswordReset";
+import ResetPassword from "./pages/ResetPassword";
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
 function App() {
     return (
@@ -31,6 +36,12 @@ function App() {
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/resend-verification" element={<ResendVerification />} />
                     <Route path="/handle-verification" element={<HandleVerification />} />
+<<<<<<< HEAD
+=======
+                    <Route path="/password-recovery" element={<RequestPasswordReset />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
                 </Routes>
             </Router>
         </UserProvider>

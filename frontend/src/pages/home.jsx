@@ -45,6 +45,10 @@ const Card = ({plan, user, setUser, isTemplate}) => {
 
     const handleTitleBlur = () => {
         setIsEditing(false);
+<<<<<<< HEAD
+=======
+        //insert api call here to post the updated title
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         // Here you can update the plan title in your state or call an API to save the changes
         plan.title = editedTitle; // Example of updating the title
         
@@ -65,6 +69,11 @@ const Card = ({plan, user, setUser, isTemplate}) => {
             ...prevUser,
             plans: updatedPlans, 
         }));
+<<<<<<< HEAD
+=======
+
+        //insert api call here to post the updated plans array
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     };
 
     return (
@@ -200,6 +209,7 @@ const Content = ({user, setUser}) => {
     )
 }
 
+<<<<<<< HEAD
 function Home() {
         const { user } = useContext(UserContext);
         const navigate = useNavigate();
@@ -227,3 +237,21 @@ function Home() {
     }
 
     export default Home;
+=======
+function Home(){
+    const {user, setUser} = useContext(UserContext)
+
+    return (
+        <div className="relative flex flex-col min-h-screen">
+            <Background />
+            <div className="relative z-10">
+                <Header></Header>
+                <Content user={user} setUser={setUser}></Content>
+                <Footer></Footer>
+            </div>
+        </div>
+    );
+}
+
+export default Home;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581

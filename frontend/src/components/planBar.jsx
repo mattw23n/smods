@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import defaultMods from "../data/defaultMods";
 
 const asiaStudiesCourses = ["COR3031"]
+=======
+import React, { useState, useEffect } from "react";
+import defaultMods from "../data/defaultMods";
+
+const asiaStudiesCourses = ["COR3021"]
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 const singaporeStudiesCourses = ["COR3001"]
 
 const ActiveCounter = ({Current, Max, Category, type}) => {
@@ -76,15 +83,25 @@ const Tabs = ({ tabData }) => {
 };
 
 const PlanBar = ({plan, setPlan, mods}) => {
+<<<<<<< HEAD
     const { isGPAOn } = plan
     const { tracks, degree} = plan
     console.log("track", tracks)
+=======
+    const [asiaStudiesMods, setAsiaStudiesMods] = useState([])
+    const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([])
+
+    const { isGPAOn } = plan
+    const { tracks, degree} = plan
+
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     const degreeInfo = defaultMods
 
     const planDegree = degreeInfo.find(d => d.name === degree)
     const { modLimit } = planDegree
 
     const trackType = tracks.length
+<<<<<<< HEAD
     const modTrackLimit = modLimit[trackType]
     
 
@@ -104,6 +121,75 @@ const PlanBar = ({plan, setPlan, mods}) => {
     }
 
     const gradReqs = (completesAsiaStudies() ? 1 : 0) + (completesSingaporeStudies() ? 1 : 0)
+=======
+    console.log("tracktype", trackType)
+    const modTrackLimit = modLimit[trackType]
+
+    useEffect(() => {
+      setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.courseCode)));
+      console.log("asia studies", asiaStudiesMods);
+
+      setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.courseCode)));
+      console.log("sg studies", singaporeStudiesCourses);
+
+    }, [mods, asiaStudiesCourses, singaporeStudiesCourses]);
+
+    const foundAsiaStudies = asiaStudiesMods.length > 0
+    const foundSingaporeStudies = singaporeStudiesMods.length > 0
+
+    const calculateTermGPA = (mods) => {
+      const termGpaDict = {};
+  
+      // Group mods by term
+      mods.forEach(mod => {
+          if (!termGpaDict[mod.term]) {
+              termGpaDict[mod.term] = [];
+          }
+          termGpaDict[mod.term].push(mod.GPA);
+      });
+  
+      // Calculate GPA for each term
+      const termGpaArray = [];
+      for (const term in termGpaDict) {
+          if (termGpaDict.hasOwnProperty(term)) {
+              const gpas = termGpaDict[term];
+              const termGpa = gpas.reduce((acc, gpa) => acc + gpa, 0) / gpas.length;
+              termGpaArray.push({ term: term, gpa: termGpa });
+          }
+      }
+  
+      return termGpaArray;
+  }
+
+  const findMinMaxGPA = (termGpaArray) => {
+
+    if (termGpaArray.length === 0) {
+        return { highest: null, lowest: null };
+    }
+
+    let highest = termGpaArray[0];
+    let lowest = termGpaArray[0];
+
+    termGpaArray.forEach(termGpa => {
+        if (termGpa.gpa > highest.gpa) {
+            highest = termGpa;
+        }
+        if (termGpa.gpa < lowest.gpa) {
+            lowest = termGpa;
+        }
+    });
+
+    return { max: highest, min: lowest };
+}
+
+    const termGPAArr = calculateTermGPA(mods)
+    const minMax = findMinMaxGPA(termGPAArr)
+
+    console.log("termGPAArr", termGPAArr)
+    console.log("minMax", minMax)
+
+    const gradReqs = (foundAsiaStudies ? 1 : 0) + (foundSingaporeStudies ? 1 : 0)
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
     const uniCore = mods.filter((m) => m.courseType === "uc")
     const majorCore = mods.filter((m) => m.courseType === "mc")
@@ -153,9 +239,19 @@ const PlanBar = ({plan, setPlan, mods}) => {
 
     const Tab2 = (
         <div class="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 font-bold text-text w-fit">
+<<<<<<< HEAD
           <div className="flex justify-end items-center gap-5 font-archivo">
             <p>🌏 Asia Studies </p>
             <CrossCheck status={completesAsiaStudies()}/>
+=======
+          <div className="relative flex justify-end items-center gap-5 font-archivo">
+            <p>🌏 Asia Studies </p>
+            <CrossCheck status={foundAsiaStudies}/>
+            <div class="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                {foundAsiaStudies ? `Cleared by ${asiaStudiesMods[0].courseCode}` : `Not cleared yet` }
+                
+            </div>
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
           </div>
           <div className="flex justify-end items-center gap-5 font-archivo">
@@ -163,7 +259,11 @@ const PlanBar = ({plan, setPlan, mods}) => {
             <CrossCheck/>
 
           </div>
+<<<<<<< HEAD
           <div className="flex justify-end items-center gap-5 font-archivo">
+=======
+          <div className="relative flex justify-end items-center gap-5 font-archivo">
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             <div className="flex gap-1 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
                     <path d="M1,24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V15H1v9Z" fill="#fff"></path>
@@ -172,7 +272,14 @@ const PlanBar = ({plan, setPlan, mods}) => {
                 </svg>
                 <p>Singapore Studies</p>
             </div>
+<<<<<<< HEAD
             <CrossCheck status={completesSingaporeStudies()}/>
+=======
+            <CrossCheck status={foundSingaporeStudies}/>
+            <div class="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+              {foundSingaporeStudies ? `Cleared by ${singaporeStudiesMods[0].courseCode}` : `Not cleared yet`}
+            </div>
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             
           </div>
 
@@ -187,15 +294,42 @@ const PlanBar = ({plan, setPlan, mods}) => {
     const Tab3 = (
         <div class="bg-white/50 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+<<<<<<< HEAD
                 <p class="text-xl">{totalPoints}</p>
                 Total Grade Points
             </div>
             <ActiveCounter Current={3.7} Max="4.0" Category="min Term GPA"/>
+=======
+                <p class="text-xl">{totalPoints.toFixed(2)}</p>
+                Total Grade Points
+            </div>
+            <div className="relative flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+                <p class="text-xl">{minMax.min.gpa.toFixed(2)}</p>
+                min Term GPA
+
+                <div class="absolute left-1/2 min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  Achieved in Term {minMax.min.term}
+                </div>
+
+            </div>
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
                 <p class="text-xl">{totalCUs.toFixed(1)}</p>
                 Total CUs Taken
             </div>
+<<<<<<< HEAD
             <ActiveCounter Current={3.7} Max="4.0" Category="max Term GPA"/>
+=======
+            <div className="relative flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+                <p class="text-xl">{minMax.max.gpa.toFixed(2)}</p>
+                max Term GPA
+
+                <div class="absolute left-1/2 min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  Achieved in Term {minMax.max.term}
+                </div>
+                
+            </div>
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         </div>
     );
   

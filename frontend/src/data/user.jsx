@@ -16,6 +16,14 @@ export const TemplateUser = {
     templates: DEFAULT_TEMPLATES,
 }
 
+<<<<<<< HEAD
+=======
+
+  //add API fetch for user data here
+  //then change the parameter below to accept the new user data from the backend
+  //automatically sets the data for the other pages
+  
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -32,10 +40,17 @@ export const UserProvider = ({ children }) => {
     const loginUser = (userData) => {
         // Set default plans and templates if they don't exist
         if (!userData.plans) {
+<<<<<<< HEAD
             userData.plans = [];
         }
         if (!userData.templates) {
             userData.templates = [];
+=======
+            userData.plans = DEFAULT_PLANS;
+        }
+        if (!userData.templates) {
+            userData.templates = DEFAULT_TEMPLATES;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         }
 
         setUser(userData);

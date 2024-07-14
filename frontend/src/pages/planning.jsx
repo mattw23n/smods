@@ -8,11 +8,15 @@ import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 import html2canvas from 'html2canvas';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 import { useParams } from 'react-router-dom';
 import { UserContext } from "../data/user";
 import modValidation from "../scripts/validation";
 
+<<<<<<< HEAD
 const DEFAULT_MODS = modulesData
 
 // const TemplateMod = {
@@ -30,6 +34,8 @@ const DEFAULT_MODS = modulesData
 //     isError: false,
 // }
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 const PlanDetails = ({plan, setPlan}) => {
     const {title, degree, tracks, view} = plan
 
@@ -245,8 +251,11 @@ function Content({plan, setPlan, mods, setMods}){
 
     const isGroupView = view === 1
 
+<<<<<<< HEAD
     const groups = ["uc", "mc", "me", "tm", "fe"]
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     const viewModes = {
         4:["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
         3:["container h-[580px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
@@ -286,6 +295,12 @@ function Content({plan, setPlan, mods, setMods}){
         // Compare current mods with previous mods
         if (prevModsRef.current !== undefined && !arraysEqual(prevModsRef.current, mods) && (validationChecked.current === false || !isModalOpen)) {
             checkValidation();
+<<<<<<< HEAD
+=======
+
+            //insert api call here
+            //run validation script from backend
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             
         }
 
@@ -293,8 +308,11 @@ function Content({plan, setPlan, mods, setMods}){
         prevModsRef.current = mods;
     }, [mods]);
     
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
     const checkValidation = () => {
         const check = modValidation({ mods, setMods });
@@ -414,7 +432,10 @@ function Planning(){
     }
     
     const [plan, setPlan] = useState(selectedPlan);
+<<<<<<< HEAD
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     const [mods, setMods] = useState(plan.mods);
 
     return(

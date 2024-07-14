@@ -25,8 +25,13 @@ public class Module {
     @Column(name = "GRAD_REQUIREMENT")
     private String gradRequirement;
 
+<<<<<<< HEAD
     @Column(name = "BASKET")
     private String basket;
+=======
+    @Column(name = "GRAD_SUBREQUIREMENT")
+    private String gradSubrequirement;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
@@ -73,17 +78,31 @@ public class Module {
     @JsonBackReference(value = "mutuallyExclusiveWith")
     private List<Module> mutuallyExclusiveWith;
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     private List<MajorModule> majormodules;
     // Default constructor
     public Module() {}
 
     public Module(String moduleId, String moduleName, Float courseUnit, String gradRequirement, String basket) {
+=======
+    @ManyToOne
+    @JoinColumn(name = "MAJOR_NAME")
+    private Major major;
+    // Default constructor
+    public Module() {}
+
+    public Module(String moduleId, String moduleName, Float courseUnit, String gradRequirement, String gradSubrequirement) {
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
         this.gradRequirement = gradRequirement;
+<<<<<<< HEAD
         this.basket = basket;
+=======
+        this.gradSubrequirement = gradSubrequirement;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     public String getModuleId() {
@@ -110,6 +129,7 @@ public class Module {
         this.courseUnit = courseUnit;
     }
 
+<<<<<<< HEAD
     public String getTrackName() {
         return trackName;
     }
@@ -118,6 +138,8 @@ public class Module {
         this.trackName = trackName;
     }
 
+=======
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     public String getGradRequirement() {
         return gradRequirement;
     }
@@ -126,12 +148,21 @@ public class Module {
         this.gradRequirement = gradRequirement;
     }
 
+<<<<<<< HEAD
     public String getBasket() {
         return basket;
     }
 
     public void setBasket(String basket) {
         this.basket = basket;
+=======
+    public String getGradSubrequirement() {
+        return gradSubrequirement;
+    }
+
+    public void setGradSubrequirement(String gradSubrequirement) {
+        this.gradSubrequirement = gradSubrequirement;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     public List<PlanModuleGPA> getPlanModuleGPAs() {
@@ -142,11 +173,19 @@ public class Module {
         this.planModuleGPAs = planModuleGPAs;
     }
 
+<<<<<<< HEAD
     public List<PreassignedModule> getPreassignedModules() {
         return preassignedModules;
     }
 
     public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
+=======
+    public List<PreassignedModule> getPlanModulePreassignedGPAs() {
+        return preassignedModules;
+    }
+
+    public void setPlanModulePreassignedGPAs(List<PreassignedModule> preassignedModules) {
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         this.preassignedModules = preassignedModules;
     }
 
@@ -198,12 +237,21 @@ public class Module {
         this.mutuallyExclusiveWith = mutuallyExclusiveWith;
     }
 
+<<<<<<< HEAD
     public List<MajorModule> getMajormodules() {
         return majormodules;
     }
 
     public void setMajormodules(List<MajorModule> majormodules) {
         this.majormodules = majormodules;
+=======
+    public Major getMajor() {
+        return major;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     @Override
@@ -211,12 +259,20 @@ public class Module {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
+<<<<<<< HEAD
         return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(trackName, module.trackName) && Objects.equals(gradRequirement, module.gradRequirement) && Objects.equals(basket, module.basket) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules);
+=======
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(gradRequirement, module.gradRequirement) && Objects.equals(gradSubrequirement, module.gradSubrequirement) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(major, module.major);
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     @Override
     public int hashCode() {
+<<<<<<< HEAD
         return Objects.hash(moduleId, moduleName, courseUnit, trackName, gradRequirement, basket, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules);
+=======
+        return Objects.hash(moduleId, moduleName, courseUnit, gradRequirement, gradSubrequirement, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, major);
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     @Override
@@ -225,18 +281,29 @@ public class Module {
                 "moduleId='" + moduleId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
+<<<<<<< HEAD
                 ", trackName='" + trackName + '\'' +
                 ", gradRequirement='" + gradRequirement + '\'' +
                 ", basket='" + basket + '\'' +
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", preassignedModules=" + preassignedModules +
+=======
+                ", gradRequirement='" + gradRequirement + '\'' +
+                ", gradSubrequirement='" + gradSubrequirement + '\'' +
+                ", planModuleGPAs=" + planModuleGPAs +
+                ", planModulePreassignedGPAs=" + preassignedModules +
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
                 ", preRequisites=" + preRequisites +
                 ", preRequisiteDependents=" + preRequisiteDependents +
                 ", coRequisites=" + coRequisites +
                 ", coRequisiteDependents=" + coRequisiteDependents +
                 ", mutuallyExclusives=" + mutuallyExclusives +
                 ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
+<<<<<<< HEAD
                 ", majormodules=" + majormodules +
+=======
+                ", major=" + major +
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
                 '}';
     }
 }

@@ -14,6 +14,7 @@ const DeleteButton = ({ setMods, module }) => {
     }
 
     const handleClick = () => {
+<<<<<<< HEAD
         // const courseCode = e.dataTransfer.getData("courseCode")
         // const courseCode = courseCode
 
@@ -23,6 +24,14 @@ const DeleteButton = ({ setMods, module }) => {
         setMods((prevMods) => {
             const newMods = prevMods.filter((mod) => mod.courseCode !== courseCode);
             // console.log("after filter", newMods);
+=======
+
+        //sets the mods to the updated version without the deleted mod
+        //replace with api call
+        setMods((prevMods) => {
+            const newMods = prevMods.filter((mod) => mod.courseCode !== courseCode);
+
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             return newMods;
         })
 

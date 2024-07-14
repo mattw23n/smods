@@ -140,6 +140,15 @@ public class AuthController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    @GetMapping("/redirect-reset-password")
+    public void redirectToResetPassword(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
+        String redirectUrl = "http://localhost:3000/reset-password?token=" + token;
+        response.sendRedirect(redirectUrl);
+    }
+
+>>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
         try {
