@@ -7,6 +7,11 @@ function Form() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
+    const [inputErrors, setInputErrors] = useState({
+        name: "",
+        email: "",
+        message: "",
+    });
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -22,13 +27,26 @@ function Form() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        const newErrors = {
+            name: name ? '' : 'Name is required',
+            email: email ? '' : 'Email is required',
+            message: message ? '' : 'Message is required',
+        };
+
+        setInputErrors(newErrors);
+
         console.log("Name:", name);
         console.log("Email:", email);
         console.log("Message:", message);
+
+        if(!newErrors.name && !newErrors.email && !newErrors.message){
+            console.log("Form submmited succesfully")
+        }
     };
 
     return (
-        <div className="flex flex-col bg-white bg-opacity-40 gap-y-4 p-8 rounded-xl w-3/4 items-center justify-center shadow-md">
+        <div className="flex flex-col bg-white/50 gap-y-4 p-8 rounded-3xl w-[500px] items-center justify-center shadow-md">
             <div className="w-full">
                 <label htmlFor="Name" className="block text-xs font-bold font-poppins"> Name </label>
                 <input
@@ -39,6 +57,7 @@ function Form() {
                     value={name}
                     onChange={handleNameChange}
                 />
+                {inputErrors.name && <p className="font-archivo text-red-500 text-xs mt-1">{inputErrors.name}</p>}
             </div>
             <div className="w-full">
                 <label htmlFor="Email" className="block text-xs font-bold font-poppins"> Email </label>
@@ -50,6 +69,7 @@ function Form() {
                     value={email}
                     onChange={handleEmailChange}
                 />
+                {inputErrors.email && <p className="font-archivo text-red-500 text-xs mt-1">{inputErrors.email}</p>}
             </div>
             <div className="w-full">
                 <label htmlFor="Message" className="block text-xs font-bold font-poppins"> Message </label>
@@ -61,9 +81,10 @@ function Form() {
                     value={message}
                     onChange={handleMessageChange}
                 ></textarea>
+                {inputErrors.message && <p className="font-archivo text-red-500 text-xs mt-1">{inputErrors.message}</p>}
             </div>
             <div className="flex justify-end w-full" onClick={handleSubmit}>
-                <button className="w-1/6 bg-primary text-white py-1.5 rounded-xl hover:bg-opacity-70 shadow-md">Send</button>
+                <button className="bg-primary rounded-xl px-5 py-2.5 w-fit flex text-text font-archivo gap-2 text-sm font-poppins font-bold text-white shadow hover:bg-blue-500 transition all">Send</button>
             </div>
         </div>
     );
@@ -95,7 +116,7 @@ function ContactDetail({ href, icon, title, detail }) {
 
 function Contact() {
     return (
-        <div className="flex flex-col gap-y-3 justify-start py-4 w-1/2 ml-20">
+        <div className="flex flex-col gap-y-3 justify-start w-1/2 ml-20 font-poppins">
             <ContactDetail
                 href="https://maps.app.goo.gl/GCW125aSK3chtdJ6A"
                 icon={
@@ -142,19 +163,15 @@ function Contact() {
 
 function Content() {
     return (
-        <main className="flex-grow">
-            <div className="flex flex-col min-h-screen items-center justify-center">
-                <div className="bg-white bg-opacity-25 rounded-xl p-8 shadow-md max-w-screen w-4/5 flex flex-col items-center justify-between">
-                    <div className="font-poppins">
-                        <p className="font-bold text-3xl mb-2">Contact Us</p>
-                        <p className="text-sm mb-12 font-archivo">
-                            For assistance or to share your suggestions, please use the form below to reach out to our team. We're here to help and will respond promptly to your inquiries.
-                        </p>
-                    </div>
-                    <div className="flex flex-row w-full font-poppins">
-                        <Form />
-                        <Contact />
-                    </div>
+        <main className="flex-grow flex flex-col my-12 pb-20">
+            <div className="flex flex-col mx-10 self-center">
+                <p className="font-bold text-3xl font-poppins text-left mb-2">Contact Us</p>
+                <p className="font-archivo">
+                    For assistance or to share your suggestions, please use the form below to reach out to our team. <br /> We're here to help and will respond promptly to your inquiries.
+                </p>
+                <div className="flex mt-10 items-start">
+                    <Form />
+                    <Contact />
                 </div>
             </div>
         </main>
