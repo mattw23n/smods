@@ -18,9 +18,9 @@ const Term = ({term, plan, mods, setMods, type}) => {
 
     const findValue = (dict, targetKey) => {
         for (const key in dict) {
-          if (key === targetKey) {
-            return dict[key];
-          }
+            if (key === targetKey) {
+                return dict[key];
+            }
         }
         return null; // If the key is not found
     };
@@ -30,13 +30,13 @@ const Term = ({term, plan, mods, setMods, type}) => {
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("courseCode", module.courseCode);
     };
-    
+
     const handleDragOver = (e) => {
         e.preventDefault();
         highlightIndicator(e);
         setActive(true);
     }
-    
+
     const highlightIndicator = (e) => {
         const indicators = getIndicators();
         // console.log(indicators)
@@ -66,7 +66,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
                 }else{
                     return closest;
                 }
-            }, 
+            },
             {
                 offset: Number.NEGATIVE_INFINITY,
                 element: indicators[indicators.length - 1],
@@ -113,7 +113,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
             }
 
             modToTransfer = {...modToTransfer, term};
-            
+
 
             const moveToBack = before === "-1";
 
@@ -128,12 +128,8 @@ const Term = ({term, plan, mods, setMods, type}) => {
             // console.log("copy")
             // console.log(copy)
 
-            
-<<<<<<< HEAD
 
-=======
             //sets the mods array into the updated one with the updated term positioning from the drag
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
             setMods(copy);
 
             // console.log(mods)
@@ -157,7 +153,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
         }
         return 0;
     });
-    
+
     const totalTermGPA = filteredMods.reduce((accumulator, mod) => {
         return accumulator + mod.GPA
     }, 0)
@@ -178,24 +174,24 @@ const Term = ({term, plan, mods, setMods, type}) => {
                     {isGPAOn && (<p>{termGPA.toFixed(2)}/4.0</p>)}
                 </div>
             </div>
-            
-            <div 
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDragEnd}
-            className={` min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
+
+            <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDragEnd}
+                className={` min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
-                
+
                 {filteredMods.map((m) => {
                     return <Mod key={m.courseCode} module={m} plan={plan}
-                    handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods}/>
+                                handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods}/>
                 })}
                 <DropIndicator beforeId={-1} term={term}/>
 
-                
-            
+
+
             </div>
-            
+
         </div>
     );
 }
@@ -219,27 +215,27 @@ function Year({num, plan, mods, setMods}){
 
     return(
         <>
-        {!isGroupView && (
-        <div className="h-fit p-4 bg-white/30 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2 transition all">
-            <div className="flex justify-between">
-                <p className="font-poppins font-bold text-sm">Year {num}</p>
-                {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
-            </div>
-            
-            <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods}></Term>
-            <Term term={num * 2} plan={plan} mods={mods} setMods={setMods}></Term>
-        </div>
-        )}
-        {isGroupView && (
-        <div className={`${isEditMode ? "grid grid-cols-2 " :"flex mr-20 pr-20" } gap-5 transition all`}>
-            {groups.map(g => (
-                <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g}></Term>
-            ))}
-        </div>
-        )}
+            {!isGroupView && (
+                <div className="h-fit p-4 bg-white/30 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2 transition all">
+                    <div className="flex justify-between">
+                        <p className="font-poppins font-bold text-sm">Year {num}</p>
+                        {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
+                    </div>
+
+                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods}></Term>
+                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods}></Term>
+                </div>
+            )}
+            {isGroupView && (
+                <div className={`${isEditMode ? "grid grid-cols-2 " :"flex mr-20 pr-20" } gap-5 transition all`}>
+                    {groups.map(g => (
+                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g}></Term>
+                    ))}
+                </div>
+            )}
         </>
-        
-        
+
+
     );
 }
 

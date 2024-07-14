@@ -3,40 +3,11 @@ import Background from "../components/background";
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-<<<<<<< HEAD
-function ContactUs(){
-=======
 function ContactUs() {
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     return (
         <div className="relative flex flex-col min-h-screen">
             <Background />
             <div className="relative z-10">
-<<<<<<< HEAD
-                <Header></Header>
-                <main className="flex-grow">
-                    <div className="flex flex-col min-h-screen items-center justify-center">
-                        <p className="font-poppins font-bold text-3xl text-center">Contact Gilchris Nathaniel </p>
-                        <div className="flex font-poppins text-xl h-fit items-center gap-5">@GilchrisNathaniel on
-                            <a href="https://t.me/GilchrisNathaniel">
-                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 48 48">
-                            <path fill="#29b6f6" d="M24,4C13,4,4,13,4,24s9,20,20,20s20-9,20-20S35,4,24,4z"></path><path fill="#fff" d="M34,15l-3.7,19.1c0,0-0.2,0.9-1.2,0.9c-0.6,0-0.9-0.3-0.9-0.3L20,28l-4-2l-5.1-1.4c0,0-0.9-0.3-0.9-1	c0-0.6,0.9-0.9,0.9-0.9l21.3-8.5c0,0,0.7-0.2,1.1-0.2c0.3,0,0.6,0.1,0.6,0.5C34,14.8,34,15,34,15z"></path><path fill="#b0bec5" d="M23,30.5l-3.4,3.4c0,0-0.1,0.1-0.3,0.1c-0.1,0-0.1,0-0.2,0l1-6L23,30.5z"></path><path fill="#cfd8dc" d="M29.9,18.2c-0.2-0.2-0.5-0.3-0.7-0.1L16,26c0,0,2.1,5.9,2.4,6.9c0.3,1,0.6,1,0.6,1l1-6l9.8-9.1	C30,18.7,30.1,18.4,29.9,18.2z"></path>
-                            </svg>
-                            </a>
-                            
-                        </div>
-                    </div>
-                    
-                </main>
-                    
-                <Footer></Footer>
-            </div>
-        </div>
-    )
-}
-
-export default ContactUs
-=======
                 <Header />
                 <main className="flex-grow">
                     <div className="flex flex-col min-h-screen items-center justify-center">
@@ -49,18 +20,18 @@ export default ContactUs
                             </div>
                             <div className="flex flex-row w-full font-poppins">
                                 <div className="flex flex-col bg-white bg-opacity-40 gap-y-4 p-8 rounded-xl w-3/4 items-center justify-center">
-                                <div className="w-full">
-                                    <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Name</p>
-                                    <input type="name" placeholder="Enter Your name" style={{ fontSize: '14px' }} className="appearance-none w-full rounded-lg text-gray-700 mb-2 px-2 py-1 leading-tight focus:outline-none" />
-                                </div>
-                                <div className="w-full">
-                                    <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Email</p>
-                                    <input type="mail" placeholder="Enter your email" style={{ fontSize: '14px' }} className="appearance-none w-full rounded-lg text-gray-700 mb-2 px-2 py-1 leading-tight focus:outline-none" />
-                                </div>
-                                <div className="w-full">
-                                    <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Message</p>
-                                    <textarea id="message" rows="4" className="block rounded-lg p-2.5 w-full text-sm text-gray-900 mb-4 border-none focus:ring-transparent" placeholder="Your message..."></textarea>
-                                </div>
+                                    <div className="w-full">
+                                        <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Name</p>
+                                        <input type="name" placeholder="Enter Your name" style={{ fontSize: '14px' }} className="appearance-none w-full rounded-lg text-gray-700 mb-2 px-2 py-1 leading-tight focus:outline-none" />
+                                    </div>
+                                    <div className="w-full">
+                                        <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Email</p>
+                                        <input type="mail" placeholder="Enter your email" style={{ fontSize: '14px' }} className="appearance-none w-full rounded-lg text-gray-700 mb-2 px-2 py-1 leading-tight focus:outline-none" />
+                                    </div>
+                                    <div className="w-full">
+                                        <p className="font-bold ml-2 text-sm" style={{ alignSelf: 'start' }}>Message</p>
+                                        <textarea id="message" rows="4" className="block rounded-lg p-2.5 w-full text-sm text-gray-900 mb-4 border-none focus:ring-transparent" placeholder="Your message..."></textarea>
+                                    </div>
                                     <div className="flex justify-end w-full">
                                         <button className="w-1/6 bg-primary text-white py-1.5 rounded-xl">Send</button>
                                     </div>
@@ -78,19 +49,19 @@ export default ContactUs
                                         </div>
                                     </a>
                                     <div className="my-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-9 w-9 text-primary">
-                                    <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd"></path>
-                                    </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-9 w-9 text-primary">
+                                            <path fill-rule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clip-rule="evenodd"></path>
+                                        </svg>
                                         <div className="ml-3">
                                             <p className="font-bold">Phone</p>
                                             <p>+65 92447270</p>
                                         </div>
                                     </div>
                                     <div className="my-3 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-9 w-9 text-primary">
-                                        <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"></path>
-                                        <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"></path>
-                                    </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-9 w-9 text-primary">
+                                            <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z"></path>
+                                            <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z"></path>
+                                        </svg>
                                         <div className="ml-3">
                                             <p className="font-bold">Email</p>
                                             <p>smods@gmail.com</p>
@@ -125,4 +96,3 @@ export default ContactUs
 }
 
 export default ContactUs;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581

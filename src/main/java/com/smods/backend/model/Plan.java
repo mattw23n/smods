@@ -21,16 +21,11 @@ public class Plan {
     @Column(name = "DEGREE")
     private String degree;
 
-<<<<<<< HEAD
     @Column(name = "TRACK1")
     private String track1;
 
     @Column(name = "TRACK2")
     private String track2;
-=======
-    @Column(name = "TRACK")
-    private String track;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 
     @Column(name = "CREATION_DATE")
     private ZonedDateTime creationDateTime;
@@ -64,7 +59,6 @@ public class Plan {
     public Plan() {
     }
 
-<<<<<<< HEAD
     public Plan(PlanKey planId, String planName, String degree, String track1, String track2, ZonedDateTime creationDateTime) {
         this.planId = planId;
         this.planName = planName;
@@ -74,17 +68,7 @@ public class Plan {
         this.creationDateTime = creationDateTime;
     }
 
-=======
-    // Constructor with parameters
-    public Plan(String planName, String degree, String track, User user) {
-        this.planName = planName;
-        this.degree = degree;
-        this.track = track;
-        this.user = user;
-    }
-
     // Getters and setters
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     public PlanKey getPlanId() {
         return planId;
     }
@@ -109,7 +93,6 @@ public class Plan {
         this.degree = degree;
     }
 
-<<<<<<< HEAD
     public String getTrack1() {
         return track1;
     }
@@ -126,22 +109,6 @@ public class Plan {
         this.track2 = track2;
     }
 
-    public ZonedDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(ZonedDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-=======
-    public String getTrack() {
-        return track;
-    }
-
-    public void setTrack(String track) {
-        this.track = track;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
-    }
-
     public User getUser() {
         return user;
     }
@@ -150,8 +117,6 @@ public class Plan {
         this.user = user;
     }
 
-<<<<<<< HEAD
-=======
     public ZonedDateTime getCreationDateTime() {
         return creationDateTime;
     }
@@ -160,7 +125,6 @@ public class Plan {
         this.creationDateTime = creationDateTime;
     }
 
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
@@ -173,13 +137,8 @@ public class Plan {
         return planModulePreassignedGPAs;
     }
 
-<<<<<<< HEAD
     public void setPlanModulePreassignedGPAs(List<PreassignedModule> planModulePreassignedGPAs) {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
-=======
-    public void setPlanModulePreassignedGPAs(List<PreassignedModule> preassignedModules) {
-        this.planModulePreassignedGPAs = preassignedModules;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     public List<Major> getMajors() {
@@ -190,30 +149,19 @@ public class Plan {
         this.majors = majors;
     }
 
-<<<<<<< HEAD
-=======
     // Equals and hashCode methods
 
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-<<<<<<< HEAD
         return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
-=======
-        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track, plan.track) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     @Override
     public int hashCode() {
-<<<<<<< HEAD
         return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
-=======
-        return Objects.hash(planId, planName, degree, track, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     }
 
     @Override
@@ -222,12 +170,8 @@ public class Plan {
                 "planId=" + planId +
                 ", planName='" + planName + '\'' +
                 ", degree='" + degree + '\'' +
-<<<<<<< HEAD
                 ", track1='" + track1 + '\'' +
                 ", track2='" + track2 + '\'' +
-=======
-                ", track='" + track + '\'' +
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
                 ", creationDateTime=" + creationDateTime +
                 ", user=" + user +
                 ", planModuleGPAs=" + planModuleGPAs +

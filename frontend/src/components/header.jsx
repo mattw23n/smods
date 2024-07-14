@@ -30,16 +30,10 @@ function NavItem({ title, link }) {
     );
 }
 
-<<<<<<< HEAD
-function Header() {
-    const { user, logoutUser } = useContext(UserContext);
-
-=======
 function Header({showLogIn = true}) {
     const { user, logoutUser } = useContext(UserContext);
 
 
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     return (
         <header className="top-0 left-0 w-full z-50 bg-white/30 backdrop-blur border-b">
             <div className="mx-8 max-w-full px-3 sm:px-6 lg:px-8 pb-0">
@@ -63,19 +57,6 @@ function Header({showLogIn = true}) {
                                     </button>
                                 </div>
                             ) : (
-<<<<<<< HEAD
-                                <div className="sm:flex sm:gap-4">
-                                    <Link className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow" to="/signin">
-                                        Login
-                                    </Link>
-
-                                    <div className="hidden sm:flex">
-                                        <Link className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-poppins font-bold text-primary" to="/register">
-                                            Register
-                                        </Link>
-                                    </div>
-                                </div>
-=======
                                 <>
                                     {showLogIn ? (
                                         <div className="sm:flex sm:gap-4">
@@ -91,7 +72,6 @@ function Header({showLogIn = true}) {
                                         </div>
                                     ) : null}
                                 </>
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
                             )}
                         </div>
                     </div>

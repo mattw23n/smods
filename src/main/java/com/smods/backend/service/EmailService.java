@@ -29,11 +29,8 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Password Reset Request");
-<<<<<<< HEAD
-        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
-=======
+
         String resetUrl = "http://localhost:8080/api/auth/redirect-reset-password?token=" + token;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         message.setText("Dear " + user.getUsername() + ",\n\nTo reset your password, please use the following link: \n" + resetUrl + "\n\nThis link will expire in 24 hours.\n\nThank you,\nSMODS");
         mailSender.send(message);
     }

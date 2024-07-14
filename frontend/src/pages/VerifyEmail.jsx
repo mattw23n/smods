@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
-<<<<<<< HEAD
 
 function VerifyEmail() {
     return (
@@ -24,7 +23,6 @@ function VerifyEmail() {
             </div>
             <Footer />
         </div>
-=======
 import Background from "../components/background";
 
 function VerifyEmail() {
@@ -64,8 +62,6 @@ function VerifyEmail() {
                 <Footer />
             </div>
         </div>
-        
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
     );
 }
 

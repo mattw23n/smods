@@ -2,15 +2,10 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
-<<<<<<< HEAD
-import com.smods.backend.model.*;
-import com.smods.backend.model.Module;
-=======
 import com.smods.backend.model.Module;
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.model.User;
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -30,26 +25,16 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
-<<<<<<< HEAD
     private final MajorRepository majorRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
     public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService, MajorRepository majorRepository) {
-=======
-    private final AuthorizationService authorizationService;
-
-    @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
-<<<<<<< HEAD
         this.majorRepository = majorRepository;
-=======
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         this.authorizationService = authorizationService;
     }
 
@@ -123,11 +108,7 @@ public class PlanService {
             throw new RuntimeException("Module is already in plan");
         }
 
-<<<<<<< HEAD
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
-=======
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
         planModuleGPARepository.save(planModuleGPA);
 
         return validatePlanModules(planId, userId);
@@ -198,7 +179,6 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-<<<<<<< HEAD
 //    public Map<String, Double> getGradRequirements(Plan plan){
 //        // check the Plan's major and track.
 //        List<Major> majors = plan.getMajors();
@@ -220,9 +200,7 @@ public class PlanService {
 //                    // add to map either SMU core or free elective based on grad requirement of module.
 //
 //        return null;
-=======
 //    public static Map<String, Double> getGradRequirements(Plan plan){
 //        // for each module in plan,
->>>>>>> a87d4d024f7e053f41194b494a747aff6066f581
 //    }
 }
