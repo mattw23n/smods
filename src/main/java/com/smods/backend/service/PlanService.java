@@ -2,10 +2,9 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
+import com.smods.backend.exception.TrackNotFoundException;
+import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
-import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.model.User;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlanService {
@@ -24,14 +24,16 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
+    private final MajorRepository majorRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, MajorRepository majorRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
+        this.majorRepository = majorRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -176,7 +178,17 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-//    public static Map<String, Double> getGradRequirements(Plan plan){
-//        // for each module in plan,
-//    }
+    public Map<String, Double> getGradRequirements(Plan plan){
+        List<Major> majors = plan.getMajors();
+
+        List<Track> tracks = new ArrayList<>();
+        if (plan.getTrack1() != null)
+            tracks.add(majorRepository.findTrackByTrackName(plan.getTrack1())
+                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
+        if (plan.getTrack2() != null)
+            tracks.add(majorRepository.findTrackByTrackName(plan.getTrack2())
+                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
+
+        return null;
+    }
 }
