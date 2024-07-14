@@ -39,7 +39,7 @@ function RequestPasswordReset() {
                         {message && <p className="text-green-500 mb-4 font-archivo">{message}</p>}
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="mb-4">
-                                
+
                                 <label htmlFor="email" className="sr-only">Email</label>
                                 <div className="relative">
                                     <input
@@ -64,7 +64,7 @@ function RequestPasswordReset() {
                     </div>
                 </div>
                 <div className="my-20 py-20">
-                    
+
                 </div>
                 <Footer />
             </div>

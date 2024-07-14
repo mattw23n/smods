@@ -28,44 +28,44 @@ function AboutUs(){
                     </div>
                     <div className="flex gap-6 flex-wrap justify-center w-1/2">
                         <a href="https://github.com/gilchrisn" target="_blank">
-                        <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+                            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                 <img className="aspect-square h-full w-full" src="https://avatars.githubusercontent.com/u/121764212?v=4" alt="Avatar" />
                             </span>
-                            <div className="font-poppins text-lg text-white">gilchrisn</div>
-                        </div>
+                                <div className="font-poppins text-lg text-white">gilchrisn</div>
+                            </div>
                         </a>
                         <a href="https://github.com/kth333" target="_blank">
-                        <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+                            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                 <img className="aspect-square h-full w-full" src="https://avatars.githubusercontent.com/u/143651427?s=64&v=4" alt="Avatar" />
                             </span>
-                            <div className="font-poppins text-lg text-white">kth333</div>
-                        </div>
+                                <div className="font-poppins text-lg text-white">kth333</div>
+                            </div>
                         </a>
                         <a href="https://github.com/mattw23n" target="_blank">
-                        <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+                            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                 <img className="aspect-square h-full w-full" src="https://avatars.githubusercontent.com/u/144515044?v=4" alt="Avatar" />
                             </span>
-                            <div className="font-poppins text-lg text-white">mattw23n</div>
-                        </div>
+                                <div className="font-poppins text-lg text-white">mattw23n</div>
+                            </div>
                         </a>
                         <a href="https://github.com/gilchrisn" target="_blank">
-                        <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+                            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                 <img className="aspect-square h-full w-full" src="https://avatars.githubusercontent.com/u/121764212?v=4" alt="Avatar" />
                             </span>
-                            <div className="font-poppins text-lg text-white">theo</div>
-                        </div>
+                                <div className="font-poppins text-lg text-white">theo</div>
+                            </div>
                         </a>
                         <a href="https://github.com/verdiowong" target="_blank">
-                        <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
+                            <div className="inline-flex gap-4 items-center py-2 border bg-primary rounded-full px-4 hover:scale-105 hover:opacity-90 duration-300">
                             <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
                                 <img className="aspect-square h-full w-full" src="https://avatars.githubusercontent.com/u/140170309?v=4" alt="Avatar" />
                             </span>
-                            <div className="font-poppins text-lg text-white">verdiowong</div>
-                        </div>
+                                <div className="font-poppins text-lg text-white">verdiowong</div>
+                            </div>
                         </a>
                     </div>
                 </main>

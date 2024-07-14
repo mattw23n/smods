@@ -46,13 +46,8 @@ public class Track extends Major{
         this.major = major;
     }
 
-
-    public Map<String, Double> getGradRequirements() {
+    public Map<String, Double> getTrackGradRequirements() {
         return trackGradRequirements;
-    }
-
-    public void setGradRequirements(Map<String, Double> trackGradRequirements) {
-        this.trackGradRequirements = trackGradRequirements;
     }
 
     @Override
@@ -67,6 +62,12 @@ public class Track extends Major{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), trackName, major, trackGradRequirements);
+    }
+
+    public void setTrackGradRequirements(Map<String, Double> trackGradRequirements) {
+        this.trackGradRequirements = trackGradRequirements;
+
+
     }
 
     @Override

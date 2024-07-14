@@ -178,7 +178,7 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-    public Map<String, Double> getGradRequirements(Plan plan){
+    public Map<String, Double> getGradRequirements(Plan plan) {
         List<Major> majors = plan.getMajors();
 
         List<Track> tracks = new ArrayList<>();

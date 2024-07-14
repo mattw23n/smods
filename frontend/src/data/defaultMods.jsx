@@ -7,7 +7,7 @@ const DEFAULT_CS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:1, GPA: 0,
         isError: false,
     },{
@@ -52,7 +52,7 @@ const DEFAULT_CS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -61,7 +61,7 @@ const DEFAULT_CS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -70,7 +70,7 @@ const DEFAULT_CS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -79,7 +79,7 @@ const DEFAULT_CS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -137,7 +137,7 @@ const DEFAULT_CS = [
         term:8, GPA: 0.0,
         isError: false,
     },
-  ];
+];
 
 const DEFAULT_IS = [
     {
@@ -146,7 +146,7 @@ const DEFAULT_IS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:1, GPA: 0,
         isError: false,
     },{
@@ -191,7 +191,7 @@ const DEFAULT_IS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -200,7 +200,7 @@ const DEFAULT_IS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -209,7 +209,7 @@ const DEFAULT_IS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -218,7 +218,7 @@ const DEFAULT_IS = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -276,7 +276,7 @@ const DEFAULT_IS = [
         term:8, GPA: 0.0,
         isError: false,
     },
-  ];
+];
 
 const DEFAULT_SE = [
     {
@@ -285,7 +285,7 @@ const DEFAULT_SE = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:1, GPA: 0,
         isError: false,
     },{
@@ -330,7 +330,7 @@ const DEFAULT_SE = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -339,7 +339,7 @@ const DEFAULT_SE = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -348,7 +348,7 @@ const DEFAULT_SE = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -357,7 +357,7 @@ const DEFAULT_SE = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -415,7 +415,7 @@ const DEFAULT_SE = [
         term:8, GPA: 0.0,
         isError: false,
     },
-  ];
+];
 
 const DEFAULT_CL = [
     {
@@ -424,7 +424,7 @@ const DEFAULT_CL = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:1, GPA: 0,
         isError: false,
     },{
@@ -469,7 +469,7 @@ const DEFAULT_CL = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -478,7 +478,7 @@ const DEFAULT_CL = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -487,7 +487,7 @@ const DEFAULT_CL = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -496,7 +496,7 @@ const DEFAULT_CL = [
             mutuallyExclusive: [],
             prerequisites: [],
             corequisites: [],
-        }, 
+        },
         term:2, GPA: 0.0,
         isError: false,
     },{
@@ -554,7 +554,7 @@ const DEFAULT_CL = [
         term:8, GPA: 0.0,
         isError: false,
     },
-  ];
+];
 
 const defaultMods = [
     {
@@ -652,7 +652,7 @@ const defaultMods = [
                 fe: 6,
             }
         ]
-        
+
     },
 ];
 

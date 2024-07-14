@@ -15,7 +15,7 @@ function Form() {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const [submit, setSubmit] = useState("");
-    
+
     const [inputErrors, setInputErrors] = useState({
         email: "",
         username: "",
@@ -50,7 +50,7 @@ function Form() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+
 
         const newErrors = {
             email: email ? '' : 'Email is required',
@@ -71,7 +71,7 @@ function Form() {
                 admissionYear: year ? parseInt(year) : null,
                 degree: degree
             };
-    
+
             try {
                 const response = await axios.post('http://localhost:8080/api/auth/register', userData);
                 setSuccess('Registration successful');
@@ -91,7 +91,7 @@ function Form() {
         }else{
             setSubmit('Form is incomplete!')
         }
-        
+
     };
 
     return (
@@ -105,103 +105,103 @@ function Form() {
                     {success && <p className="text-green-500 font-archivo">{success}</p>}
                 </div>
                 <div className="flex-1 overflow-y-auto max-h-[250px] px-2">
-                <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col gap-4">
-                        <div>
-                            <p className="font-bold pb-1 text-sm font-poppins">Email</p>
-                            <label htmlFor="email" className="sr-only">Email</label>
-                            <div className="relative">
-                                <input
-                                    type="email"
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
-                                    placeholder="Enter your email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                />
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex flex-col gap-4">
+                            <div>
+                                <p className="font-bold pb-1 text-sm font-poppins">Email</p>
+                                <label htmlFor="email" className="sr-only">Email</label>
+                                <div className="relative">
+                                    <input
+                                        type="email"
+                                        className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                    />
+                                </div>
+                                {inputErrors.email && <p className="text-red-500 text-xs mt-1">{inputErrors.email}</p>}
                             </div>
-                            {inputErrors.email && <p className="text-red-500 text-xs mt-1">{inputErrors.email}</p>}
-                        </div>
-                        <div>
-                             <p className="font-bold pb-1 text-sm font-poppins">Username</p>
-                             <label htmlFor="user" className="sr-only">Username</label>
-                             <div className="relative">
-                                 <input
-                                     type="text"
-                                     className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
-                                     placeholder="Enter username"
-                                     value={user}
-                                     onChange={handleUserChange}
-                                 />
+                            <div>
+                                <p className="font-bold pb-1 text-sm font-poppins">Username</p>
+                                <label htmlFor="user" className="sr-only">Username</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
+                                        placeholder="Enter username"
+                                        value={user}
+                                        onChange={handleUserChange}
+                                    />
+                                </div>
+                                {inputErrors.username && <p className="text-red-500 text-xs mt-1">{inputErrors.username}</p>}
                             </div>
-                            {inputErrors.username && <p className="text-red-500 text-xs mt-1">{inputErrors.username}</p>}
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">Password</label>
-                            <div className="relative">
-                                <p className="font-bold pb-1 text-sm font-poppins">
-                                    Password
-                                </p>
-                                <input
-                                    type="password"
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
-                                    placeholder="Enter your password"
-                                    value={password}
-                                    onChange={handlePasswordChange}
-                                />
+                            <div>
+                                <label htmlFor="password" className="sr-only">Password</label>
+                                <div className="relative">
+                                    <p className="font-bold pb-1 text-sm font-poppins">
+                                        Password
+                                    </p>
+                                    <input
+                                        type="password"
+                                        className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
+                                        placeholder="Enter your password"
+                                        value={password}
+                                        onChange={handlePasswordChange}
+                                    />
+                                </div>
+                                {inputErrors.password && <p className="text-red-500 text-xs mt-1">{inputErrors.password}</p>}
                             </div>
-                            {inputErrors.password && <p className="text-red-500 text-xs mt-1">{inputErrors.password}</p>}
-                        </div>
-                        <div>
-                            <p className="font-bold pb-1 text-sm font-poppins">Year</p>
-                            <label htmlFor="year" className="sr-only">Year</label>
-                            <div className="relative">
-                                <select
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
-                                    value={year}
-                                    onChange={handleYearChange}
-                                >
-                                    <option value="" disabled>Select year</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                </select>
+                            <div>
+                                <p className="font-bold pb-1 text-sm font-poppins">Year</p>
+                                <label htmlFor="year" className="sr-only">Year</label>
+                                <div className="relative">
+                                    <select
+                                        className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
+                                        value={year}
+                                        onChange={handleYearChange}
+                                    >
+                                        <option value="" disabled>Select year</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
+                                </div>
+                                {inputErrors.year && <p className="text-red-500 text-xs mt-1">{inputErrors.year}</p>}
                             </div>
-                            {inputErrors.year && <p className="text-red-500 text-xs mt-1">{inputErrors.year}</p>}
-                        </div>
-                        <div>
-                            <p className="font-bold pb-1 text-sm font-poppins">Degree</p>
-                            <label htmlFor="Degree" className="sr-only">Degree</label>
-                            <div className="relative">
-                                <select
-                                    className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
-                                    value={degree}
-                                    onChange={handleDegreeChange}
-                                >
-                                    <option value="" disabled>Select Degree</option>
-                                    {degrees.map((m, key) => (
-                                        <option key={key} value={m}>{m}</option>
-                                    ))}
+                            <div>
+                                <p className="font-bold pb-1 text-sm font-poppins">Degree</p>
+                                <label htmlFor="Degree" className="sr-only">Degree</label>
+                                <div className="relative">
+                                    <select
+                                        className="w-full rounded-xl border-gray-200 py-2 px-4 pe-12 text-sm font-archivo shadow-sm"
+                                        value={degree}
+                                        onChange={handleDegreeChange}
+                                    >
+                                        <option value="" disabled>Select Degree</option>
+                                        {degrees.map((m, key) => (
+                                            <option key={key} value={m}>{m}</option>
+                                        ))}
 
-                                </select>
+                                    </select>
+                                </div>
+                                {inputErrors.degree && <p className="text-red-500 text-xs mt-1">{inputErrors.degree}</p>}
                             </div>
-                            {inputErrors.degree && <p className="text-red-500 text-xs mt-1">{inputErrors.degree}</p>}
-                        </div>
-                        
-                    </div>
-                        
-                    <div className='mt-8'>
-                        <button
-                            type="submit"
-                            className="bg-primary rounded-xl px-5 py-2.5 w-fit flex text-text font-archivo gap-2 text-sm font-poppins font-bold text-white shadow hover:bg-blue-500 transition all"
-                        >
-                            Register
-                        </button>
 
-                    </div>
-                        
-                </form>
-            </div>
+                        </div>
+
+                        <div className='mt-8'>
+                            <button
+                                type="submit"
+                                className="bg-primary rounded-xl px-5 py-2.5 w-fit flex text-text font-archivo gap-2 text-sm font-poppins font-bold text-white shadow hover:bg-blue-500 transition all"
+                            >
+                                Register
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
 
                 <p className="text-left text-sm text-gray-700 font-poppins mt-12">
                     Already have an account? <Link className="font-bold hover:text-gray-900" to="/signin">Sign In</Link>
@@ -209,7 +209,7 @@ function Form() {
             </div>
 
             <div className="my-20 py-20">
-                    
+
             </div>
         </div>
     );
@@ -220,11 +220,11 @@ function Register() {
     return (
         <div className="relative flex flex-col min-h-screen">
             <Background />
-                <div className="relative z-10">
-                    <Header showLogIn={false} />
-                    <Form />
-                    <Footer />
-                </div>
+            <div className="relative z-10">
+                <Header showLogIn={false} />
+                <Form />
+                <Footer />
+            </div>
         </div>
     );
 }

@@ -35,7 +35,7 @@ function App() {
                     <Route path="/handle-verification" element={<HandleVerification />} />
                     <Route path="/password-recovery" element={<RequestPasswordReset />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
-                    
+
                 </Routes>
             </Router>
         </UserProvider>

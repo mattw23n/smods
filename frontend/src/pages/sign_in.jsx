@@ -95,7 +95,7 @@ function Form() {
                     <p className="font-archivo">Sign in into your SMODS account.</p>
                     {error && <p className="text-red-500 font-archivo text-left">{error}</p>}
                 </div>
-                    
+
                 <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4">
                         <div>
@@ -131,10 +131,10 @@ function Form() {
                             {inputErrors.password && <p className="text-red-500 text-xs mt-1">{inputErrors.password}</p>}
                         </div>
                         <p className="text-right text-xs text-gray-700 font-poppins">
-                                <Link className="font-bold hover:text-gray-900" to="/register">Forgot password?</Link>
+                            <Link className="font-bold hover:text-gray-900" to="/register">Forgot password?</Link>
                         </p>
                     </div>
-                        
+
                     <div className='mt-8'>
                         <button
                             type="submit"
@@ -144,16 +144,16 @@ function Form() {
                         </button>
 
                     </div>
-                        
+
                 </form>
-                
+
                 <p className="text-left text-sm text-gray-700 font-poppins mt-12">
                     Don't have an account? <Link className="font-bold hover:text-gray-900" to="/register">Register</Link>
                 </p>
             </div>
 
             <div className="my-20 py-20">
-                    
+
             </div>
         </div>
     );
@@ -164,11 +164,11 @@ function SignIn() {
     return (
         <div className="relative flex flex-col min-h-screen">
             <Background />
-                <div className="relative z-10">
-                    <Header showLogIn={false} />
-                    <Form />
-                    <Footer />
-                </div>
+            <div className="relative z-10">
+                <Header showLogIn={false} />
+                <Form />
+                <Footer />
+            </div>
         </div>
     );
 }

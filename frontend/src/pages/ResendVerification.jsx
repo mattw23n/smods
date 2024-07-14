@@ -42,7 +42,7 @@ function ResendVerification() {
                         </div>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="mb-4">
-                                
+
                                 <label htmlFor="email" className="sr-only">Email</label>
                                 <div className="relative">
                                     <input
@@ -70,14 +70,16 @@ function ResendVerification() {
                     </div>
                 </div>
                 <div className="my-20 py-20">
-                    
+
                 </div>
                 <Footer />
             </div>
         </div>
-        
+
     );
 }
 
 export default ResendVerification;
+
+
 
