@@ -21,8 +21,11 @@ public class Plan {
     @Column(name = "DEGREE")
     private String degree;
 
-    @Column(name = "TRACK")
-    private String track;
+    @Column(name = "TRACK1")
+    private String track1;
+
+    @Column(name = "TRACK2")
+    private String track2;
 
     @Column(name = "CREATION_DATE")
     private ZonedDateTime creationDateTime;
@@ -56,15 +59,15 @@ public class Plan {
     public Plan() {
     }
 
-    // Constructor with parameters
-    public Plan(String planName, String degree, String track, User user) {
+    public Plan(PlanKey planId, String planName, String degree, String track1, String track2, ZonedDateTime creationDateTime) {
+        this.planId = planId;
         this.planName = planName;
         this.degree = degree;
-        this.track = track;
-        this.user = user;
+        this.track1 = track1;
+        this.track2 = track2;
+        this.creationDateTime = creationDateTime;
     }
 
-    // Getters and setters
     public PlanKey getPlanId() {
         return planId;
     }
@@ -89,20 +92,20 @@ public class Plan {
         this.degree = degree;
     }
 
-    public String getTrack() {
-        return track;
+    public String getTrack1() {
+        return track1;
     }
 
-    public void setTrack(String track) {
-        this.track = track;
+    public void setTrack1(String track1) {
+        this.track1 = track1;
     }
 
-    public User getUser() {
-        return user;
+    public String getTrack2() {
+        return track2;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setTrack2(String track2) {
+        this.track2 = track2;
     }
 
     public ZonedDateTime getCreationDateTime() {
@@ -111,6 +114,14 @@ public class Plan {
 
     public void setCreationDateTime(ZonedDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<PlanModuleGPA> getPlanModuleGPAs() {
@@ -125,8 +136,8 @@ public class Plan {
         return planModulePreassignedGPAs;
     }
 
-    public void setPlanModulePreassignedGPAs(List<PreassignedModule> preassignedModules) {
-        this.planModulePreassignedGPAs = preassignedModules;
+    public void setPlanModulePreassignedGPAs(List<PreassignedModule> planModulePreassignedGPAs) {
+        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 
     public List<Major> getMajors() {
@@ -137,19 +148,17 @@ public class Plan {
         this.majors = majors;
     }
 
-    // Equals and hashCode methods
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track, plan.track) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
+        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, planName, degree, track, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
+        return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
     }
 
     @Override
@@ -158,7 +167,8 @@ public class Plan {
                 "planId=" + planId +
                 ", planName='" + planName + '\'' +
                 ", degree='" + degree + '\'' +
-                ", track='" + track + '\'' +
+                ", track1='" + track1 + '\'' +
+                ", track2='" + track2 + '\'' +
                 ", creationDateTime=" + creationDateTime +
                 ", user=" + user +
                 ", planModuleGPAs=" + planModuleGPAs +

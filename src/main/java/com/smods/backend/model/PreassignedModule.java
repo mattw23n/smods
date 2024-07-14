@@ -42,12 +42,8 @@ public class PreassignedModule {
     public PreassignedModule() {}
 
     // Constructor with parameters
-
-
-    public PreassignedModule(Plan plan, Module module, Major major, int term) {
-        this.plan = plan;
-        this.module = module;
-        this.major = major;
+    public PreassignedModule(PreassignedModuleKey preassignedModuleKey, int term) {
+        this.preassignedModuleKey = preassignedModuleKey;
         this.term = term;
     }
 

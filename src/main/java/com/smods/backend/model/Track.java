@@ -2,6 +2,7 @@ package com.smods.backend.model;
 
 import jakarta.persistence.*;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +15,12 @@ public class Track extends Major{
     @ManyToOne
     @JoinColumn(name = "MAJOR_NAME", insertable = false, updatable = false)
     private Major major;
+
+    @ElementCollection
+    @CollectionTable(name = "TRACK_GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MAJOR_NAME"))
+    @MapKeyColumn(name = "REQUIREMENT_TYPE")
+    @Column(name = "COURSE_UNIT")
+    private Map<String, Double> trackGradRequirements;
 
     public Track() {
     }
@@ -40,17 +47,27 @@ public class Track extends Major{
     }
 
     @Override
+    public Map<String, Double> getGradRequirements() {
+        return trackGradRequirements;
+    }
+
+    @Override
+    public void setGradRequirements(Map<String, Double> trackGradRequirements) {
+        this.trackGradRequirements = trackGradRequirements;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Track track = (Track) o;
-        return Objects.equals(trackName, track.trackName) && Objects.equals(major, track.major);
+        return Objects.equals(trackName, track.trackName) && Objects.equals(major, track.major) && Objects.equals(trackGradRequirements, track.trackGradRequirements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), trackName, major);
+        return Objects.hash(super.hashCode(), trackName, major, trackGradRequirements);
     }
 
     @Override
@@ -58,6 +75,7 @@ public class Track extends Major{
         return "Track{" +
                 "trackName='" + trackName + '\'' +
                 ", major=" + major +
+                ", trackGradRequirements=" + trackGradRequirements +
                 '}';
     }
 }

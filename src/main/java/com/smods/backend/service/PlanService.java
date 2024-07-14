@@ -2,10 +2,8 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
+import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
-import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.model.User;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -25,14 +23,16 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
+    private final MajorRepository majorRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService, MajorRepository majorRepository) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
+        this.majorRepository = majorRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -106,7 +106,7 @@ public class PlanService {
             throw new RuntimeException("Module is already in plan");
         }
 
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
+        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
         planModuleGPARepository.save(planModuleGPA);
 
         return validatePlanModules(planId, userId);
@@ -177,7 +177,26 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-//    public static Map<String, Double> getGradRequirements(Plan plan){
-//        // for each module in plan,
+//    public Map<String, Double> getGradRequirements(Plan plan){
+//        // check the Plan's major and track.
+//        List<Major> majors = plan.getMajors();
+//        List<Track> track =
+//
+//        // If the plan has a track
+//        if (plan.getTrack1() != null || plan.getTrack2() != null){
+//            // iterate each module
+//            for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()){
+//
+//            }
+//        }
+//
+//                // if the track name of plan and modules matches
+//                    // add to map track core or elective based on grad requirement of module
+//                // else if the major name matches
+//                    // add to map major core or major elective based on grad requirement of module
+//                // else
+//                    // add to map either SMU core or free elective based on grad requirement of module.
+//
+//        return null;
 //    }
 }

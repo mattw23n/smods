@@ -52,17 +52,6 @@ public class PlanModuleGPA {
 
 
     // Constructor with parameters
-
-
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, int term) {
-        this.planModuleGPAId = planModuleGPAId;
-        this.plan = plan;
-        this.module = module;
-        this.term = term;
-
-        // fill in the rest of the attributes based on degree and track of module and plan
-    }
-
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.term = term;
