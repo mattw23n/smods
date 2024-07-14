@@ -20,6 +20,13 @@ function Form() {
         setMessage(event.target.value);
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log("Name:", name);
+        console.log("Email:", email);
+        console.log("Message:", message);
+    };
+
     return (
         <div className="flex flex-col bg-white bg-opacity-40 gap-y-4 p-8 rounded-xl w-3/4 items-center justify-center shadow-md">
             <div className="w-full">
@@ -55,7 +62,7 @@ function Form() {
                     onChange={handleMessageChange}
                 ></textarea>
             </div>
-            <div className="flex justify-end w-full">
+            <div className="flex justify-end w-full" onClick={handleSubmit}>
                 <button className="w-1/6 bg-primary text-white py-1.5 rounded-xl hover:bg-opacity-70 shadow-md">Send</button>
             </div>
         </div>
