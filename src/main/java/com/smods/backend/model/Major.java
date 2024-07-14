@@ -1,7 +1,6 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 import java.util.Map;
@@ -23,9 +22,6 @@ public class Major {
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<MajorModule> majorModules;
-
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<Module> modules;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<PreassignedModule> preassignedModules;
@@ -76,14 +72,6 @@ public class Major {
         this.plans = plans;
     }
 
-    public List<Module> getModules() {
-        return modules;
-    }
-
-    public void setModules(List<Module> modules) {
-        this.modules = modules;
-    }
-
     public List<PreassignedModule> getPreassignedModules() {
         return preassignedModules;
     }
@@ -111,7 +99,6 @@ public class Major {
                 "majorName='" + majorName + '\'' +
                 ", majorGradRequirements=" + majorGradRequirements +
                 ", majorModules=" + majorModules +
-                ", modules=" + modules +
                 ", preassignedModules=" + preassignedModules +
                 ", plans=" + plans +
                 '}';

@@ -71,9 +71,6 @@ public class Module {
     private List<MajorModule> majormodules;
     // Default constructor
     public Module() {}
-    @ManyToOne
-    @JoinColumn(name = "MAJOR_NAME")
-    private Major major;
 
     public Module(String moduleId, String moduleName, Float courseUnit, String trackName) {
         this.moduleId = moduleId;
@@ -185,26 +182,17 @@ public class Module {
     public void setMajormodules(List<MajorModule> majormodules) {
         this.majormodules = majormodules;
     }
-
-    public Major getMajor() {
-        return major;
-    }
-
-    public void setMajor(Major major) {
-        this.major = major;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(trackName, module.trackName) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules) && Objects.equals(major, module.major);
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(trackName, module.trackName) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleId, moduleName, courseUnit, trackName, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules, major);
+        return Objects.hash(moduleId, moduleName, courseUnit, trackName, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules);
     }
 
     @Override
@@ -223,7 +211,6 @@ public class Module {
                 ", mutuallyExclusives=" + mutuallyExclusives +
                 ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
                 ", majormodules=" + majormodules +
-                ", major=" + major +
                 '}';
     }
 }

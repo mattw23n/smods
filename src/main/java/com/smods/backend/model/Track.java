@@ -46,6 +46,15 @@ public class Track extends Major{
         this.major = major;
     }
 
+
+    public Map<String, Double> getGradRequirements() {
+        return trackGradRequirements;
+    }
+
+    public void setGradRequirements(Map<String, Double> trackGradRequirements) {
+        this.trackGradRequirements = trackGradRequirements;
+    }
+
     @Override
     public Map<String, Double> getGradRequirements() {
         return trackGradRequirements;

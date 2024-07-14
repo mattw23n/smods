@@ -1,7 +1,6 @@
 package com.smods.backend.controller;
 
 import com.smods.backend.dto.ModuleValidationResponse;
-import com.smods.backend.model.Module;
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.model.User;
