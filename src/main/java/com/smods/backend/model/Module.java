@@ -17,11 +17,7 @@ public class Module {
     private String moduleName;
 
     @Column(name = "COURSE_UNIT")
-    private Float courseUnit;
-
-    @Column(name = "TRACK_NAME")
-    private String trackName;
-
+    private Double courseUnit;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     @JsonBackReference(value = "module-planModuleGPA")
@@ -72,11 +68,10 @@ public class Module {
     // Default constructor
     public Module() {}
 
-    public Module(String moduleId, String moduleName, Float courseUnit, String trackName) {
+    public Module(String moduleId, String moduleName, Double courseUnit) {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
-        this.trackName = trackName;
     }
 
     public String getModuleId() {
@@ -95,20 +90,12 @@ public class Module {
         this.moduleName = moduleName;
     }
 
-    public Float getCourseUnit() {
+    public Double getCourseUnit() {
         return courseUnit;
     }
 
-    public void setCourseUnit(Float courseUnit) {
+    public void setCourseUnit(Double courseUnit) {
         this.courseUnit = courseUnit;
-    }
-
-    public String getTrackName() {
-        return trackName;
-    }
-
-    public void setTrackName(String trackName) {
-        this.trackName = trackName;
     }
 
     public List<PlanModuleGPA> getPlanModuleGPAs() {
@@ -187,12 +174,12 @@ public class Module {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(trackName, module.trackName) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules);
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleId, moduleName, courseUnit, trackName, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules);
+        return Objects.hash(moduleId, moduleName, courseUnit, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules);
     }
 
     @Override
@@ -201,7 +188,6 @@ public class Module {
                 "moduleId='" + moduleId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
-                ", trackName='" + trackName + '\'' +
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", preassignedModules=" + preassignedModules +
                 ", preRequisites=" + preRequisites +

@@ -2,6 +2,7 @@ package com.smods.backend.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,11 +15,8 @@ public class Major {
     @Column(name = "MAJOR_NAME")
     private String majorName;
 
-    @ElementCollection
-    @CollectionTable(name = "MAJOR_GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MAJOR_NAME"))
-    @MapKeyColumn(name = "REQUIREMENT_TYPE")
-    @Column(name = "COURSE_UNIT")
-    private Map<String, Double> majorGradRequirements;
+    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    private List<MajorGradRequirement> majorGradRequirements;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<MajorModule> majorModules;
@@ -32,10 +30,6 @@ public class Major {
     public Major() {
     }
 
-    public Major(String majorName) {
-        this.majorName = majorName;
-    }
-
     public String getMajorName() {
         return majorName;
     }
@@ -44,15 +38,11 @@ public class Major {
         this.majorName = majorName;
     }
 
-    public Map<String, Double> getGradRequirements() {
+    public List<MajorGradRequirement> getMajorGradRequirements() {
         return majorGradRequirements;
     }
 
-    public Map<String, Double> getMajorGradRequirements() {
-        return majorGradRequirements;
-    }
-
-    public void setMajorGradRequirements(Map<String, Double> majorGradRequirements) {
+    public void setMajorGradRequirements(List<MajorGradRequirement> majorGradRequirements) {
         this.majorGradRequirements = majorGradRequirements;
     }
 
@@ -64,20 +54,20 @@ public class Major {
         this.majorModules = majorModules;
     }
 
-    public List<Plan> getPlans() {
-        return plans;
-    }
-
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
-    }
-
     public List<PreassignedModule> getPreassignedModules() {
         return preassignedModules;
     }
 
     public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
         this.preassignedModules = preassignedModules;
+    }
+
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
     }
 
     @Override
@@ -94,7 +84,8 @@ public class Major {
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "Major{" +
                 "majorName='" + majorName + '\'' +
                 ", majorGradRequirements=" + majorGradRequirements +

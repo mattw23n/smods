@@ -1,7 +1,10 @@
 package com.smods.backend.model;
 
+import com.smods.backend.model.composite_key.TrackGradRequirementKey;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,11 +19,8 @@ public class Track extends Major{
     @JoinColumn(name = "MAJOR_NAME", insertable = false, updatable = false)
     private Major major;
 
-    @ElementCollection
-    @CollectionTable(name = "TRACK_GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "MAJOR_NAME"))
-    @MapKeyColumn(name = "REQUIREMENT_TYPE")
-    @Column(name = "COURSE_UNIT")
-    private Map<String, Double> trackGradRequirements;
+    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL)
+    private List<TrackGradRequirement> trackGradRequirements;
 
     public Track() {
     }
@@ -46,8 +46,12 @@ public class Track extends Major{
         this.major = major;
     }
 
-    public Map<String, Double> getTrackGradRequirements() {
+    public List<TrackGradRequirement> getTrackGradRequirements() {
         return trackGradRequirements;
+    }
+
+    public void setTrackGradRequirements(List<TrackGradRequirement> trackGradRequirements) {
+        this.trackGradRequirements = trackGradRequirements;
     }
 
     @Override
@@ -62,12 +66,6 @@ public class Track extends Major{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), trackName, major, trackGradRequirements);
-    }
-
-    public void setTrackGradRequirements(Map<String, Double> trackGradRequirements) {
-        this.trackGradRequirements = trackGradRequirements;
-
-
     }
 
     @Override

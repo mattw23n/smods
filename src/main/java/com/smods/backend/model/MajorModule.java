@@ -27,12 +27,16 @@ public class MajorModule {
     @Column(name = "BASKET")
     private String basket;
 
+    @Column(name = "TRACK_NAME")
+    private String trackName;
+
     public MajorModule() {
     }
 
-    public MajorModule(MajorModuleKey majorModuleId, String gradRequirement, String basket) {
+    public MajorModule(MajorModuleKey majorModuleId, String gradRequirement, String basket, String trackName) {
         this.gradRequirement = gradRequirement;
         this.basket = basket;
+        this.trackName = trackName;
     }
 
     public MajorModuleKey getMajorModuleId() {
@@ -73,6 +77,14 @@ public class MajorModule {
 
     public void setBasket(String basket) {
         this.basket = basket;
+    }
+
+    public String getTrackName() {
+        return trackName;
+    }
+
+    public void setTrackName(String trackName) {
+        this.trackName = trackName;
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,15 +26,19 @@ public class PlanService {
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
     private final MajorRepository majorRepository;
+    private final TrackRepository trackRepository;
+    private final MajorModuleRepository majorModuleRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, MajorRepository majorRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, MajorRepository majorRepository, TrackRepository trackRepository, MajorModuleRepository majorModuleRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
         this.majorRepository = majorRepository;
+        this.trackRepository = trackRepository;
+        this.majorModuleRepository = majorModuleRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -179,16 +184,55 @@ public class PlanService {
     }
 
     public Map<String, Double> getGradRequirements(Plan plan) {
+        Map<String, Double> gradRequirements = new HashMap<>();
+
+        // Get all majors and tracks
         List<Major> majors = plan.getMajors();
+        List<Track> tracks = getTracksFromPlan(plan);
 
-        List<Track> tracks = new ArrayList<>();
-        if (plan.getTrack1() != null)
-            tracks.add(majorRepository.findTrackByTrackName(plan.getTrack1())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
-        if (plan.getTrack2() != null)
-            tracks.add(majorRepository.findTrackByTrackName(plan.getTrack2())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
+        // Loop through all modules in the plan
+        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
+            Module module = planModuleGPA.getModule();
+            String gradRequirement = findGradRequirement(tracks, majors, module);
 
-        return null;
+            if (gradRequirement != null) {
+                gradRequirements.merge(gradRequirement, module.getCourseUnit(), Double::sum);
+            }
+        }
+
+        return gradRequirements;
     }
+
+    private List<Track> getTracksFromPlan(Plan plan) {
+        List<Track> tracks = new ArrayList<>();
+        if (plan.getTrack1() != null) {
+            tracks.add(trackRepository.findByTrackName(plan.getTrack1())
+                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
+        }
+        if (plan.getTrack2() != null) {
+            tracks.add(trackRepository.findByTrackName(plan.getTrack2())
+                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
+        }
+        return tracks;
+    }
+
+    private String findGradRequirement(List<Track> tracks, List<Major> majors, Module module) {
+        for (Track track : tracks) {
+            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
+            if (majorModule != null) {
+                return majorModule.getGradRequirement();
+            }
+        }
+
+        for (Major major : majors) {
+            MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
+            if (majorModule != null) {
+                return majorModule.getGradRequirement();
+            }
+        }
+
+        MajorModule majorModule = majorModuleRepository.findByModule(module);
+        return majorModule != null ? majorModule.getGradRequirement() : null;
+    }
+
 }
