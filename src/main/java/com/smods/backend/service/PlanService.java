@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
 @Service
 public class PlanService {
@@ -183,26 +181,37 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-    public Map<String, Double> getGradRequirements(Plan plan) {
-        Map<String, Double> gradRequirements = new HashMap<>();
+    public Map<String, Map<String, Double>> getGradRequirements(Plan plan) {
+        Map<String, Map<String, Double>> gradRequirements = new HashMap<>();
 
         // Get all majors and tracks
-        List<Major> majors = plan.getMajors();
+        Major major = plan.getMajor();
         List<Track> tracks = getTracksFromPlan(plan);
+
+        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements()
 
         // Loop through all modules in the plan
         for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
             Module module = planModuleGPA.getModule();
-            String gradRequirement = findGradRequirement(tracks, majors, module);
+            SimpleEntry<String, String> gradRequirement = findGradRequirementAndBasket(tracks, major, module);
 
             if (gradRequirement != null) {
-                gradRequirements.merge(gradRequirement, module.getCourseUnit(), Double::sum);
+                String requirement = gradRequirement.getKey();
+                String basket = gradRequirement.getValue();
+
+                gradRequirements.putIfAbsent(requirement, new HashMap<>());
+
+                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
+
+                gradRequirements.get(requirement).merge(basket, module.getCourseUnit(), Double::sum);
             }
         }
-
         return gradRequirements;
     }
 
+    private Map<String, Map<String, Double>> getMajorGradRequirements(Major major, List<Track> tracks){
+
+    }
     private List<Track> getTracksFromPlan(Plan plan) {
         List<Track> tracks = new ArrayList<>();
         if (plan.getTrack1() != null) {
@@ -216,23 +225,21 @@ public class PlanService {
         return tracks;
     }
 
-    private String findGradRequirement(List<Track> tracks, List<Major> majors, Module module) {
+    private SimpleEntry<String, String> findGradRequirementAndBasket(List<Track> tracks, Major major, Module module) {
         for (Track track : tracks) {
             MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
             if (majorModule != null) {
-                return majorModule.getGradRequirement();
+                return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
             }
         }
 
-        for (Major major : majors) {
-            MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
-            if (majorModule != null) {
-                return majorModule.getGradRequirement();
-            }
+        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
+        if (majorModule != null) {
+            return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
         }
 
-        MajorModule majorModule = majorModuleRepository.findByModule(module);
-        return majorModule != null ? majorModule.getGradRequirement() : null;
+        majorModule = majorModuleRepository.findByModule(module);
+        return majorModule != null ? new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket()) : null;
     }
 
 }

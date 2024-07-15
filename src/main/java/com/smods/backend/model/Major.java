@@ -24,7 +24,7 @@ public class Major {
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<PreassignedModule> preassignedModules;
 
-    @ManyToMany(mappedBy = "majors", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
     private List<Plan> plans;
 
     public Major() {

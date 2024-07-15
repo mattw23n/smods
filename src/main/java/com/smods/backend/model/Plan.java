@@ -44,16 +44,9 @@ public class Plan {
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
     private List<PreassignedModule> planModulePreassignedGPAs;
 
-    @ManyToMany
-    @JoinTable(
-            name = "PLAN_MAJOR",
-            joinColumns = {
-                    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
-                    @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
-            },
-            inverseJoinColumns = @JoinColumn(name = "MAJOR_NAME")
-    )
-    private List<Major> majors;
+    @ManyToOne
+    @JoinColumn(name = "MAJOR")
+    private Major major;
 
     // Default constructor
     public Plan() {
@@ -141,12 +134,12 @@ public class Plan {
         this.planModulePreassignedGPAs = planModulePreassignedGPAs;
     }
 
-    public List<Major> getMajors() {
-        return majors;
+    public Major getMajor() {
+        return major;
     }
 
-    public void setMajors(List<Major> majors) {
-        this.majors = majors;
+    public void setMajor(Major major) {
+        this.major = Plan.this.major;
     }
 
     // Equals and hashCode methods
@@ -156,12 +149,12 @@ public class Plan {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(majors, plan.majors);
+        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(major, plan.major);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, majors);
+        return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, major);
     }
 
     @Override
@@ -176,7 +169,7 @@ public class Plan {
                 ", user=" + user +
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
-                ", majors=" + majors +
+                ", major=" + major +
                 '}';
     }
 }
