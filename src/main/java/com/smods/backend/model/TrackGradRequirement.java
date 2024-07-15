@@ -14,7 +14,7 @@ public class TrackGradRequirement {
 
     @ManyToOne
     @MapsId("trackName")
-    @JoinColumn(name = "TRACK_NAME")
+    @JoinColumn(name = "TRACK_NAME", referencedColumnName = "TRACK_NAME")
     private Track track;
 
     @ElementCollection
