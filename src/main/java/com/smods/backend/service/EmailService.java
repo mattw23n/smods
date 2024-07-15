@@ -34,4 +34,12 @@ public class EmailService {
         message.setText("Dear " + user.getUsername() + ",\n\nTo reset your password, please use the following link: \n" + resetUrl + "\n\nThis link will expire in 24 hours.\n\nThank you,\nSMODS");
         mailSender.send(message);
     }
+
+    public void sendContactFormMessage(String name, String email, String messageContent) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo("smodstesting@gmail.com");
+        message.setSubject("New Contact Form Submission from " + name);
+        message.setText("Name: " + name + "\nEmail: " + email + "\n\nMessage:\n" + messageContent);
+        mailSender.send(message);
+    }
 }

@@ -131,7 +131,7 @@ function Form() {
                             {inputErrors.password && <p className="text-red-500 text-xs mt-1">{inputErrors.password}</p>}
                         </div>
                         <p className="text-right text-xs text-gray-700 font-poppins">
-                            <Link className="font-bold hover:text-gray-900" to="/register">Forgot password?</Link>
+                            <Link className="font-bold hover:text-gray-900" to="/password-recovery">Forgot password?</Link>
                         </p>
                     </div>
 

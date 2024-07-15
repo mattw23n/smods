@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import Laptop from "../images/prot_clean.png";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -9,14 +9,14 @@ import validationDemo from "../images/validationDemo.gif";
 import { Link } from 'react-router-dom';
 import Background from "../components/background";
 import { animate, useMotionValue, motion } from "framer-motion";
-import useMeasure from "react-use-measure"
+import useMeasure from "react-use-measure";
 import TestimonyCarousel from "../components/testimony";
+import { UserContext } from "../data/user";  // Import the UserContext
 
 const VerdioPart = () => {
     return (
         <>
             <div className="flex flex-col items-center mx-6 mt-8">
-
                 <h1 className="text-center text-4xl font-extrabold font-poppins py-2 mb-16 max-w-2xl">
                     Simplify your learning with us
                 </h1>
@@ -68,53 +68,50 @@ const VerdioPart = () => {
 }
 
 const PlanButton = () => {
+    const { user } = useContext(UserContext);
+
     return (
-        <div class="w-full h-40 flex items-center justify-left cursor-pointer">
-            <Link class="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
-                  to="/signin">
-            <span
-                class="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"
-            ></span>
-                <span
-                    class="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12"
-                >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                fill="none"
-                class="w-5 h-5 text-white"
+        <div className="w-full h-40 flex items-center justify-left cursor-pointer">
+            <Link
+                className="relative inline-flex items-center justify-start py-3 pl-4 pr-12 overflow-hidden font-semibold shadow text-white font-poppins transition-all duration-150 ease-in-out rounded hover:pl-10 hover:pr-6 bg-black group"
+                to={user ? "/home" : "/signin"}
             >
-                <path
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    stroke-width="2"
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                ></path>
-            </svg>
-            </span>
-                <span
-                    class="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200"
-                >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                fill="none"
-                class="w-5 h-5 text-blue-400"
-            >
-                <path
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    stroke-width="2"
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                ></path>
-            </svg>
-            </span>
-                <span
-                    class="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400"
-                >Sign Up Now!
-            </span>
+                <span className="absolute bottom-0 left-0 w-full h-1 transition-all duration-150 ease-in-out bg-white group-hover:h-full"></span>
+                <span className="absolute right-0 pr-4 duration-200 ease-out group-hover:translate-x-12">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        fill="none"
+                        className="w-5 h-5 text-white"
+                    >
+                        <path
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        ></path>
+                    </svg>
+                </span>
+                <span className="absolute left-0 pl-2.5 -translate-x-12 text-blue-500 group-hover:translate-x-0 ease-out duration-200">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        fill="none"
+                        className="w-5 h-5 text-blue-400"
+                    >
+                        <path
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                            strokeWidth="2"
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                        ></path>
+                    </svg>
+                </span>
+                <span className="relative w-full text-left transition-colors duration-200 ease-in-out group-hover:text-black dark:group-hover:text-blue-400">
+                    Start Planning Now!
+                </span>
             </Link>
         </div>
     )
@@ -151,14 +148,9 @@ const testimonials = [
         text: "TESTIMONY 6",
         author: "John Doe",
     },
-
-
 ];
 
-
 const Testimonials = () => {
-
-
     return (
         <section>
             <div className="mx-auto max-w-[1340px] px-4 py-12">
@@ -175,7 +167,6 @@ const Testimonials = () => {
     );
 };
 
-
 function Hero() {
     return (
         <section className="">
@@ -188,7 +179,6 @@ function Hero() {
                         Make the most out of your studies with <b>SMODS</b>
                     </p>
                     <PlanButton />
-
                 </div>
                 <div className="flex max-w-[600px] align-bottom">
                     <img src={Laptop} alt="mockup" className="w-full h-auto " />
@@ -225,14 +215,8 @@ function Hero() {
                     <div>
                         <PlanButton />
                     </div>
-
                 </div>
-
             </div>
-
-
-
-
         </section>
     );
 }
