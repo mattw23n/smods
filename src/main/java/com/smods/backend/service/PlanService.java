@@ -188,7 +188,7 @@ public class PlanService {
         Major major = plan.getMajor();
         List<Track> tracks = getTracksFromPlan(plan);
 
-        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements()
+        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
 
         // Loop through all modules in the plan
         for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
@@ -209,9 +209,6 @@ public class PlanService {
         return gradRequirements;
     }
 
-    private Map<String, Map<String, Double>> getMajorGradRequirements(Major major, List<Track> tracks){
-
-    }
     private List<Track> getTracksFromPlan(Plan plan) {
         List<Track> tracks = new ArrayList<>();
         if (plan.getTrack1() != null) {
