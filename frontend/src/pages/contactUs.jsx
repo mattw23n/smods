@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import Background from "../components/background";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -7,6 +8,7 @@ function Form() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
+    const [responseMessage, setResponseMessage] = useState("");
     const [inputErrors, setInputErrors] = useState({
         name: "",
         email: "",
@@ -25,7 +27,7 @@ function Form() {
         setMessage(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const newErrors = {
@@ -36,12 +38,17 @@ function Form() {
 
         setInputErrors(newErrors);
 
-        console.log("Name:", name);
-        console.log("Email:", email);
-        console.log("Message:", message);
-
-        if(!newErrors.name && !newErrors.email && !newErrors.message){
-            console.log("Form submmited succesfully")
+        if (!newErrors.name && !newErrors.email && !newErrors.message) {
+            try {
+                const response = await axios.post('http://localhost:8080/api/contact/send', {
+                    name,
+                    email,
+                    message
+                });
+                setResponseMessage('Message sent successfully.');
+            } catch (error) {
+                setResponseMessage('Error sending message.');
+            }
         }
     };
 
@@ -86,6 +93,7 @@ function Form() {
             <div className="flex justify-end w-full" onClick={handleSubmit}>
                 <button className="bg-primary rounded-xl px-5 py-2.5 w-fit flex text-text font-archivo gap-2 text-sm font-poppins font-bold text-white shadow hover:bg-blue-500 transition all">Send</button>
             </div>
+            {responseMessage && <p className="mt-4 text-sm text-gray-500 font-poppins">{responseMessage}</p>}
         </div>
     );
 }
@@ -178,17 +186,18 @@ function Content() {
     );
 }
 
-function ContactUs () {
+function ContactUs() {
     return (
         <div className="relative flex flex-col min-h-screen">
-        <Background />
-        <div className="relative z-10">
-            <Header />
-            <Content />
-            <Footer />
+            <Background />
+            <div className="relative z-10">
+                <Header />
+                <Content />
+                <Footer />
             </div>
         </div>
     );
 }
 
 export default ContactUs;
+
