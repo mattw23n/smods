@@ -156,7 +156,7 @@ const Testimonials = () => {
             <div className="mx-auto max-w-[1340px] px-4 py-12">
                 <div className="max-w-7xl items-end justify-between">
                     <p className="max-w-xl text-4xl font-bold font-poppins leading-normal text-gray-900 ">
-                        Dont take our word for it. <br /> Take theirs.
+                        Don't take our word for it. <br /> Take theirs.
                     </p>
                 </div>
                 <div className="my-10">
@@ -173,7 +173,7 @@ function Hero() {
             <div className="flex px-4 my-40 mx-10 justify-between">
                 <div className="flex flex-col ml-10 justify-left">
                     <p className="pt-2 mb-4 text-6xl font-extrabold leading-normal font-poppins ">
-                        Plan your mods. <br /> Hassle free.
+                        Plan your mods. <br /> Hassle-free.
                     </p>
                     <p className="font-archivo text-xl">
                         Make the most out of your studies with <b>SMODS</b>
