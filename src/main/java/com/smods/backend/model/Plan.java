@@ -30,19 +30,19 @@ public class Plan {
     @Column(name = "CREATION_DATE")
     private ZonedDateTime creationDateTime;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
     @JsonBackReference(value = "user-plan")
     private User user;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "plan-planModuleGPA")
-    private List<PlanModuleGPA> planModuleGPAs;
+    private List<PlanModuleGPA> planModuleGPAs = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "plan-planModulePreassignedGPA")
-    private List<PreassignedModule> planModulePreassignedGPAs;
+    private List<PreassignedModule> planModulePreassignedGPAs = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "MAJOR")
