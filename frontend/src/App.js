@@ -12,7 +12,7 @@ import Anims from './pages/justForAnims.jsx';
 import VerifyEmail from './pages/VerifyEmail.jsx';
 import ResendVerification from './pages/ResendVerification.jsx';
 import HandleVerification from './pages/HandleVerification.jsx';
-import { UserProvider } from "./data/user";
+import { UserProvider, UserLoader } from "./data/user";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ResetPassword from "./pages/ResetPassword";
 

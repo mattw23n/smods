@@ -1,14 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from "react";
+import {Link, useNavigate} from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
-import { UserContext } from "../data/user";
-import defaultMods from "../data/defaultMods";
+import {UserContext} from "../data/user";
 
 const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
-    const { username, plans, userId } = user;
+    const { username, plans = [], userId } = user;
 
     const majors = [
         { Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
@@ -44,7 +43,6 @@ const Content = ({ user, setUser }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(selectedDegree + selectedTrack + selectedTitle);
 
         // Validate form
         const newErrors = {
@@ -55,13 +53,18 @@ const Content = ({ user, setUser }) => {
 
         setErrors(newErrors);
 
+        const jwtToken = localStorage.getItem('jwt');
+        if (!jwtToken) {
+            console.error('JWT token is not available');
+            return;
+        }
+
         // Check if there are no errors
         if (!newErrors.title && !newErrors.degree && !newErrors.track) {
             // Form is valid, proceed with form submission
             console.log('Form submitted');
 
-            const degree = defaultMods.find(degree => degree.name === selectedDegree);
-            const { modules, handbook } = degree;
+            const { modules, handbook } = selectedDegree;
 
             const newTracks = [selectedTrack];
 
@@ -109,7 +112,9 @@ const Content = ({ user, setUser }) => {
         }
     };
 
-    const selectedDegreeTracks = majors.find((m) => m.Title === selectedDegree)?.Tracks || [];
+    const selectedDegreeTracks = selectedDegree
+        ? majors.find((m) => m.Title === selectedDegree)?.Tracks || []
+        : [];
 
     return (
         <main>
@@ -194,6 +199,7 @@ const Content = ({ user, setUser }) => {
 
 function NewPlan() {
     const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     return (
         <div className="relative">
