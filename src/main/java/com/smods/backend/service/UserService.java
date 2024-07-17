@@ -1,5 +1,6 @@
 package com.smods.backend.service;
 
+import com.smods.backend.dto.PlanDTO;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.dto.UserDetailsDTO;
 import com.smods.backend.model.Plan;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -64,13 +66,26 @@ public class UserService {
     }
 
     public UserDetailsDTO getUserById(Long id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            List<Plan> plans = planRepository.findByUser(user);
-            return new UserDetailsDTO(user.getUsername(), user.getEmail(), user.getPassword(), plans);
-        } else {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
             return null;
         }
+
+        List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> new PlanDTO(
+                plan.getPlanId().getPlanId(),
+                plan.getPlanName(),
+                plan.getDegree(),
+                plan.getTrack1(),
+                plan.getTrack2(),
+                plan.getCreationDateTime()
+        )).collect(Collectors.toList());
+
+        return new UserDetailsDTO(
+                user.getUserId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                planDTOs
+        );
     }
 }

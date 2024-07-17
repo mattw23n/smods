@@ -17,32 +17,39 @@ export const TemplateUser = {
 }
 
 
-//add API fetch for user data here
-//then change the parameter below to accept the new user data from the backend
-//automatically sets the data for the other pages
-
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
+    const fetchUserData = async (userId) => {
+        const jwtToken = localStorage.getItem('jwt');
+        if (!jwtToken) {
+            console.error('JWT token is not available');
+            return;
+        }
+
+        try {
+            const response = await axios.get(`http://localhost:8080/api/user/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`
+                }
+            });
+            setUser(response.data);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
+
     useEffect(() => {
         // Load user from local storage if available
         const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser);
+        if (storedUser && storedUser.id) {
+            fetchUserData(storedUser.id);
         }
     }, []);
 
     const loginUser = (userData) => {
-        // Set default plans and templates if they don't exist
-        if (!userData.plans) {
-            userData.plans = DEFAULT_PLANS;
-        }
-        if (!userData.templates) {
-            userData.templates = DEFAULT_TEMPLATES;
-        }
-
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData)); // Persist user state
     };
@@ -53,7 +60,7 @@ export const UserProvider = ({ children }) => {
     };
 
     return (
-        <UserContext.Provider value={{ user, setUser, loginUser, logoutUser }}>
+        <UserContext.Provider value={{ user, setUser, loginUser, logoutUser, fetchUserData }}>
             {children}
         </UserContext.Provider>
     );
