@@ -2,6 +2,7 @@ package com.smods.backend.controller;
 
 import com.smods.backend.dto.PlanDTO;
 import com.smods.backend.dto.UserDetailsDTO;
+import com.smods.backend.service.AuthorizationService;
 import com.smods.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +14,15 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private AuthorizationService authorizationService;
 
     @InjectMocks
     private UserController userController;
@@ -40,6 +44,7 @@ public class UserControllerTest {
         );
 
         when(userService.getUserById(userId)).thenReturn(userDetails);
+        doNothing().when(authorizationService).checkUserAuthorization(userId);
 
         ResponseEntity<UserDetailsDTO> response = userController.getUserById(userId);
         assertEquals(200, response.getStatusCodeValue());
@@ -51,6 +56,7 @@ public class UserControllerTest {
         Long userId = 1L;
 
         when(userService.getUserById(userId)).thenReturn(null);
+        doNothing().when(authorizationService).checkUserAuthorization(userId);
 
         ResponseEntity<UserDetailsDTO> response = userController.getUserById(userId);
         assertEquals(404, response.getStatusCodeValue());
