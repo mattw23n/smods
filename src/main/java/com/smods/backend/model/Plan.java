@@ -2,9 +2,16 @@ package com.smods.backend.model;
 
 import com.smods.backend.exception.PlanModificationException;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.smods.backend.model.composite_key.PlanKey;
+import jakarta.persistence.*;
+
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity
+@Table(name = "PLAN")
 public class Plan {
 
     @Id
@@ -27,47 +34,70 @@ public class Plan {
     @ManyToMany
     @Column(name = "plannedModules")
     private Set<Module> plannedModules = new HashSet<>();
+    @EmbeddedId
+    private PlanKey planId;
 
+    @Column(name = "PLAN_NAME")
+    private String planName;
+
+    @Column(name = "DEGREE")
+    private String degree;
+
+    @Column(name = "TRACK1")
+    private String track1;
+
+    @Column(name = "TRACK2")
+    private String track2;
+
+    @Column(name = "CREATION_DATE")
+    private ZonedDateTime creationDateTime;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @MapsId("userId")
+    @JoinColumn(name = "USER_ID")
+    @JsonBackReference(value = "user-plan")
+    private User user;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "plan-planModuleGPA")
+    private List<PlanModuleGPA> planModuleGPAs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "plan-planModulePreassignedGPA")
+    private List<PreassignedModule> planModulePreassignedGPAs = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "MAJOR")
+    private Major major;
+
+    // Default constructor
     public Plan() {
-        // Default constructor for JPA
     }
 
-    public Plan(String name, String degree, String track, Set<Module> exemptions) {
-        this.name = name;
+    public Plan(PlanKey planId, String planName, String degree, String track1, String track2, ZonedDateTime creationDateTime) {
+        this.planId = planId;
+        this.planName = planName;
         this.degree = degree;
-        this.track = track;
-        this.exemptions = exemptions;
-    }
-
-    public void addModule(Module module) {
-        if (plannedModules.contains(module)) {
-            throw new PlanModificationException("You already picked this module");
-        }
-        plannedModules.add(module);
-    }
-
-    public void removeModule(Module module) {
-        if (!plannedModules.contains(module)) {
-            throw new PlanModificationException("You have not picked this module yet");
-        }
-        plannedModules.remove(module);
+        this.track1 = track1;
+        this.track2 = track2;
+        this.creationDateTime = creationDateTime;
     }
 
     // Getters and setters
-    public Long getId() {
-        return id;
+    public PlanKey getPlanId() {
+        return planId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPlanId(PlanKey planId) {
+        this.planId = planId;
     }
 
-    public String getName() {
-        return name;
+    public String getPlanName() {
+        return planName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPlanName(String planName) {
+        this.planName = planName;
     }
 
     public String getDegree() {
@@ -78,27 +108,90 @@ public class Plan {
         this.degree = degree;
     }
 
-    public String getTrack() {
-        return track;
+    public String getTrack1() {
+        return track1;
     }
 
-    public void setTrack(String track) {
-        this.track = track;
+    public void setTrack1(String track1) {
+        this.track1 = track1;
     }
 
-    public Set<Module> getExemptions() {
-        return exemptions;
+    public String getTrack2() {
+        return track2;
     }
 
-    public void setExemptions(Set<Module> exemptions) {
-        this.exemptions = exemptions;
+    public void setTrack2(String track2) {
+        this.track2 = track2;
     }
 
-    public Set<Module> getPlannedModules() {
-        return plannedModules;
+    public User getUser() {
+        return user;
     }
 
-    public void setPlannedModules(Set<Module> plannedModules) {
-        this.plannedModules = plannedModules;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ZonedDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
+    }
+
+    public List<PlanModuleGPA> getPlanModuleGPAs() {
+        return planModuleGPAs;
+    }
+
+    public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
+        this.planModuleGPAs = planModuleGPAs;
+    }
+
+    public List<PreassignedModule> getPlanModulePreassignedGPAs() {
+        return planModulePreassignedGPAs;
+    }
+
+    public void setPlanModulePreassignedGPAs(List<PreassignedModule> planModulePreassignedGPAs) {
+        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    }
+
+    public Major getMajor() {
+        return major;
+    }
+
+    public void setMajor(Major major) {
+        this.major = Plan.this.major;
+    }
+
+    // Equals and hashCode methods
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plan plan = (Plan) o;
+        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(major, plan.major);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, major);
+    }
+
+    @Override
+    public String toString() {
+        return "Plan{" +
+                "planId=" + planId +
+                ", planName='" + planName + '\'' +
+                ", degree='" + degree + '\'' +
+                ", track1='" + track1 + '\'' +
+                ", track2='" + track2 + '\'' +
+                ", creationDateTime=" + creationDateTime +
+                ", user=" + user +
+                ", planModuleGPAs=" + planModuleGPAs +
+                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
+                ", major=" + major +
+                '}';
     }
 }

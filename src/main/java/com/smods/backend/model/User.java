@@ -4,44 +4,64 @@ import com.smods.backend.model.Module;
 import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.time.Year;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "USER_ID", nullable = false, unique = true)
+    private Long userId;
 
+    @Column(name = "USERNAME", nullable = false, unique = true, length = 16)
     private String username;
+
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "ROLE", nullable = false)
     private String role;
 
-    private boolean emailVerified;
-    private String verificationCode;
+    @Column(name = "EMAIL_VERIFIED")
+    private Boolean emailVerified;
 
-    @ElementCollection
-    private Set<String> major = new HashSet<>();
+    @Column(name = "VERIFICATION_TOKEN", unique = true)
+    private String verificationToken;
 
-    @ElementCollection
-    private Set<String> track = new HashSet<>();
+    @Column(name = "VERIFICATION_TOKEN_EXPIRY_DATE")
+    private Date tokenExpiryDate;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_modules",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "module_id")
-    )
-    private Set<Module> mods = new HashSet<>();
+    @Column(name = "PASSWORD_RESET_TOKEN", unique = true)
+    private String passwordResetToken;
 
-    public User() {
-        // Default constructor for JPA
-    }
+    @Column(name = "PASSWORD_RESET_TOKEN_EXPIRY_DATE")
+    private Date passwordResetTokenExpiryDate;
 
+    @Column(name = "ADMISSION_YEAR")
+    private Year admissionYear;
+
+    @Column(name = "DEGREE")
+    private String degree;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "user-plan")
+    private List<Plan> plans;
+
+    // Default constructor
+    public User() {}
+
+    // Constructor
     public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
@@ -50,14 +70,14 @@ public class User {
         this.emailVerified = false;
     }
 
-    // Getters and setters
+    // Getters and Setters
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -92,48 +112,98 @@ public class User {
         this.role = role;
     }
 
-    public boolean isEmailVerified() {
+    public Boolean getEmailVerified() {
         return emailVerified;
     }
 
-    public void setEmailVerified(boolean emailVerified) {
+    public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
-    public String getVerificationCode() {
-        return verificationCode;
+    public String getVerificationToken() {
+        return verificationToken;
     }
 
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
-    public Set<String> getMajor() {
-        return major;
+    public Date getTokenExpiryDate() {
+        return tokenExpiryDate;
     }
 
-    public void setMajor(Set<String> major) {
-        this.major = major;
+    public void setTokenExpiryDate(Date tokenExpiryDate) {
+        this.tokenExpiryDate = tokenExpiryDate;
     }
 
-    public Set<String> getTrack() {
-        return track;
+    public String getPasswordResetToken() {
+        return passwordResetToken;
     }
 
-    public void setTrack(Set<String> track) {
-        this.track = track;
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
     }
 
-    public Set<Module> getMods() {
-        return mods;
+    public Date getPasswordResetTokenExpiryDate() {
+        return passwordResetTokenExpiryDate;
     }
 
-    public void setMods(Set<Module> mods) {
-        this.mods = mods;
+    public void setPasswordResetTokenExpiryDate(Date passwordResetTokenExpiryDate) {
+        this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
     }
 
-    public void addMod(Module mod) {
-        this.mods.add(mod);
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
+    }
+
+    public Year getAdmissionYear() {
+        return admissionYear;
+    }
+
+    public void setAdmissionYear(Year admissionYear) {
+        this.admissionYear = admissionYear;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                ", emailVerified=" + emailVerified +
+                ", verificationToken='" + verificationToken + '\'' +
+                ", tokenExpiryDate=" + tokenExpiryDate +
+                ", passwordResetToken='" + passwordResetToken + '\'' +
+                ", passwordResetTokenExpiryDate=" + passwordResetTokenExpiryDate +
+                ", plans=" + plans +
+                '}';
     }
 >>>>>>> 4b2c7ba06db6b1a6c2f8a55e3ded14ce6856d97c
 }
