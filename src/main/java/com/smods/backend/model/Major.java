@@ -2,32 +2,54 @@ package com.smods.backend.model;
 
 import jakarta.persistence.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Entity
 @Table(name = "MAJOR")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Major {
     @Id
     @Column(name = "MAJOR_NAME")
     private String majorName;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<MajorGradRequirement> majorGradRequirements;
+    @Column(name = "FIRST_MAJOR?")
+    private boolean firstMajor;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<MajorModule> majorModules;
+    @Column(name = "SECOND_MAJOR_SAME_SCHOOL?")
+    private boolean secondMajorSameSchool;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<PreassignedModule> preassignedModules;
+    @Column(name = "SECOND_MAJOR_DIFFERENT_SCHOOL?")
+    private boolean secondMajorDifferentSchool;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<Plan> plans;
+    @ManyToOne
+    @JoinColumn(name = "DEGREE_NAME")
+    private Degree degree;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ADDITIONAL_SECOND_MAJOR_MODULE_REQUIREMENT",
+            joinColumns = @JoinColumn(name = "MAJOR_NAME"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
+    )
+    private List<Module> additionalSecondMajorModuleRequirement;
+
+    @ManyToMany
+    @JoinTable(
+            name = "TRACK_MODULE_REQUIREMENT",
+            joinColumns = @JoinColumn(name = "MAJOR_NAME"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
+    )
+    private List<Module> trackModuleRequirment;
 
     public Major() {
+    }
+
+    public Major(String majorName, boolean firstMajor, boolean secondMajorSameSchool, boolean secondMajorDifferentSchool, Degree degree) {
+        this.majorName = majorName;
+        this.firstMajor = firstMajor;
+        this.secondMajorSameSchool = secondMajorSameSchool;
+        this.secondMajorDifferentSchool = secondMajorDifferentSchool;
+        this.degree = degree;
     }
 
     public String getMajorName() {
@@ -38,36 +60,52 @@ public class Major {
         this.majorName = majorName;
     }
 
-    public List<MajorGradRequirement> getMajorGradRequirements() {
-        return majorGradRequirements;
+    public boolean isFirstMajor() {
+        return firstMajor;
     }
 
-    public void setMajorGradRequirements(List<MajorGradRequirement> majorGradRequirements) {
-        this.majorGradRequirements = majorGradRequirements;
+    public void setFirstMajor(boolean firstMajor) {
+        this.firstMajor = firstMajor;
     }
 
-    public List<MajorModule> getMajorModules() {
-        return majorModules;
+    public boolean isSecondMajorSameSchool() {
+        return secondMajorSameSchool;
     }
 
-    public void setMajorModules(List<MajorModule> majorModules) {
-        this.majorModules = majorModules;
+    public void setSecondMajorSameSchool(boolean secondMajorSameSchool) {
+        this.secondMajorSameSchool = secondMajorSameSchool;
     }
 
-    public List<PreassignedModule> getPreassignedModules() {
-        return preassignedModules;
+    public boolean isSecondMajorDifferentSchool() {
+        return secondMajorDifferentSchool;
     }
 
-    public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
-        this.preassignedModules = preassignedModules;
+    public void setSecondMajorDifferentSchool(boolean secondMajorDifferentSchool) {
+        this.secondMajorDifferentSchool = secondMajorDifferentSchool;
     }
 
-    public List<Plan> getPlans() {
-        return plans;
+    public Degree getDegree() {
+        return degree;
     }
 
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
+    public void setDegree(Degree degree) {
+        this.degree = degree;
+    }
+
+    public List<Module> getAdditionalSecondMajorModuleRequirement() {
+        return additionalSecondMajorModuleRequirement;
+    }
+
+    public void setAdditionalSecondMajorModuleRequirement(List<Module> additionalSecondMajorModuleRequirement) {
+        this.additionalSecondMajorModuleRequirement = additionalSecondMajorModuleRequirement;
+    }
+
+    public List<Module> getTrackModuleRequirment() {
+        return trackModuleRequirment;
+    }
+
+    public void setTrackModuleRequirment(List<Module> trackModuleRequirment) {
+        this.trackModuleRequirment = trackModuleRequirment;
     }
 
     @Override
@@ -75,23 +113,24 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return Objects.equals(majorName, major.majorName) && Objects.equals(majorGradRequirements, major.majorGradRequirements) && Objects.equals(majorModules, major.majorModules) && Objects.equals(preassignedModules, major.preassignedModules) && Objects.equals(plans, major.plans);
+        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirment, major.trackModuleRequirment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, majorGradRequirements, majorModules, preassignedModules, plans);
+        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirment);
     }
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "Major{" +
                 "majorName='" + majorName + '\'' +
-                ", majorGradRequirements=" + majorGradRequirements +
-                ", majorModules=" + majorModules +
-                ", preassignedModules=" + preassignedModules +
-                ", plans=" + plans +
+                ", firstMajor=" + firstMajor +
+                ", secondMajorSameSchool=" + secondMajorSameSchool +
+                ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
+                ", degree=" + degree +
+                ", additionalSecondMajorModuleRequirement=" + additionalSecondMajorModuleRequirement +
+                ", trackModuleRequirment=" + trackModuleRequirment +
                 '}';
     }
 }

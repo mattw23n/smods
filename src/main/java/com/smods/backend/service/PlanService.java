@@ -2,7 +2,6 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
-import com.smods.backend.exception.TrackNotFoundException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 
 @Service
 public class PlanService {
@@ -23,20 +21,14 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
-    private final MajorRepository majorRepository;
-    private final TrackRepository trackRepository;
-    private final MajorModuleRepository majorModuleRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, MajorRepository majorRepository, TrackRepository trackRepository, MajorModuleRepository majorModuleRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
-        this.majorRepository = majorRepository;
-        this.trackRepository = trackRepository;
-        this.majorModuleRepository = majorModuleRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -110,7 +102,7 @@ public class PlanService {
             throw new RuntimeException("Module is already in plan");
         }
 
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
+        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
         planModuleGPARepository.save(planModuleGPA);
 
         return validatePlanModules(planId, userId);
@@ -181,62 +173,127 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-    public Map<String, Map<String, Double>> getGradRequirements(Plan plan) {
-        Map<String, Map<String, Double>> gradRequirements = new HashMap<>();
+//    public Map<String, Map<String, Double>> getGradRequirements(Plan plan) {
+//        Map<String, Map<String, Double>> gradRequirements = new HashMap<>();
+//
+//        // Get all majors and tracks
+//        Major major = plan.getMajor();
+//        List<Track> tracks = getTracksFromPlan(plan);
+//
+//        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
+//
+//        // Loop through all modules in the plan
+//        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
+//            Module module = planModuleGPA.getModule();
+//            SimpleEntry<String, String> gradRequirement = findGradRequirementAndBasket(tracks, major, module);
+//
+//            if (gradRequirement != null) {
+//                String requirement = gradRequirement.getKey();
+//                String basket = gradRequirement.getValue();
+//
+//                gradRequirements.putIfAbsent(requirement, new HashMap<>());
+//
+//                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
+//
+//                gradRequirements.get(requirement).merge(basket, module.getCourseUnit(), Double::sum);
+//            }
+//        }
+//        return gradRequirements;
+//    }
 
-        // Get all majors and tracks
-        Major major = plan.getMajor();
-        List<Track> tracks = getTracksFromPlan(plan);
-
-        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
-
-        // Loop through all modules in the plan
-        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
-            Module module = planModuleGPA.getModule();
-            SimpleEntry<String, String> gradRequirement = findGradRequirementAndBasket(tracks, major, module);
-
-            if (gradRequirement != null) {
-                String requirement = gradRequirement.getKey();
-                String basket = gradRequirement.getValue();
-
-                gradRequirements.putIfAbsent(requirement, new HashMap<>());
-
-                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
-
-                gradRequirements.get(requirement).merge(basket, module.getCourseUnit(), Double::sum);
-            }
-        }
-        return gradRequirements;
-    }
-
-    private List<Track> getTracksFromPlan(Plan plan) {
-        List<Track> tracks = new ArrayList<>();
-        if (plan.getTrack1() != null) {
-            tracks.add(trackRepository.findByTrackName(plan.getTrack1())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
-        }
-        if (plan.getTrack2() != null) {
-            tracks.add(trackRepository.findByTrackName(plan.getTrack2())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
-        }
-        return tracks;
-    }
-
-    private SimpleEntry<String, String> findGradRequirementAndBasket(List<Track> tracks, Major major, Module module) {
-        for (Track track : tracks) {
-            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
-            if (majorModule != null) {
-                return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
-            }
-        }
-
-        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
-        if (majorModule != null) {
-            return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
-        }
-
-        majorModule = majorModuleRepository.findByModule(module);
-        return majorModule != null ? new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket()) : null;
-    }
+//    public Map<String, Double> getGradRequirements(Plan plan) {
+//        Map<String, Double> gradRequirements = new HashMap<>();
+//
+//        // Get all majors and tracks
+//        Major major = plan.getMajor();
+//        List<Track> tracks = getTracksFromPlan(plan);
+//
+//        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
+//        for (MajorGradRequirement singleMajorGradRequirme)
+//
+//        // Loop through all modules in the plan
+//        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
+//            Module module = planModuleGPA.getModule();
+//            String gradRequirement = findGradRequirement(tracks, major, module);
+//
+//            if (gradRequirement != null) {
+//                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
+//                if (gradRequirements.get(gradRequirement) >= )
+//                gradRequirements.merge(gradRequirement, module.getCourseUnit(), Double::sum);
+//            }
+//        }
+//        return gradRequirements;
+//    }
+//
+//    public Map<String, Double> getPlanGradRequirement(Plan plan){
+//        Map<String, Double> targetGradRequirement = new HashMap<>();
+//
+//        List<MajorGradRequirement> majorGradRequirements = plan.getMajor().getMajorGradRequirements();
+//        List<TrackGradRequirement> trackGradRequirements = new HashMap<>()
+//
+//        for (MajorGradRequirement majorGradRequirement : majorGradRequirements){
+//            String gradRequirement = majorGradRequirement.getMajorGradRequirementId().getMajorGradRequirementType();
+//            Double counter = 0.0;
+//
+//            Map<String, Double> majorBaskets = majorGradRequirement.getMajorBaskets();
+//            Collection<Double> courseUnits = majorBaskets.values();
+//            for (Double courseUnit : courseUnits){
+//                counter += courseUnit;
+//            }
+//
+//            targetGradRequirement.putIfAbsent(gradRequirement, 0.0);
+//            targetGradRequirement.merge(gradRequirement, counter, Double::sum);*
+//
+//        }
+//
+//        List<Track> tracks = getTracksFromPlan(plan);
+//    }
+//
+//    private List<Track> getTracksFromPlan(Plan plan) {
+//        List<Track> tracks = new ArrayList<>();
+//        if (plan.getTrack1() != null) {
+//            tracks.add(trackRepository.findByTrackName(plan.getTrack1())
+//                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
+//        }
+//        if (plan.getTrack2() != null) {
+//            tracks.add(trackRepository.findByTrackName(plan.getTrack2())
+//                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
+//        }
+//        return tracks;
+//    }
+//
+//    private SimpleEntry<String, String> findGradRequirementAndBasket(List<Track> tracks, Major major, Module module) {
+//        for (Track track : tracks) {
+//            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
+//            if (majorModule != null) {
+//                return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
+//            }
+//        }
+//
+//        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
+//        if (majorModule != null) {
+//            return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
+//        }
+//
+//        majorModule = majorModuleRepository.findByModule(module);
+//        return majorModule != null ? new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket()) : null;
+//    }
+//
+//    private String findGradRequirement(List<Track> tracks, Major major, Module module) {
+//        for (Track track : tracks) {
+//            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
+//            if (majorModule != null) {
+//                return majorModule.getGradRequirement();
+//            }
+//        }
+//
+//        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
+//        if (majorModule != null) {
+//            return majorModule.getGradRequirement();
+//        }
+//
+//        majorModule = majorModuleRepository.findByModule(module);
+//        return majorModule != null ? majorModule.getGradRequirement() : null;
+//    }
 
 }

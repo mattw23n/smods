@@ -2,6 +2,8 @@ package com.smods.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -19,59 +21,53 @@ public class Module {
     @Column(name = "COURSE_UNIT")
     private Double courseUnit;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    @JsonBackReference(value = "module-planModuleGPA")
-    private List<PlanModuleGPA> planModuleGPAs;
+    @ElementCollection
+    @CollectionTable(name = "BASKET", joinColumns = @JoinColumn(name = "MODULE_ID"))
+    @Column(name = "BASKET")
+    private List<String> baskets;
+
+    @Column(name = "SUBTYPE")
+    private String subtype;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    @JsonBackReference(value = "module-planModulePreassignedGPA")
-    private List<PreassignedModule> preassignedModules;
+    private  List<PlanModuleGPA> planModuleGPAs;
 
     @ManyToMany
     @JoinTable(
             name = "PRE_REQUISITE",
             joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
+            inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID")
     )
-    private List<Module> preRequisites;
-
-    @ManyToMany(mappedBy = "preRequisites")
-    @JsonBackReference(value = "preRequisiteDependents")
-    private List<Module> preRequisiteDependents;
+    List<Module> preRequisites;
 
     @ManyToMany
     @JoinTable(
             name = "CO_REQUISITE",
             joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
+            inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID")
     )
     private List<Module> coRequisites;
-
-    @ManyToMany(mappedBy = "coRequisites")
-    @JsonBackReference(value = "coRequisiteDependents")
-    private List<Module> coRequisiteDependents;
 
     @ManyToMany
     @JoinTable(
             name = "MUTUALLY_EXCLUSIVE",
             joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MODULE_ID2")
+            inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID")
     )
     private List<Module> mutuallyExclusives;
 
-    @ManyToMany(mappedBy = "mutuallyExclusives")
-    @JsonBackReference(value = "mutuallyExclusiveWith")
-    private List<Module> mutuallyExclusiveWith;
-
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
-    private List<MajorModule> majormodules;
-    // Default constructor
-    public Module() {}
+    private List<MajorModuleRequirement> majorModuleRequirements;
 
-    public Module(String moduleId, String moduleName, Double courseUnit) {
+    public Module() {
+    }
+
+    public Module(String moduleId, String moduleName, Double courseUnit, List<String> baskets, String subtype) {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
+        this.baskets = baskets;
+        this.subtype = subtype;
     }
 
     public String getModuleId() {
@@ -98,20 +94,28 @@ public class Module {
         this.courseUnit = courseUnit;
     }
 
+    public List<String> getBaskets() {
+        return baskets;
+    }
+
+    public void setBaskets(List<String> baskets) {
+        this.baskets = baskets;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
+    }
+
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
 
     public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
         this.planModuleGPAs = planModuleGPAs;
-    }
-
-    public List<PreassignedModule> getPreassignedModules() {
-        return preassignedModules;
-    }
-
-    public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
-        this.preassignedModules = preassignedModules;
     }
 
     public List<Module> getPreRequisites() {
@@ -122,28 +126,12 @@ public class Module {
         this.preRequisites = preRequisites;
     }
 
-    public List<Module> getPreRequisiteDependents() {
-        return preRequisiteDependents;
-    }
-
-    public void setPreRequisiteDependents(List<Module> preRequisiteDependents) {
-        this.preRequisiteDependents = preRequisiteDependents;
-    }
-
     public List<Module> getCoRequisites() {
         return coRequisites;
     }
 
     public void setCoRequisites(List<Module> coRequisites) {
         this.coRequisites = coRequisites;
-    }
-
-    public List<Module> getCoRequisiteDependents() {
-        return coRequisiteDependents;
-    }
-
-    public void setCoRequisiteDependents(List<Module> coRequisiteDependents) {
-        this.coRequisiteDependents = coRequisiteDependents;
     }
 
     public List<Module> getMutuallyExclusives() {
@@ -154,32 +142,25 @@ public class Module {
         this.mutuallyExclusives = mutuallyExclusives;
     }
 
-    public List<Module> getMutuallyExclusiveWith() {
-        return mutuallyExclusiveWith;
+    public List<MajorModuleRequirement> getMajorModuleRequirements() {
+        return majorModuleRequirements;
     }
 
-    public void setMutuallyExclusiveWith(List<Module> mutuallyExclusiveWith) {
-        this.mutuallyExclusiveWith = mutuallyExclusiveWith;
+    public void setMajorModuleRequirements(List<MajorModuleRequirement> majorModuleRequirements) {
+        this.majorModuleRequirements = majorModuleRequirements;
     }
 
-    public List<MajorModule> getMajormodules() {
-        return majormodules;
-    }
-
-    public void setMajormodules(List<MajorModule> majormodules) {
-        this.majormodules = majormodules;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preassignedModules, module.preassignedModules) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(preRequisiteDependents, module.preRequisiteDependents) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(coRequisiteDependents, module.coRequisiteDependents) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(mutuallyExclusiveWith, module.mutuallyExclusiveWith) && Objects.equals(majormodules, module.majormodules);
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(baskets, module.baskets) && Objects.equals(subtype, module.subtype) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(majorModuleRequirements, module.majorModuleRequirements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleId, moduleName, courseUnit, planModuleGPAs, preassignedModules, preRequisites, preRequisiteDependents, coRequisites, coRequisiteDependents, mutuallyExclusives, mutuallyExclusiveWith, majormodules);
+        return Objects.hash(moduleId, moduleName, courseUnit, baskets, subtype, planModuleGPAs, preRequisites, coRequisites, mutuallyExclusives, majorModuleRequirements);
     }
 
     @Override
@@ -188,15 +169,13 @@ public class Module {
                 "moduleId='" + moduleId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
+                ", baskets=" + baskets +
+                ", subtype='" + subtype + '\'' +
                 ", planModuleGPAs=" + planModuleGPAs +
-                ", preassignedModules=" + preassignedModules +
                 ", preRequisites=" + preRequisites +
-                ", preRequisiteDependents=" + preRequisiteDependents +
                 ", coRequisites=" + coRequisites +
-                ", coRequisiteDependents=" + coRequisiteDependents +
                 ", mutuallyExclusives=" + mutuallyExclusives +
-                ", mutuallyExclusiveWith=" + mutuallyExclusiveWith +
-                ", majormodules=" + majormodules +
+                ", majorModuleRequirements=" + majorModuleRequirements +
                 '}';
     }
 }

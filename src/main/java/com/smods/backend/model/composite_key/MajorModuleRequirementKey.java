@@ -7,27 +7,27 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class MajorModuleKey implements Serializable {
-    @Column(name = "MAJOR_NAME")
-    private String majorName;
+public class MajorModuleRequirementKey implements Serializable {
+    @Column(name = "DEGREE_NAME")
+    private String degreeName;
 
     @Column(name = "MODULE_ID")
     private String moduleId;
 
-    public MajorModuleKey() {
+    public MajorModuleRequirementKey() {
     }
 
-    public MajorModuleKey(String majorName, String moduleId) {
-        this.majorName = majorName;
+    public MajorModuleRequirementKey(String degreeName, String moduleId) {
+        this.degreeName = degreeName;
         this.moduleId = moduleId;
     }
 
-    public String getMajorName() {
-        return majorName;
+    public String getDegreeName() {
+        return degreeName;
     }
 
-    public void setMajorName(String majorName) {
-        this.majorName = majorName;
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
     }
 
     public String getModuleId() {
@@ -42,19 +42,19 @@ public class MajorModuleKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MajorModuleKey that = (MajorModuleKey) o;
-        return Objects.equals(majorName, that.majorName) && Objects.equals(moduleId, that.moduleId);
+        MajorModuleRequirementKey that = (MajorModuleRequirementKey) o;
+        return Objects.equals(degreeName, that.degreeName) && Objects.equals(moduleId, that.moduleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, moduleId);
+        return Objects.hash(degreeName, moduleId);
     }
 
     @Override
     public String toString() {
-        return "MajorModuleKey{" +
-                "majorName='" + majorName + '\'' +
+        return "MajorModuleRequirementKey{" +
+                "degreeName='" + degreeName + '\'' +
                 ", moduleId='" + moduleId + '\'' +
                 '}';
     }

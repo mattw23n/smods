@@ -13,10 +13,8 @@ public class PlanModuleGPAKey implements Serializable {
     @Column(name = "MODULE_ID")
     private String moduleId;
 
-    // Default constructor
-    public PlanModuleGPAKey() {}
-
-    // Constructor with parameters
+    public PlanModuleGPAKey() {
+    }
 
     public PlanModuleGPAKey(PlanKey planId, String moduleId) {
         this.planId = planId;
@@ -41,7 +39,6 @@ public class PlanModuleGPAKey implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlanModuleGPAKey that = (PlanModuleGPAKey) o;
@@ -51,5 +48,13 @@ public class PlanModuleGPAKey implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(planId, moduleId);
+    }
+
+    @Override
+    public String toString() {
+        return "PlanModuleGPAKey{" +
+                "planId=" + planId +
+                ", moduleId='" + moduleId + '\'' +
+                '}';
     }
 }

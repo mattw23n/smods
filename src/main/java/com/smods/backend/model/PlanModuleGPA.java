@@ -12,13 +12,18 @@ public class PlanModuleGPA {
     @EmbeddedId
     private PlanModuleGPAKey planModuleGPAId;
 
+    @Column(name = "GPA")
+    private double gpa;
+
+    @Column(name = "TERM")
+    private int term;
+
     @ManyToOne
     @MapsId("planId")
     @JoinColumns({
             @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
             @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
     })
-    @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
     @ManyToOne
@@ -26,40 +31,7 @@ public class PlanModuleGPA {
     @JoinColumn(name = "MODULE_ID")
     private Module module;
 
-    @Column(name = "GPA")
-    private Float gpa;
-
-    @Column(name = "TERM")
-    private int term;
-
-    // null if not a major module
-    @Column(name = "MAJOR")
-    private String major;
-
-    // null if not a track module
-    @Column(name = "TRACK")
-    private String track;
-
-    @Column(name = "REQUIREMENT")
-    private String requirement;
-
-    @Column(name = "SUBREQUIREMENT")
-    private String subrequirement;
-
-    // Default constructor
-    public PlanModuleGPA() {}
-
-
-
-    // Constructor with parameters
-
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Plan plan, Module module, int term) {
-        this.planModuleGPAId = planModuleGPAId;
-        this.plan = plan;
-        this.module = module;
-        this.term = term;
-
-        // fill in the rest of the attributes based on degree and track of module and plan
+    public PlanModuleGPA() {
     }
 
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
@@ -67,13 +39,28 @@ public class PlanModuleGPA {
         this.term = term;
     }
 
-    // Getters and Setters
     public PlanModuleGPAKey getPlanModuleGPAId() {
         return planModuleGPAId;
     }
 
-    public void setId(PlanModuleGPAKey planModuleGPAId) {
+    public void setPlanModuleGPAId(PlanModuleGPAKey planModuleGPAId) {
         this.planModuleGPAId = planModuleGPAId;
+    }
+
+    public double getGpa() {
+        return gpa;
+    }
+
+    public void setGpa(double gpa) {
+        this.gpa = gpa;
+    }
+
+    public int getTerm() {
+        return term;
+    }
+
+    public void setTerm(int term) {
+        this.term = term;
     }
 
     public Plan getPlan() {
@@ -92,78 +79,27 @@ public class PlanModuleGPA {
         this.module = module;
     }
 
-    public Float getGpa() {
-        return gpa;
-    }
-
-    public void setGpa(Float gpa) {
-        this.gpa = gpa;
-    }
-
-    public int getTerm() {
-        return term;
-    }
-
-    public void setTerm(int term) {
-        this.term = term;
-    }
-
-    public String getMajor() {
-        return major;
-    }
-
-    public void setMajor(String major) {
-        this.major = major;
-    }
-
-    public String getTrack() {
-        return track;
-    }
-
-    public void setTrack(String track) {
-        this.track = track;
-    }
-
-    public String getRequirement() {
-        return requirement;
-    }
-
-    public void setRequirement(String requirement) {
-        this.requirement = requirement;
-    }
-
-    public String getSubrequirement() {
-        return subrequirement;
-    }
-
-    public void setSubrequirement(String subrequirement) {
-        this.subrequirement = subrequirement;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlanModuleGPA that = (PlanModuleGPA) o;
-        return Objects.equals(planModuleGPAId, that.planModuleGPAId) &&
-                Objects.equals(plan, that.plan) &&
-                Objects.equals(module, that.module) &&
-                Objects.equals(gpa, that.gpa) &&
-                Objects.equals(term, that.term);
+        return Double.compare(gpa, that.gpa) == 0 && term == that.term && Objects.equals(planModuleGPAId, that.planModuleGPAId) && Objects.equals(plan, that.plan) && Objects.equals(module, that.module);
     }
+
     @Override
     public int hashCode() {
-        return Objects.hash(planModuleGPAId, plan, module, gpa, term);
+        return Objects.hash(planModuleGPAId, gpa, term, plan, module);
     }
 
     @Override
     public String toString() {
         return "PlanModuleGPA{" +
-                "id=" + planModuleGPAId +
+                "planModuleGPAId=" + planModuleGPAId +
+                ", gpa=" + gpa +
+                ", term=" + term +
                 ", plan=" + plan +
                 ", module=" + module +
-                ", gpa=" + gpa +
-                ", term='" + term + '\'' +
                 '}';
     }
 }
