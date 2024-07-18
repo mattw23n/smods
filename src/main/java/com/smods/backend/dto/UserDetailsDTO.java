@@ -1,23 +1,29 @@
 package com.smods.backend.dto;
 
-import com.smods.backend.model.Plan;
 import java.util.List;
 
 public class UserDetailsDTO {
 
+    private Long userId;
+
     private String username;
     private String email;
-    private String password;
-    private List<Plan> plans;
+    private String role;
+    private List<PlanDTO> plans;
 
-    public UserDetailsDTO(String username, String email, String password, List<Plan> plans) {
+    public UserDetailsDTO(Long userId, String username, String email, String role, List<PlanDTO> plans) {
+        this.userId = userId;
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.role = role;
         this.plans = plans;
     }
 
     // Getters and setters
+
+    public Long getUserId() { return userId; }
+
+    public void setUserId(Long userId) { this.userId = userId; }
 
     public String getUsername() {
         return username;
@@ -35,19 +41,19 @@ public class UserDetailsDTO {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public List<Plan> getPlans() {
+    public List<PlanDTO> getPlans() {
         return plans;
     }
 
-    public void setPlans(List<Plan> plans) {
+    public void setPlans(List<PlanDTO> plans) {
         this.plans = plans;
     }
 }

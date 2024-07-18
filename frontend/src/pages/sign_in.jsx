@@ -22,7 +22,6 @@ function Form() {
 
     const navigate = useNavigate();
 
-
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
     };
@@ -33,12 +32,17 @@ function Form() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Trim spaces from username and password
+        const trimmedUsername = username.trim();
+        const trimmedPassword = password.trim();
+
         console.log("Username:", username);
         console.log("Password:", password);
 
         const newErrors = {
-            username: username ? '' : 'Username/Email is required',
-            password: password ? '' : 'Password is required',
+            username: trimmedUsername ? '' : 'Username/Email is required',
+            password: trimmedPassword ? '' : 'Password is required',
         };
 
         setInputErrors(newErrors);
@@ -48,8 +52,8 @@ function Form() {
 
             try {
                 const response = await axios.post('http://localhost:8080/api/auth/login', {
-                    username: username,
-                    password: password,
+                    username: trimmedUsername,
+                    password: trimmedPassword,
                 });
 
                 if (response.status === 200) {

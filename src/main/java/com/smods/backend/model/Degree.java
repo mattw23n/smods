@@ -1,7 +1,6 @@
 package com.smods.backend.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 import java.util.Map;
 import java.util.List;

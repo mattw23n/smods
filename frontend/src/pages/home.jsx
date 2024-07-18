@@ -1,73 +1,93 @@
 import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
+import Loading from "../pages/loading";
 import { UserContext } from "../data/user";
 
 const majors = [
-    {title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"]},
-    {title: "Information Systems", tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"]},
-    {title: "Software Engineering", tracks: ["Not Applicable"]},
-    {title: "Computing & Law", tracks: ["Not Applicable"]},
-]
+    { title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+    { title: "Information Systems", tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
+    { title: "Software Engineering", tracks: ["Not Applicable"] },
+    { title: "Computing & Law", tracks: ["Not Applicable"] },
+];
 
-
-const Card = ({plan, user, setUser, isTemplate}) => {
-
-    const { title, date, degree, tracks} = plan
-    // console.log(plan)
-
+const Card = ({ plan, user, setUser, isTemplate }) => {
+    const { planName, creationDateTime, degree, track1, track2, planId } = plan;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(title);
+    const [editedTitle, setEditedTitle] = useState(planName);
 
     const toggleMenu = (event) => {
         event.stopPropagation();
         event.preventDefault();
-
         setIsMenuOpen(!isMenuOpen);
-        // console.log("options clicked")
     };
 
     const handleRename = (event) => {
         event.stopPropagation();
-        event.preventDefault(); // Prevent default action
-
+        event.preventDefault();
         setIsEditing(true);
         setIsMenuOpen(false);
-        console.log(plan)
     };
 
     const handleTitleChange = (event) => {
         setEditedTitle(event.target.value);
     };
 
-    const handleTitleBlur = () => {
+    const handleTitleBlur = async () => {
         setIsEditing(false);
-        //insert api call here to post the updated title
-        // Here you can update the plan title in your state or call an API to save the changes
-        plan.title = editedTitle; // Example of updating the title
+        if (editedTitle !== planName) {
+            try {
+                const token = localStorage.getItem('jwt');
+                const response = await axios.put(
+                    `http://localhost:8080/api/users/${user.userId}/plans/${planId}/rename`,
+                    null,
+                    {
+                        params: { newPlanName: editedTitle },
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
 
+                if (response.status === 200) {
+                    plan.planName = editedTitle;
+                    setUser((prevUser) => ({
+                        ...prevUser,
+                        plans: prevUser.plans.map((p) =>
+                            p.planId === planId ? { ...p, planName: editedTitle } : p
+                        ),
+                    }));
+                }
+            } catch (error) {
+                console.error('Error renaming plan:', error);
+            }
+        }
     };
 
-    const handleDelete = (event) => {
+    const handleDelete = async (event) => {
         event.stopPropagation();
         event.preventDefault();
+        try {
+            const token = localStorage.getItem('jwt');
+            const response = await axios.delete(
+                `http://localhost:8080/api/users/${user.userId}/plans/${planId}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
-        console.log('Delete clicked');
-
-        const deletedPlan = plan.id
-
-        const updatedPlans = user.plans.filter((plan) => plan.id !== deletedPlan);
-        console.log("after filter", updatedPlans);
-
-        setUser(prevUser => ({
-            ...prevUser,
-            plans: updatedPlans,
-        }));
-
-        //insert api call here to post the updated plans array
+            if (response.status === 200) {
+                const updatedPlans = user.plans.filter((p) => p.planId !== planId);
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    plans: updatedPlans,
+                }));
+            }
+        } catch (error) {
+            console.error('Error deleting plan:', error);
+        }
     };
 
     return (
@@ -76,7 +96,7 @@ const Card = ({plan, user, setUser, isTemplate}) => {
             <div className="flex flex-col gap-y-0">
                 <div className="flex justify-between">
                     {!isEditing ? (
-                        <p className="text-base font-poppins font-bold">{title}</p>
+                        <p className="text-base font-poppins font-bold">{planName}</p>
                     ) : (
                         <input
                             type="text"
@@ -90,11 +110,10 @@ const Card = ({plan, user, setUser, isTemplate}) => {
                     {!isTemplate && (
                         <button onClick={toggleMenu} className="focus:outline-none bg-gray relative z-20">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clipRule="evenodd" />
+                                <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clipRule="evenodd" />
                             </svg>
                         </button>
                     )}
-
                     {isMenuOpen && (
                         <div className="absolute top-0 right-0 -mt-14 -mr-20 w-32 bg-white rounded-lg shadow-lg z-30">
                             <button onClick={handleDelete} className="flex w-full justify-between items-center text-left px-4 py-2 text-sm font-archivo text-text rounded-t-lg hover:bg-gray-100 hover:text-red-500">
@@ -108,43 +127,42 @@ const Card = ({plan, user, setUser, isTemplate}) => {
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
-
                             </button>
                         </div>
                     )}
                 </div>
-                <p className="text-xs font-archivo">{date}</p>
+                <p className="text-xs font-archivo">{new Date(creationDateTime).toLocaleDateString()}</p>
             </div>
-
-
             <div className="px-4 py-2 bg-white/50 rounded-2xl text-sm font-archivo">
                 <p>Degree: {degree}</p>
                 <div className="flex gap-x-1">
                     <p>Tracks: </p>
                     <div className="flex flex-col w-40">
-                        {tracks.map((t, index) => (<span key={index}>{t}</span>)
-
-                        )}
+                        {track1 && <span>{track1}</span>}
+                        {track2 && <span>{track2}</span>}
                     </div>
-
-
                 </div>
-
             </div>
         </div>
-    )
-}
+    );
+};
 
+const Content = ({ user, setUser }) => {
+    const navigate = useNavigate();
 
-const Content = ({user, setUser}) => {
+    useEffect(() => {
+        if (!user) {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
-    const {username, plans, templates} = user
+    const { username = '', plans = [], templates = [] } = user || {};
 
-    console.log(plans)
+    const isEmptyPlan = plans.length === 0;
 
-    const isEmptyPlan = plans.length === 0
+    console.log("User data in Content component:", user);
 
-    return(
+    return (
         <main className="flex-grow">
             <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
                 <div className="text-text font-poppins font-bold">
@@ -175,20 +193,19 @@ const Content = ({user, setUser}) => {
                             {!isEmptyPlan && (
                                 <div className="isolate w-fit min-w-[520px] min-h-[320px] px-2 py-2 grid grid-cols-2 gap-2 z-0">
                                     {plans.map((plan) => (
-                                        <Link key={plan.id} to={`/plan/${plan.id}`}>
+                                        <Link key={plan.planId} to={`/plan/${plan.planId}`}>
                                             <Card plan={plan} user={user} setUser={setUser} />
                                         </Link>
                                     ))}
                                 </div>
                             )}
-
                         </div>
                         <div className="w-fit flex flex-col gap-2 text-text">
                             <p className="text-l font-poppins font-bold">🪹Templates</p>
                             <div className="isolate px-2 py-2 flex flex-col gap-2 ">
-                                {templates.map((templates, index) => (
-                                    <Link key={templates.id} to={`/plan/${templates.id}`}>
-                                        <Card key={index} plan={templates} user={user} setUser={setUser} isTemplate={true}/>
+                                {templates.map((template, index) => (
+                                    <Link key={template.id} to={`/plan/${template.id}`}>
+                                        <Card key={index} plan={template} user={user} setUser={setUser} isTemplate={true}/>
                                     </Link>
                                 ))}
                             </div>
@@ -196,23 +213,27 @@ const Content = ({user, setUser}) => {
                     </div>
                 </div>
             </div>
-            <div className="my-20 py-10">
-
-            </div>
+            <div className="my-20 py-10"></div>
         </main>
-    )
+    );
 }
 
-function Home(){
-    const {user, setUser} = useContext(UserContext)
+function Home() {
+    const { user, loading, setUser } = useContext(UserContext);
+
+    if (loading) {
+        return <Loading />;
+    }
+
+    console.log("User data in Home component:", user);
 
     return (
         <div className="relative flex flex-col min-h-screen">
             <Background />
             <div className="relative z-10">
-                <Header></Header>
-                <Content user={user} setUser={setUser}></Content>
-                <Footer></Footer>
+                <Header />
+                <Content user={user} setUser={setUser} />
+                <Footer />
             </div>
         </div>
     );
