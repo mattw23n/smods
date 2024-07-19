@@ -99,7 +99,7 @@ const Content = ({ user, setUser }) => {
                         ...prevUser,
                         plans: updatedPlans,
                     }));
-                    navigate(`/plan/${createdPlan.planKey.planId}`);
+                    navigate(`/home`);
                 } else {
                     console.error('Failed to create plan:', response.statusText);
                 }

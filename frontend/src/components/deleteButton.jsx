@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const DeleteButton = ({ setMods, module, plan, term }) => {
+const DeleteButton = ({ setMods, module, plan, setValidationResponse }) => {
     const [active, setActive] = useState(false);
     const moduleId = module.moduleId;
 
@@ -15,7 +15,7 @@ const DeleteButton = ({ setMods, module, plan, term }) => {
 
     const handleClick = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}&isAdding=false`, {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${module.term}&isAdding=false`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,8 +25,16 @@ const DeleteButton = ({ setMods, module, plan, term }) => {
 
             if (response.ok) {
                 const validationResponse = await response.json();
-                // Handle the validation response
-                console.log("Validation Response:", validationResponse);
+                // Update the validation response state
+                if (
+                    !validationResponse.unsatisfiedPreRequisites.length &&
+                    !validationResponse.unsatisfiedCoRequisites.length &&
+                    !validationResponse.mutuallyExclusiveConflicts.length
+                ) {
+                    setValidationResponse(null); // Clear the validation response state if empty
+                } else {
+                    setValidationResponse(validationResponse); // Update the validation response state
+                }
 
                 // Update the frontend state to remove the module
                 setMods((prevMods) => prevMods.filter((mod) => mod.moduleId !== moduleId));

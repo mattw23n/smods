@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import DropIndicator from "./dropIndicator";
 import Mod from "./mods";
+import DeleteButton from "./deleteButton";
 
-const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
+const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMode }) => {
     const [active, setActive] = useState(false);
     const { isGPAOn, view } = plan;
     const isGroupView = view === 1;
@@ -23,6 +24,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
 
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("moduleId", module.moduleId);
+        e.dataTransfer.setData("originTerm", module.term);
     };
 
     const handleDragOver = (e) => {
@@ -79,54 +81,117 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
         clearHighlights();
 
         const moduleId = e.dataTransfer.getData("moduleId");
+        const originTerm = e.dataTransfer.getData("originTerm");
         const indicators = getIndicators();
         const { element } = getNearestIndicator(e, indicators);
         const before = element.dataset.before || "-1";
 
         let copy = [...mods];
         let modToTransfer = copy.find((m) => m.moduleId === moduleId);
-        let isAdding = true;
+
+        if (modToTransfer && originTerm !== term.toString()) {
+            // Remove module from the original term if it's moving to a new term
+            copy = copy.filter((m) => m.moduleId !== moduleId);
+
+            // Update the term of the module
+            modToTransfer = { ...modToTransfer, term };
+
+            // Call the API to delete the module from the original term
+            try {
+                const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    }
+                });
+
+                if (deleteResponse.ok) {
+                    console.log("Module successfully removed from the original term.");
+                } else {
+                    console.error('Failed to remove module from the original term:', deleteResponse.statusText);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error removing module from the original term:', error);
+                return;
+            }
+        }
 
         if (!modToTransfer) {
-            // Module is new and not found in current mods, create a new module object
+            // Add new module
             modToTransfer = { moduleId, term };
-        } else {
-            // Module is already in the plan, update its term
-            copy = copy.filter((m) => m.moduleId !== moduleId);
-            modToTransfer = { ...modToTransfer, term };
-            isAdding = false;
-        }
-
-        if (before === "-1" && isAdding) {
             copy.push(modToTransfer);
-        } else if (isAdding) {
-            const insertAtIndex = copy.findIndex((el) => el.moduleId === before);
-            if (insertAtIndex === undefined) return;
-            copy.splice(insertAtIndex, 0, modToTransfer);
+        } else {
+            // Insert the module in the new term
+            const moveToBack = before === "-1";
+            if (moveToBack) {
+                copy.push(modToTransfer);
+            } else {
+                const insertAtIndex = copy.findIndex((el) => el.moduleId === before);
+                if (insertAtIndex === undefined) return;
+                copy.splice(insertAtIndex, 0, modToTransfer);
+            }
         }
 
-        // Call the API to update the module
+        // Call the API to add the module to the new term
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${modToTransfer.term}&isAdding=${isAdding}`, {
+            const addResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${modToTransfer.term}&isAdding=true`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                }
+                },
+                body: JSON.stringify({
+                    moduleId: moduleId,
+                    term: modToTransfer.term,
+                    isAdding: true
+                })
+            });
+
+            if (addResponse.ok) {
+                const validationResponse = await addResponse.json();
+                console.log("Validation Response:", validationResponse);
+                setValidationResponse(validationResponse);  // Update the validation response state
+            } else {
+                console.error('Failed to add module to the new term:', addResponse.statusText);
+            }
+        } catch (error) {
+            console.error('Error adding module to the new term:', error);
+        }
+
+        setMods(copy);
+    };
+
+    const handleDelete = async (moduleId) => {
+        // Call the API to delete the module
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=&isAdding=false`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify({
+                    moduleId: moduleId,
+                    term: undefined,
+                    isAdding: false
+                })
             });
 
             if (response.ok) {
                 const validationResponse = await response.json();
                 console.log("Validation Response:", validationResponse);
                 setValidationResponse(validationResponse);  // Update the validation response state
+
+                // Update the frontend state to remove the module
+                setMods((prevMods) => prevMods.filter((mod) => mod.moduleId !== moduleId));
             } else {
-                console.error('Failed to update module:', response.statusText);
+                console.error('Failed to delete module:', response.statusText);
             }
         } catch (error) {
-            console.error('Error updating module:', error);
+            console.error('Error deleting module:', error);
         }
-
-        setMods(copy);
     };
 
     let filteredMods = [];
@@ -165,8 +230,11 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
 
                 {filteredMods.map((m) => {
-                    return <Mod key={m.moduleId} module={m} plan={plan}
-                                handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} />
+                    return (
+                        <div key={m.moduleId} className="flex items-center justify-between">
+                            <Mod module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
+                        </div>
+                    )
                 })}
                 <DropIndicator beforeId={-1} term={term} />
             </div>
@@ -175,13 +243,14 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
 };
 
 function Year({ num, plan, mods, setMods, setValidationResponse }) {
+    mods.sort((m1, m2) => m1.term - m2.term);
     const { isGPAOn, isEditMode, view } = plan;
     const isGroupView = view === 1;
 
     const term1 = mods.filter((m) => m.term === (num * 2 - 1));
     const term2 = mods.filter((m) => m.term === (num * 2));
 
-    const yearMods = [...term1, ...term2];
+    const yearMods = term1.concat(term2);
 
     const totalYearGPA = yearMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
     const yearGPA = totalYearGPA / yearMods.length;
@@ -197,14 +266,14 @@ function Year({ num, plan, mods, setMods, setValidationResponse }) {
                         {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
                     </div>
 
-                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
-                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
+                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} isEditMode={isEditMode} />
+                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} isEditMode={isEditMode} />
                 </div>
             )}
             {isGroupView && (
                 <div className={`${isEditMode ? "grid grid-cols-2" : "flex mr-20 pr-20"} gap-5 transition all`}>
                     {groups.map(g => (
-                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g} setValidationResponse={setValidationResponse} />
+                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g} setValidationResponse={setValidationResponse} isEditMode={isEditMode} />
                     ))}
                 </div>
             )}
