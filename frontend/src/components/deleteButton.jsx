@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 const DeleteButton = ({ setMods, module }) => {
     const [active, setActive] = useState(false);
-    const courseCode = module.courseCode
+    const moduleId = module.moduleId
 
     const handleHover = (e) => {
         e.preventDefault();
@@ -18,7 +18,7 @@ const DeleteButton = ({ setMods, module }) => {
         //sets the mods to the updated version without the deleted mod
         //replace with api call
         setMods((prevMods) => {
-            const newMods = prevMods.filter((mod) => mod.courseCode !== courseCode);
+            const newMods = prevMods.filter((mod) => mod.moduleId !== moduleId);
 
             return newMods;
         })

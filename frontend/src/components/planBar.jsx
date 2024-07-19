@@ -90,10 +90,10 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     // const trackType = tracks.length;
 
     // useEffect(() => {
-    //     setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.courseCode)));
+    //     setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.moduleId)));
     //     console.log("asia studies", asiaStudiesMods);
 
-    //     setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.courseCode)));
+    //     setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.moduleId)));
     //     console.log("sg studies", singaporeStudiesCourses);
     // }, [mods, asiaStudiesCourses, singaporeStudiesCourses]);
 
@@ -183,7 +183,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
             <p>🌏 Asia Studies </p>
             <CrossCheck status={foundAsiaStudies} />
             <div className="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                {foundAsiaStudies ? `Cleared by ${asiaStudiesMods[0].courseCode}` : `Not cleared yet`}
+                {foundAsiaStudies ? `Cleared by ${asiaStudiesMods[0].moduleId}` : `Not cleared yet`}
             </div>
         </div> */}
             {/* <div className="flex justify-end items-center gap-5 font-archivo">
@@ -208,7 +208,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
                 </div>
                 <CrossCheck status={false} />
                 {/* <div className="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                {foundSingaporeStudies ? `Cleared by ${singaporeStudiesMods[0].courseCode}` : `Not cleared yet`}
+                {foundSingaporeStudies ? `Cleared by ${singaporeStudiesMods[0].moduleId}` : `Not cleared yet`}
             </div> */}
             </div>
             <div className="flex justify-end items-center gap-5 font-archivo">

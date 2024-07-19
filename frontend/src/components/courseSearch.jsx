@@ -6,7 +6,7 @@ const ALL_MODULES = allMods;
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
-        e.dataTransfer.setData("courseCode", module.moduleId);
+        e.dataTransfer.setData("moduleId", module.moduleId);
     };
 
     return (
