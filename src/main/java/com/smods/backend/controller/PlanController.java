@@ -81,7 +81,7 @@ public class PlanController {
         return ResponseEntity.ok(planModules);
     }
 
-    @PutMapping("/{planId}/edit")
+    @PutMapping("/{planId}/add")
     public ResponseEntity<ModuleValidationResponse> addModule(
             @PathVariable Long planId,
             @PathVariable Long userId,
@@ -92,7 +92,7 @@ public class PlanController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{planId}/edit")
+    @DeleteMapping("/{planId}/delete")
     public ResponseEntity<ModuleValidationResponse> deleteModule(
             @PathVariable Long planId,
             @PathVariable Long userId,

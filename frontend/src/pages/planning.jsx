@@ -27,7 +27,7 @@ const PlanDetails = ({ plan, setPlan }) => {
                     <p>{degree || 'N/A'}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
-                    <p className="font-bold">Majors:</p>
+                    <p className="font-bold">Major:</p>
                     <div className="flex flex-col">
                         <p>{firstMajor || 'N/A'}</p>
                         <p>{secondMajor || 'N/A'}</p>
@@ -201,7 +201,7 @@ const Dashboard = ({ plan, setPlan, mods }) => {
 };
 
 function Content({ plan, setPlan, mods, setMods }) {
-    const { isEditMode, view = 1 } = plan; // Set default view to 1
+    const { isEditMode, view = 4 } = plan; // Set default view to 4
 
     const viewModes = {
         4: ["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
@@ -210,62 +210,11 @@ function Content({ plan, setPlan, mods, setMods }) {
         1: ["h-fit pb-10 overflow-x-auto", "inline-block"],
     };
 
-    const viewTailwind = viewModes[view] ? viewModes[view][0] : viewModes[1][0]; // Default to view 1 if view is not in viewModes
-    const viewTailwindChild = viewModes[view] ? viewModes[view][1] : viewModes[1][1]; // Default to view 1 if view is not in viewModes
+    const viewTailwind = viewModes[view] ? viewModes[view][0] : viewModes[4][0]; // Default to view 4 if view is not in viewModes
+    const viewTailwindChild = viewModes[view] ? viewModes[view][1] : viewModes[4][1]; // Default to view 4 if view is not in viewModes
 
     const yearNums = [1, 2, 3, 4]; // Define the years array
     const isGroupView = view === 1; // Determine if the view is group view
-
-    const handleAddModule = async (moduleId, term) => {
-        const userId = plan.userId;
-        const planId = plan.planId;
-
-        try {
-            const response = await fetch(`http://localhost:8080/api/users/${userId}/plans/${planId}/edit`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                },
-                body: JSON.stringify({ moduleId, term })
-            });
-
-            if (response.ok) {
-                const updatedPlan = await response.json();
-                setPlan(updatedPlan);
-            } else {
-                console.error('Failed to add module:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error adding module:', error);
-        }
-    };
-
-    const handleDeleteModule = async (moduleId) => {
-        const userId = plan.userId;
-        const planId = plan.planId;
-
-        try {
-            const token = localStorage.getItem('jwt');
-            const response = await fetch(`http://localhost:8080/api/users/${userId}/plans/${planId}/edit`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ moduleId })
-            });
-
-            if (response.ok) {
-                const updatedPlan = await response.json();
-                setPlan(updatedPlan);
-            } else {
-                console.error('Failed to delete module:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error deleting module:', error);
-        }
-    };
 
     return (
         <div className="flex-grow">
@@ -289,9 +238,6 @@ function Content({ plan, setPlan, mods, setMods }) {
                         </div>
                     )}
                 </div>
-                {isEditMode && (
-                    <CourseSearch plan={plan} handleAddModule={handleAddModule} handleDeleteModule={handleDeleteModule}></CourseSearch>
-                )}
             </div>
         </div>
     );
@@ -305,10 +251,13 @@ function Planning() {
 
     useEffect(() => {
         if (user && user.userId) {
+            console.log("User:", user);
+            console.log("Plan ID from URL:", id);
+            console.log("User plans:", user.plans);
             const selectedPlan = user.plans.find(p => p.planId === parseInt(id));
-
+            console.log("Selected Plan:", selectedPlan);
             if (selectedPlan) {
-                setPlan(selectedPlan);
+                setPlan({ ...selectedPlan, view: 4 }); // Default to 4-year view
                 setMods(selectedPlan.planModuleGPAs || []);
             }
         }
