@@ -190,7 +190,7 @@ const ButtonGroup = ({ plan, setPlan }) => {
     );
 };
 
-const Dashboard = ({ plan, setPlan, mods }) => {
+const Dashboard = ({ plan, setPlan, mods, setValidationResponse }) => {
     return (
         <div className="mx-20 my-5 flex gap-5">
             <PlanDetails plan={plan} setPlan={setPlan} />
@@ -200,7 +200,7 @@ const Dashboard = ({ plan, setPlan, mods }) => {
     );
 };
 
-function Content({ plan, setPlan, mods, setMods }) {
+function Content({ plan, setPlan, mods, setMods, validationResponse, setValidationResponse }) {
     const { isEditMode, view = 4 } = plan; // Set default view to 4
 
     const viewModes = {
@@ -216,17 +216,54 @@ function Content({ plan, setPlan, mods, setMods }) {
     const yearNums = [1, 2, 3, 4]; // Define the years array
     const isGroupView = view === 1; // Determine if the view is group view
 
+    // Helper function to render the validation response
+    const renderValidationResponse = (response) => {
+        if (!response) return null;
+
+        const { unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts } = response;
+
+        return (
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
+                {unsatisfiedPreRequisites && (
+                    <div>
+                        <strong>Unsatisfied Pre-Requisites:</strong>
+                        <ul>
+                            {unsatisfiedPreRequisites.map((item, index) => <li key={index}>{item}</li>)}
+                        </ul>
+                    </div>
+                )}
+                {unsatisfiedCoRequisites && (
+                    <div>
+                        <strong>Unsatisfied Co-Requisites:</strong>
+                        <ul>
+                            {unsatisfiedCoRequisites.map((item, index) => <li key={index}>{item}</li>)}
+                        </ul>
+                    </div>
+                )}
+                {mutuallyExclusiveConflicts && (
+                    <div>
+                        <strong>Mutually Exclusive Conflicts:</strong>
+                        <ul>
+                            {mutuallyExclusiveConflicts.map((item, index) => <li key={index}>{item}</li>)}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div className="flex-grow">
-            <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
+            <Dashboard plan={plan} setPlan={setPlan} mods={mods} setValidationResponse={setValidationResponse}></Dashboard>
+            {validationResponse && renderValidationResponse(validationResponse)}
             <div className={`${isEditMode ? `px-20 mb-10 flex gap-5` : "px-20 mb-10"}`}>
-                <div className="flex flex-1">
-                    <div className="flex-1">
+                <div className="flex">
+                    <div className="flex-grow">
                         {!isGroupView && (
                             <div className={viewTailwind}>
                                 <div className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
                                     {yearNums.map(num => (
-                                        <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
+                                        <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
                                     ))}
                                 </div>
                             </div>
@@ -234,7 +271,7 @@ function Content({ plan, setPlan, mods, setMods }) {
                         {isGroupView && (
                             <div className={viewTailwind}>
                                 <div className={viewTailwindChild}>
-                                    <Year plan={plan} mods={mods} setMods={setMods}></Year>
+                                    <Year plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse}></Year>
                                 </div>
                             </div>
                         )}
@@ -255,6 +292,7 @@ function Planning() {
     const { id } = useParams(); // planId from the URL
     const [plan, setPlan] = useState(null);
     const [mods, setMods] = useState([]);
+    const [validationResponse, setValidationResponse] = useState(null); // Add state for validation response
 
     useEffect(() => {
         if (user && user.userId) {
@@ -264,7 +302,7 @@ function Planning() {
             const selectedPlan = user.plans.find(p => p.planId === parseInt(id));
             console.log("Selected Plan:", selectedPlan);
             if (selectedPlan) {
-                setPlan({ ...selectedPlan, view: 4 }); // Default to 4-year view
+                setPlan({ ...selectedPlan, userId: user.userId, view: 4 }); // Default to 4-year view
                 setMods(selectedPlan.planModuleGPAs || []);
             }
         }
@@ -279,7 +317,7 @@ function Planning() {
             <Background />
             <div className="relative z-10">
                 <Header></Header>
-                <Content plan={plan} setPlan={setPlan} mods={mods} setMods={setMods}></Content>
+                <Content plan={plan} setPlan={setPlan} mods={mods} setMods={setMods} validationResponse={validationResponse} setValidationResponse={setValidationResponse}></Content>
                 <Footer></Footer>
             </div>
         </div>

@@ -80,7 +80,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods }) => {
             >
                 <div className="flex items-center justify-left gap-2">
                     {isEditMode && !isSearchMode && (
-                        <DeleteButton setMods={setMods} module={module} />
+                        <DeleteButton setMods={setMods} module={module} plan={plan} term={module.term} />
                     )}
                     <div>
                         {moduleId} {moduleName}

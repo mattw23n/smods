@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Mod from "./mods";
 import DropIndicator from "./dropIndicator";
-import allMods from "../data/allMods";
+import Mod from "./mods";
 
-const Term = ({ term, plan, mods, setMods, type }) => {
+const Term = ({ term, plan, mods, setMods, type, setValidationResponse }) => {
     const [active, setActive] = useState(false);
     const { isGPAOn, view } = plan;
     const isGroupView = view === 1;
@@ -88,18 +87,14 @@ const Term = ({ term, plan, mods, setMods, type }) => {
         let modToTransfer = copy.find((m) => m.moduleId === moduleId);
         let isAdding = true;
 
-        if (modToTransfer) {
-            // Module is already in the plan, so it's a removal action
-            isAdding = false;
-            copy = copy.filter((m) => m.moduleId !== moduleId);
+        if (!modToTransfer) {
+            // Module is new and not found in current mods, create a new module object
+            modToTransfer = { moduleId, term };
         } else {
-            // Find the module to add from allMods
-            modToTransfer = allMods.find((m) => m.moduleId === moduleId);
-            if (!modToTransfer) {
-                console.error("Module not found in allMods.");
-                return;
-            }
+            // Module is already in the plan, update its term
+            copy = copy.filter((m) => m.moduleId !== moduleId);
             modToTransfer = { ...modToTransfer, term };
+            isAdding = false;
         }
 
         if (before === "-1" && isAdding) {
@@ -112,23 +107,18 @@ const Term = ({ term, plan, mods, setMods, type }) => {
 
         // Call the API to update the module
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update`, {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${modToTransfer.term}&isAdding=${isAdding}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                },
-                body: JSON.stringify({
-                    moduleId: moduleId,
-                    term: isAdding ? modToTransfer.term : undefined,
-                    isAdding
-                })
+                }
             });
 
             if (response.ok) {
                 const validationResponse = await response.json();
-                // Handle the validation response
                 console.log("Validation Response:", validationResponse);
+                setValidationResponse(validationResponse);  // Update the validation response state
             } else {
                 console.error('Failed to update module:', response.statusText);
             }
@@ -184,15 +174,14 @@ const Term = ({ term, plan, mods, setMods, type }) => {
     );
 };
 
-function Year({ num, plan, mods, setMods }) {
-    mods.sort((m1, m2) => m1.term - m2.term);
+function Year({ num, plan, mods, setMods, setValidationResponse }) {
     const { isGPAOn, isEditMode, view } = plan;
     const isGroupView = view === 1;
 
     const term1 = mods.filter((m) => m.term === (num * 2 - 1));
     const term2 = mods.filter((m) => m.term === (num * 2));
 
-    const yearMods = term1.concat(term2);
+    const yearMods = [...term1, ...term2];
 
     const totalYearGPA = yearMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
     const yearGPA = totalYearGPA / yearMods.length;
@@ -208,14 +197,14 @@ function Year({ num, plan, mods, setMods }) {
                         {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
                     </div>
 
-                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods} />
-                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods} />
+                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
+                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
                 </div>
             )}
             {isGroupView && (
                 <div className={`${isEditMode ? "grid grid-cols-2" : "flex mr-20 pr-20"} gap-5 transition all`}>
                     {groups.map(g => (
-                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g} />
+                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g} setValidationResponse={setValidationResponse} />
                     ))}
                 </div>
             )}

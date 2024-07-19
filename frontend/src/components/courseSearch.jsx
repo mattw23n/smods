@@ -1,8 +1,4 @@
 import React, { useState } from "react";
-import Mod from "./mods";
-import allMods from "../data/allMods";
-
-const ALL_MODULES = allMods;
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
@@ -12,7 +8,16 @@ const ModuleRepository = ({ searchResult, plan }) => {
     return (
         <div className="bg-white p-2 rounded-3xl max-w-full overflow-auto">
             {searchResult.map((m) => {
-                return <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={handleDragStart} />;
+                return (
+                    <div
+                        key={m.moduleId}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, m)}
+                        className="bg-gray-100 p-2 rounded-lg mb-2 cursor-pointer"
+                    >
+                        {m.moduleId} - {m.moduleName}
+                    </div>
+                );
             })}
         </div>
     );
