@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 public class PlanModuleGPAKey implements Serializable {
-    private PlanKey planId;
+    private PlanKey planKey;
 
     @Column(name = "MODULE_ID")
     private String moduleId;
@@ -16,17 +16,17 @@ public class PlanModuleGPAKey implements Serializable {
     public PlanModuleGPAKey() {
     }
 
-    public PlanModuleGPAKey(PlanKey planId, String moduleId) {
-        this.planId = planId;
+    public PlanModuleGPAKey(PlanKey planKey, String moduleId) {
+        this.planKey = planKey;
         this.moduleId = moduleId;
     }
 
-    public PlanKey getPlanId() {
-        return planId;
+    public PlanKey getPlanKey() {
+        return planKey;
     }
 
-    public void setPlanId(PlanKey planId) {
-        this.planId = planId;
+    public void setPlanKey(PlanKey planKey) {
+        this.planKey = planKey;
     }
 
     public String getModuleId() {
@@ -42,18 +42,18 @@ public class PlanModuleGPAKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlanModuleGPAKey that = (PlanModuleGPAKey) o;
-        return Objects.equals(planId, that.planId) && Objects.equals(moduleId, that.moduleId);
+        return Objects.equals(planKey, that.planKey) && Objects.equals(moduleId, that.moduleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, moduleId);
+        return Objects.hash(planKey, moduleId);
     }
 
     @Override
     public String toString() {
         return "PlanModuleGPAKey{" +
-                "planId=" + planId +
+                "planKey=" + planKey +
                 ", moduleId='" + moduleId + '\'' +
                 '}';
     }
