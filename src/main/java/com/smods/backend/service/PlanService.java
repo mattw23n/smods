@@ -91,7 +91,7 @@ public class PlanService {
     }
 
     @Transactional
-    public ModuleValidationResponse addModule(Long planId, Long userId, String moduleId, int term) {
+    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, boolean isAdding) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
@@ -103,38 +103,24 @@ public class PlanService {
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
-        // check if module is already in plan
         PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
-        if (planModuleGPARepository.existsById(planModuleGPAKey)) {
-            throw new RuntimeException("Module is already in plan");
+
+        if (isAdding) {
+            // check if module is already in plan
+            if (planModuleGPARepository.existsById(planModuleGPAKey)) {
+                throw new RuntimeException("Module is already in plan");
+            }
+
+            PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+            planModuleGPA.setModule(module);
+            planModuleGPARepository.save(planModuleGPA);
+        } else {
+            // check if module is in the plan
+            PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                    .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+
+            planModuleGPARepository.delete(planModuleGPA);
         }
-
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
-        planModuleGPA.setModule(module);
-        planModuleGPARepository.save(planModuleGPA);
-
-        return validatePlanModules(planId, userId);
-    }
-
-    @Transactional
-    public ModuleValidationResponse deleteModule(Long planId, Long userId, String moduleId) {
-        authorizationService.checkUserAuthorization(userId);
-        PlanKey planKey = new PlanKey(planId, userId);
-
-        // check if plan exists
-        Plan plan = planRepository.findById(planKey)
-                .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
-
-        // check if module exists
-        Module module = moduleRepository.findById(moduleId)
-                .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
-
-        // check if module is in the plan
-        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
-        PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
-                .orElseThrow(() -> new RuntimeException("Module not found in plan"));
-
-        planModuleGPARepository.delete(planModuleGPA);
 
         return validatePlanModules(planId, userId);
     }

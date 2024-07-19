@@ -17,18 +17,13 @@ const Term = ({ term, plan, mods, setMods, type }) => {
     };
 
     const findValue = (dict, targetKey) => {
-        for (const key in dict) {
-            if (key === targetKey) {
-                return dict[key];
-            }
-        }
-        return null; // If the key is not found
+        return dict[targetKey] || null;
     };
 
     const typeFull = findValue(typeDict, type);
 
     const handleDragStart = (e, module) => {
-        e.dataTransfer.setData("courseCode", module.courseCode);
+        e.dataTransfer.setData("moduleId", module.moduleId);
     };
 
     const handleDragOver = (e) => {
@@ -71,7 +66,7 @@ const Term = ({ term, plan, mods, setMods, type }) => {
         return el;
     };
 
-    const getIndicators = (e) => {
+    const getIndicators = () => {
         return Array.from(document.querySelectorAll(`[data-column="${term}"]`));
     };
 
@@ -84,59 +79,64 @@ const Term = ({ term, plan, mods, setMods, type }) => {
         setActive(false);
         clearHighlights();
 
-        const courseCode = e.dataTransfer.getData("courseCode");
+        const moduleId = e.dataTransfer.getData("moduleId");
         const indicators = getIndicators();
         const { element } = getNearestIndicator(e, indicators);
         const before = element.dataset.before || "-1";
 
-        if (before !== courseCode) {
-            let copy = [...mods];
-            let searchMods = allMods;
+        let copy = [...mods];
+        let modToTransfer = copy.find((m) => m.moduleId === moduleId);
+        let isAdding = true;
 
-            let modToTransfer = copy.find((m) => m.courseCode === courseCode);
-
+        if (modToTransfer) {
+            // Module is already in the plan, so it's a removal action
+            isAdding = false;
+            copy = copy.filter((m) => m.moduleId !== moduleId);
+        } else {
+            // Find the module to add from allMods
+            modToTransfer = allMods.find((m) => m.moduleId === moduleId);
             if (!modToTransfer) {
-                modToTransfer = searchMods.find((m) => m.courseCode === courseCode);
-            } else {
-                copy = copy.filter((m) => m.courseCode !== courseCode);
+                console.error("Module not found in allMods.");
+                return;
             }
-
             modToTransfer = { ...modToTransfer, term };
-
-            const moveToBack = before === "-1";
-
-            if (moveToBack) {
-                copy.push(modToTransfer);
-            } else {
-                const insertAtIndex = copy.findIndex((el) => el.courseCode === before);
-                if (insertAtIndex === undefined) return;
-                copy.splice(insertAtIndex, 0, modToTransfer);
-            }
-
-            // Call the API to add the module
-            try {
-                const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/add`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                    },
-                    body: JSON.stringify({ moduleId: modToTransfer.courseCode, term: modToTransfer.term })
-                });
-
-                if (response.ok) {
-                    const validationResponse = await response.json();
-                    // Handle the validation response
-                    console.log("Validation Response:", validationResponse);
-                } else {
-                    console.error('Failed to add module:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error adding module:', error);
-            }
-
-            setMods(copy);
         }
+
+        if (before === "-1" && isAdding) {
+            copy.push(modToTransfer);
+        } else if (isAdding) {
+            const insertAtIndex = copy.findIndex((el) => el.moduleId === before);
+            if (insertAtIndex === undefined) return;
+            copy.splice(insertAtIndex, 0, modToTransfer);
+        }
+
+        // Call the API to update the module
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify({
+                    moduleId: moduleId,
+                    term: isAdding ? modToTransfer.term : undefined,
+                    isAdding
+                })
+            });
+
+            if (response.ok) {
+                const validationResponse = await response.json();
+                // Handle the validation response
+                console.log("Validation Response:", validationResponse);
+            } else {
+                console.error('Failed to update module:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating module:', error);
+        }
+
+        setMods(copy);
     };
 
     let filteredMods = [];
@@ -146,20 +146,10 @@ const Term = ({ term, plan, mods, setMods, type }) => {
         filteredMods = mods.filter((m) => m.term === term);
     }
 
-    filteredMods.sort((f1, f2) => {
-        if (f1.courseCode < f2.courseCode) {
-            return -1;
-        }
-        if (f1.courseCode > f2.courseCode) {
-            return 1;
-        }
-        return 0;
-    });
+    filteredMods.sort((f1, f2) => f1.moduleId.localeCompare(f2.moduleId));
 
-    const totalTermGPA = filteredMods.reduce((accumulator, mod) => {
-        return accumulator + mod.GPA;
-    }, 0);
-    const termGPA = totalTermGPA / parseFloat(filteredMods.length);
+    const totalTermGPA = filteredMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
+    const termGPA = totalTermGPA / filteredMods.length;
 
     return (
         <div className={`px-4 py-4 rounded-3xl justify-center items-center h-fit 
@@ -181,11 +171,11 @@ const Term = ({ term, plan, mods, setMods, type }) => {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDragEnd}
-                className={` min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
+                className={`min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
 
                 {filteredMods.map((m) => {
-                    return <Mod key={m.courseCode} module={m} plan={plan}
+                    return <Mod key={m.moduleId} module={m} plan={plan}
                                 handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} />
                 })}
                 <DropIndicator beforeId={-1} term={term} />
@@ -194,24 +184,22 @@ const Term = ({ term, plan, mods, setMods, type }) => {
     );
 };
 
-function Year({num, plan, mods, setMods}){
-    mods.sort((m1, m2) => m1.term - m2.term)
-    const { isGPAOn, isEditMode, view } = plan
-    const isGroupView = view === 1
+function Year({ num, plan, mods, setMods }) {
+    mods.sort((m1, m2) => m1.term - m2.term);
+    const { isGPAOn, isEditMode, view } = plan;
+    const isGroupView = view === 1;
 
     const term1 = mods.filter((m) => m.term === (num * 2 - 1));
     const term2 = mods.filter((m) => m.term === (num * 2));
 
-    const yearMods = term1.concat(term2)
+    const yearMods = term1.concat(term2);
 
-    const totalYearGPA = yearMods.reduce((accumulator, mod) => {
-        return accumulator + mod.GPA
-    }, 0)
-    const yearGPA = totalYearGPA / parseFloat(yearMods.length)
+    const totalYearGPA = yearMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
+    const yearGPA = totalYearGPA / yearMods.length;
 
-    const groups = ["uc", "mc", "me", "tm", "fe"]
+    const groups = ["uc", "mc", "me", "tm", "fe"];
 
-    return(
+    return (
         <>
             {!isGroupView && (
                 <div className="h-fit p-4 bg-white/30 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2 transition all">
@@ -220,21 +208,19 @@ function Year({num, plan, mods, setMods}){
                         {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}
                     </div>
 
-                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods}></Term>
-                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods}></Term>
+                    <Term term={num * 2 - 1} plan={plan} mods={mods} setMods={setMods} />
+                    <Term term={num * 2} plan={plan} mods={mods} setMods={setMods} />
                 </div>
             )}
             {isGroupView && (
-                <div className={`${isEditMode ? "grid grid-cols-2 " :"flex mr-20 pr-20" } gap-5 transition all`}>
+                <div className={`${isEditMode ? "grid grid-cols-2" : "flex mr-20 pr-20"} gap-5 transition all`}>
                     {groups.map(g => (
-                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g}></Term>
+                        <Term key={g} plan={plan} mods={mods} setMods={setMods} type={g} />
                     ))}
                 </div>
             )}
         </>
-
-
     );
 }
 
-export default Year
+export default Year;
