@@ -8,14 +8,14 @@ import Loading from "../pages/loading";
 import { UserContext } from "../data/user";
 
 const majors = [
-    { title: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
-    { title: "Information Systems", tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
-    { title: "Software Engineering", tracks: ["Not Applicable"] },
-    { title: "Computing & Law", tracks: ["Not Applicable"] },
+    { title: "Computer Science", majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+    { title: "Information Systems", majors: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
+    { title: "Software Engineering", majors: ["Not Applicable"] },
+    { title: "Computing & Law", majors: ["Not Applicable"] },
 ];
 
 const Card = ({ plan, user, setUser, isTemplate }) => {
-    const { planName, creationDateTime, degree, track1, track2, planId } = plan;
+    const { planName, creationDateTime, degree, firstMajor, secondMajor, planId } = plan;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(planName);
@@ -110,7 +110,7 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
                     {!isTemplate && (
                         <button onClick={toggleMenu} className="focus:outline-none bg-gray relative z-20">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                                <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clipRule="evenodd" />
+                                <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clipRule="evenodd" />
                             </svg>
                         </button>
                     )}
@@ -119,7 +119,7 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
                             <button onClick={handleDelete} className="flex w-full justify-between items-center text-left px-4 py-2 text-sm font-archivo text-text rounded-t-lg hover:bg-gray-100 hover:text-red-500">
                                 Delete
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                 </svg>
                             </button>
                             <button onClick={handleRename} className="flex w-full justify-between items-center text-left px-4 py-2 text-sm font-archivo text-text rounded-b-lg hover:bg-gray-100">
@@ -136,10 +136,10 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
             <div className="px-4 py-2 bg-white/50 rounded-2xl text-sm font-archivo">
                 <p>Degree: {degree}</p>
                 <div className="flex gap-x-1">
-                    <p>Tracks: </p>
+                    <p>Majors: </p>
                     <div className="flex flex-col w-40">
-                        {track1 && <span>{track1}</span>}
-                        {track2 && <span>{track2}</span>}
+                        {firstMajor && <span>{firstMajor}</span>}
+                        {secondMajor && <span>{secondMajor}</span>}
                     </div>
                 </div>
             </div>

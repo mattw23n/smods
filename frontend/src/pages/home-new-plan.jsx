@@ -14,10 +14,10 @@ const Content = ({ user, setUser }) => {
     }, [user]);
 
     const majors = [
-        { Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
-        { Title: "Information Systems", Tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
-        { Title: "Software Engineering", Tracks: ["Not Applicable"] },
-        { Title: "Computing & Law", Tracks: ["Not Applicable"] },
+        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+        { Title: "Information Systems", Majors: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
+        { Title: "Software Engineering", Majors: ["Not Applicable"] },
+        { Title: "Computing & Law", Majors: ["Not Applicable"] },
     ];
 
     const [selectedTitle, setSelectedTitle] = useState("");
@@ -109,8 +109,8 @@ const Content = ({ user, setUser }) => {
         }
     };
 
-    const selectedDegreeTracks = selectedDegree
-        ? majors.find((m) => m.Title === selectedDegree)?.Tracks || []
+    const selectedDegreeMajors = selectedDegree
+        ? majors.find((m) => m.Title === selectedDegree)?.Majors || []
         : [];
 
     return (
@@ -174,9 +174,9 @@ const Content = ({ user, setUser }) => {
                                     onChange={handleMajor1Change}
                                     disabled={!selectedDegree} >
                                     <option disabled value="">Select First Major</option>
-                                    {selectedDegreeTracks.map((track, index) => (
-                                        <option key={index} value={track}>
-                                            {track}
+                                    {selectedDegreeMajors.map((major, index) => (
+                                        <option key={index} value={major}>
+                                            {major}
                                         </option>
                                     ))}
                                 </select>
@@ -191,9 +191,9 @@ const Content = ({ user, setUser }) => {
                                     onChange={handleMajor2Change}
                                     disabled={!selectedDegree} >
                                     <option disabled value="">Select Second Major</option>
-                                    {selectedDegreeTracks.map((track, index) => (
-                                        <option key={index} value={track}>
-                                            {track}
+                                    {selectedDegreeMajors.map((major, index) => (
+                                        <option key={index} value={major}>
+                                            {major}
                                         </option>
                                     ))}
                                 </select>

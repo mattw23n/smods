@@ -57,7 +57,7 @@ const Modal = () => {
 
 
 const PlanDetails = ({plan, setPlan}) => {
-    const {title, degree, tracks, view} = plan
+    const {title, degree, majors, view} = plan
 
     const buttonData = [
         { value: 4, label: '4Y' },
@@ -77,10 +77,10 @@ const PlanDetails = ({plan, setPlan}) => {
                     <p>{degree}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
-                    <p className="font-bold">Track:</p>
+                    <p className="font-bold">Major:</p>
                     <div className="flex flex-col">
-                    {tracks.map((track, index) => (
-                        <p key={index}>{track}</p>
+                    {majors.map((major, index) => (
+                        <p key={index}>{major}</p>
                     ))}
                     </div>
                 </div>
