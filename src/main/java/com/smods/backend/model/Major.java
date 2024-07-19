@@ -23,40 +23,29 @@ public class Major {
     @Column(name = "SECOND_MAJOR_DIFFERENT_SCHOOL?")
     private boolean secondMajorDifferentSchool;
 
+    @Column(name = "NUM_OF_SECOND_MAJOR_ELECTIVE")
+    private int numOfSecondMajorElective;
+
+    @Column(name = "NUM_OF_FIRST_MAJOR_ELECTIVE")
+    private int numOfFirstMajorElective;
+
     @ManyToOne
     @JoinColumn(name = "DEGREE_NAME")
     @JsonBackReference
     private Degree degree;
 
-    @ManyToMany
-    @JoinTable(
-            name = "ADDITIONAL_SECOND_MAJOR_MODULE_REQUIREMENT",
-            joinColumns = @JoinColumn(name = "MAJOR_NAME"),
-            inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
-    )
-    private List<Module> additionalSecondMajorModuleRequirement;
+    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    private List<AdditionalSecondMajorModuleRequirement> additionalSecondMajorModuleRequirements;
 
-    @ManyToMany
-    @JoinTable(
-            name = "TRACK_MODULE_REQUIREMENT",
-            joinColumns = @JoinColumn(name = "MAJOR_NAME"),
-            inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
-    )
-    private List<Module> trackModuleRequirement;
+
+    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    private List<FirstMajorModuleRequirement> firstMajorModuleRequirements;
 
     public Major() {
     }
 
     public Major(String majorName) {
         this.majorName = majorName;
-    }
-
-    public Major(String majorName, boolean firstMajor, boolean secondMajorSameSchool, boolean secondMajorDifferentSchool, Degree degree) {
-        this.majorName = majorName;
-        this.firstMajor = firstMajor;
-        this.secondMajorSameSchool = secondMajorSameSchool;
-        this.secondMajorDifferentSchool = secondMajorDifferentSchool;
-        this.degree = degree;
     }
 
     public String getMajorName() {
@@ -91,6 +80,22 @@ public class Major {
         this.secondMajorDifferentSchool = secondMajorDifferentSchool;
     }
 
+    public int getNumOfSecondMajorElective() {
+        return numOfSecondMajorElective;
+    }
+
+    public void setNumOfSecondMajorElective(int numOfSecondMajorElective) {
+        this.numOfSecondMajorElective = numOfSecondMajorElective;
+    }
+
+    public int getNumOfFirstMajorElective() {
+        return numOfFirstMajorElective;
+    }
+
+    public void setNumOfFirstMajorElective(int numOfFirstMajorElective) {
+        this.numOfFirstMajorElective = numOfFirstMajorElective;
+    }
+
     public Degree getDegree() {
         return degree;
     }
@@ -99,20 +104,20 @@ public class Major {
         this.degree = degree;
     }
 
-    public List<Module> getAdditionalSecondMajorModuleRequirement() {
-        return additionalSecondMajorModuleRequirement;
+    public List<AdditionalSecondMajorModuleRequirement> getAdditionalSecondMajorModuleRequirements() {
+        return additionalSecondMajorModuleRequirements;
     }
 
-    public void setAdditionalSecondMajorModuleRequirement(List<Module> additionalSecondMajorModuleRequirement) {
-        this.additionalSecondMajorModuleRequirement = additionalSecondMajorModuleRequirement;
+    public void setAdditionalSecondMajorModuleRequirements(List<AdditionalSecondMajorModuleRequirement> additionalSecondMajorModuleRequirements) {
+        this.additionalSecondMajorModuleRequirements = additionalSecondMajorModuleRequirements;
     }
 
-    public List<Module> getTrackModuleRequirement() {
-        return trackModuleRequirement;
+    public List<FirstMajorModuleRequirement> getFirstMajorModuleRequirements() {
+        return firstMajorModuleRequirements;
     }
 
-    public void setTrackModuleRequirement(List<Module> trackModuleRequirement) {
-        this.trackModuleRequirement = trackModuleRequirement;
+    public void setFirstMajorModuleRequirements(List<FirstMajorModuleRequirement> firstMajorModuleRequirements) {
+        this.firstMajorModuleRequirements = firstMajorModuleRequirements;
     }
 
     @Override
@@ -120,12 +125,12 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirement, major.trackModuleRequirement);
+        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && numOfSecondMajorElective == major.numOfSecondMajorElective && numOfFirstMajorElective == major.numOfFirstMajorElective && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirements, major.additionalSecondMajorModuleRequirements) && Objects.equals(firstMajorModuleRequirements, major.firstMajorModuleRequirements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirement);
+        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, numOfSecondMajorElective, numOfFirstMajorElective, degree, additionalSecondMajorModuleRequirements, firstMajorModuleRequirements);
     }
 
     @Override
@@ -135,9 +140,11 @@ public class Major {
                 ", firstMajor=" + firstMajor +
                 ", secondMajorSameSchool=" + secondMajorSameSchool +
                 ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
+                ", numOfSecondMajorElective=" + numOfSecondMajorElective +
+                ", numOfFirstMajorElective=" + numOfFirstMajorElective +
                 ", degree=" + degree +
-                ", additionalSecondMajorModuleRequirement=" + additionalSecondMajorModuleRequirement +
-                ", trackModuleRequirement=" + trackModuleRequirement +
+                ", additionalSecondMajorModuleRequirements=" + additionalSecondMajorModuleRequirements +
+                ", firstMajorModuleRequirements=" + firstMajorModuleRequirements +
                 '}';
     }
 }
