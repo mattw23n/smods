@@ -75,7 +75,7 @@ const PlanDetails = ({ plan, setPlan }) => {
 };
 
 const ButtonGroup = ({ plan, setPlan }) => {
-    const { isEditMode, title } = plan;
+    const { isEditMode, planName } = plan;
 
     const link = "smods.com/1234";
 
@@ -106,7 +106,7 @@ const ButtonGroup = ({ plan, setPlan }) => {
         html2canvas(document.body).then((canvas) => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = `${title}.png`;
+            link.download = `${planName}.png`;
             link.click();
         });
 
@@ -220,21 +220,28 @@ function Content({ plan, setPlan, mods, setMods }) {
         <div className="flex-grow">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods}></Dashboard>
             <div className={`${isEditMode ? `px-20 mb-10 flex gap-5` : "px-20 mb-10"}`}>
-                <div>
-                    {!isGroupView && (
-                        <div className={viewTailwind}>
-                            <div className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
-                                {yearNums.map(num => (
-                                    <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
-                                ))}
+                <div className="flex flex-1">
+                    <div className="flex-1">
+                        {!isGroupView && (
+                            <div className={viewTailwind}>
+                                <div className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
+                                    {yearNums.map(num => (
+                                        <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
-                    {isGroupView && (
-                        <div className={viewTailwind}>
-                            <div className={viewTailwindChild}>
-                                <Year plan={plan} mods={mods} setMods={setMods}></Year>
+                        )}
+                        {isGroupView && (
+                            <div className={viewTailwind}>
+                                <div className={viewTailwindChild}>
+                                    <Year plan={plan} mods={mods} setMods={setMods}></Year>
+                                </div>
                             </div>
+                        )}
+                    </div>
+                    {isEditMode && (
+                        <div className="ml-4 w-1/3">
+                            <CourseSearch plan={plan}></CourseSearch>
                         </div>
                     )}
                 </div>
