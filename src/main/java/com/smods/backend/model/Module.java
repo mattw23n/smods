@@ -2,11 +2,14 @@ package com.smods.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.hibernate.annotations.Cascade;
+import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-
+import java.util.AbstractMap.SimpleEntry;
 @Entity
 @Table(name = "MODULE")
 public class Module {
@@ -28,6 +31,11 @@ public class Module {
 
     @Column(name = "SUBTYPE")
     private String subtype;
+
+    public static final String[][] hierarchy = {
+            {"Major Core", "Major Elective", "Free Elective"},
+            {"Uni Core", "Free Elective"}
+    };
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
     @JsonBackReference(value = "module-planModuleGPA")
@@ -72,6 +80,36 @@ public class Module {
         this.courseUnit = courseUnit;
         this.baskets = baskets;
         this.subtype = subtype;
+    }
+
+    public static String getLowerHierarchy(String currentHierarchy){
+        if (currentHierarchy.equals("Free Elective")){
+            throw new RuntimeException("You are already at the bottom of the hierarchy");
+        }
+
+        SimpleEntry<Integer, Integer> position = findHierarchyPosition(currentHierarchy, new SimpleEntry<>(0, 0));
+        while (hierarchy[position.getKey()].length - 1 == position.getValue()){
+            position = findHierarchyPosition(currentHierarchy, position);
+        }
+
+        return position.getValue() == 0 ? hierarchy[position.getKey()][position.getValue()] : hierarchy[position.getKey()][position.getValue() + 1];
+
+    }
+
+    private static SimpleEntry<Integer, Integer> findHierarchyPosition(String currentHierarchy, SimpleEntry<Integer, Integer> position){
+        if (position.getKey() >= hierarchy.length || position.getValue() >= hierarchy[position.getKey()].length){
+            throw new RuntimeException("Invalid position");
+        }
+
+        for (int i = position.getKey(); i < hierarchy.length; i++){
+            for (int j = position.getValue() + 1; j < hierarchy[i].length; j++){
+                if (hierarchy[i][j].equals(currentHierarchy)){
+                    return new SimpleEntry<>(i, j);
+                }
+            }
+        }
+
+        throw new RuntimeException("Graduation requirement not found");
     }
 
     public String getModuleId() {
