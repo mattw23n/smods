@@ -173,127 +173,79 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-//    public Map<String, Map<String, Double>> getGradRequirements(Plan plan) {
-//        Map<String, Map<String, Double>> gradRequirements = new HashMap<>();
-//
-//        // Get all majors and tracks
-//        Major major = plan.getMajor();
-//        List<Track> tracks = getTracksFromPlan(plan);
-//
-//        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
-//
-//        // Loop through all modules in the plan
-//        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
-//            Module module = planModuleGPA.getModule();
-//            SimpleEntry<String, String> gradRequirement = findGradRequirementAndBasket(tracks, major, module);
-//
-//            if (gradRequirement != null) {
-//                String requirement = gradRequirement.getKey();
-//                String basket = gradRequirement.getValue();
-//
-//                gradRequirements.putIfAbsent(requirement, new HashMap<>());
-//
-//                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
-//
-//                gradRequirements.get(requirement).merge(basket, module.getCourseUnit(), Double::sum);
-//            }
-//        }
-//        return gradRequirements;
-//    }
+    public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
+        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-//    public Map<String, Double> getGradRequirements(Plan plan) {
-//        Map<String, Double> gradRequirements = new HashMap<>();
-//
-//        // Get all majors and tracks
-//        Major major = plan.getMajor();
-//        List<Track> tracks = getTracksFromPlan(plan);
-//
-//        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
-//        for (MajorGradRequirement singleMajorGradRequirme)
-//
-//        // Loop through all modules in the plan
-//        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
-//            Module module = planModuleGPA.getModule();
-//            String gradRequirement = findGradRequirement(tracks, major, module);
-//
-//            if (gradRequirement != null) {
-//                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
-//                if (gradRequirements.get(gradRequirement) >= )
-//                gradRequirements.merge(gradRequirement, module.getCourseUnit(), Double::sum);
-//            }
-//        }
-//        return gradRequirements;
-//    }
-//
-//    public Map<String, Double> getPlanGradRequirement(Plan plan){
-//        Map<String, Double> targetGradRequirement = new HashMap<>();
-//
-//        List<MajorGradRequirement> majorGradRequirements = plan.getMajor().getMajorGradRequirements();
-//        List<TrackGradRequirement> trackGradRequirements = new HashMap<>()
-//
-//        for (MajorGradRequirement majorGradRequirement : majorGradRequirements){
-//            String gradRequirement = majorGradRequirement.getMajorGradRequirementId().getMajorGradRequirementType();
-//            Double counter = 0.0;
-//
-//            Map<String, Double> majorBaskets = majorGradRequirement.getMajorBaskets();
-//            Collection<Double> courseUnits = majorBaskets.values();
-//            for (Double courseUnit : courseUnits){
-//                counter += courseUnit;
-//            }
-//
-//            targetGradRequirement.putIfAbsent(gradRequirement, 0.0);
-//            targetGradRequirement.merge(gradRequirement, counter, Double::sum);*
-//
-//        }
-//
-//        List<Track> tracks = getTracksFromPlan(plan);
-//    }
-//
-//    private List<Track> getTracksFromPlan(Plan plan) {
-//        List<Track> tracks = new ArrayList<>();
-//        if (plan.getTrack1() != null) {
-//            tracks.add(trackRepository.findByTrackName(plan.getTrack1())
-//                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
-//        }
-//        if (plan.getTrack2() != null) {
-//            tracks.add(trackRepository.findByTrackName(plan.getTrack2())
-//                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
-//        }
-//        return tracks;
-//    }
-//
-//    private SimpleEntry<String, String> findGradRequirementAndBasket(List<Track> tracks, Major major, Module module) {
-//        for (Track track : tracks) {
-//            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
-//            if (majorModule != null) {
-//                return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
-//            }
-//        }
-//
-//        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
-//        if (majorModule != null) {
-//            return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
-//        }
-//
-//        majorModule = majorModuleRepository.findByModule(module);
-//        return majorModule != null ? new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket()) : null;
-//    }
-//
-//    private String findGradRequirement(List<Track> tracks, Major major, Module module) {
-//        for (Track track : tracks) {
-//            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
-//            if (majorModule != null) {
-//                return majorModule.getGradRequirement();
-//            }
-//        }
-//
-//        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
-//        if (majorModule != null) {
-//            return majorModule.getGradRequirement();
-//        }
-//
-//        majorModule = majorModuleRepository.findByModule(module);
-//        return majorModule != null ? majorModule.getGradRequirement() : null;
-//    }
+        Map<String, Double> targetRequirement = getPlanTargetRequirement(userId, planId);
+        Map<String, Double> progressRequirement = new HashMap<>();
 
+        List<PlanModuleGPA> planModules = plan.getPlanModuleGPAs();
+
+        for (PlanModuleGPA planModule : planModules){
+            updatePlanRequirementProgress(planModule.getPlan(), targetRequirement, progressRequirement, planModule.getModule());
+        }
+
+        return progressRequirement;
+    }
+    private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
+        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
+        return plan.getDegree().getGradRequirement();
+    }
+
+
+    private void updatePlanRequirementProgress(Plan plan,
+                                               Map<String, Double> targetRequirement,
+                                               Map<String, Double> requirementProgress,
+                                               Module module){
+        Double courseUnit = module.getCourseUnit();
+
+        if (isSMUCore(plan, module)){
+            incrementPlanRequirement("Uni Core", targetRequirement, requirementProgress, courseUnit);
+        }
+        else if (isMajorCore(plan, module)){
+            incrementPlanRequirement("Major Core", targetRequirement, requirementProgress, courseUnit);
+        }
+        else if (isMajorElective(plan, module)){
+            incrementPlanRequirement("Major Elective", targetRequirement, requirementProgress, courseUnit);
+        }
+        else{
+            incrementPlanRequirement("Free Elective", targetRequirement, requirementProgress, courseUnit);
+        }
+    }
+
+    private void incrementPlanRequirement(String category,
+                                          Map<String, Double> targetRequirement,
+                                          Map<String, Double> requirementProgress,
+                                          Double courseUnit){
+
+        if (Double.compare(targetRequirement.get(category), requirementProgress.get(category)) <= 0) {
+            incrementPlanRequirement(Module.getLowerHierarchy(category), targetRequirement, requirementProgress, courseUnit);
+        }
+//        else if (Double.compare(targetRequirement.get(category), requirementProgress.get(category) + courseUnit) <= 0) {
+//
+//        }
+        else {
+            requirementProgress.put(category, requirementProgress.get(category) + courseUnit);
+        }
+    }
+    private boolean isMajorCore(Plan plan, Module module){
+        return moduleRepository
+                .findAllMajorCore(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
+
+    private boolean isSMUCore(Plan plan, Module module){
+        return moduleRepository
+                .findAllSMUCore(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
+
+    private boolean isMajorElective(Plan plan, Module module){
+        return moduleRepository
+                .findAllMajorElective(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
 }

@@ -39,7 +39,7 @@ public class Major {
             joinColumns = @JoinColumn(name = "MAJOR_NAME"),
             inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
     )
-    private List<Module> trackModuleRequirment;
+    private List<Module> trackModuleRequirement;
 
     public Major() {
     }
@@ -100,12 +100,12 @@ public class Major {
         this.additionalSecondMajorModuleRequirement = additionalSecondMajorModuleRequirement;
     }
 
-    public List<Module> getTrackModuleRequirment() {
-        return trackModuleRequirment;
+    public List<Module> getTrackModuleRequirement() {
+        return trackModuleRequirement;
     }
 
-    public void setTrackModuleRequirment(List<Module> trackModuleRequirment) {
-        this.trackModuleRequirment = trackModuleRequirment;
+    public void setTrackModuleRequirement(List<Module> trackModuleRequirement) {
+        this.trackModuleRequirement = trackModuleRequirement;
     }
 
     @Override
@@ -113,12 +113,12 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirment, major.trackModuleRequirment);
+        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirement, major.trackModuleRequirement);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirment);
+        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirement);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Major {
                 ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
                 ", degree=" + degree +
                 ", additionalSecondMajorModuleRequirement=" + additionalSecondMajorModuleRequirement +
-                ", trackModuleRequirment=" + trackModuleRequirment +
+                ", trackModuleRequirement=" + trackModuleRequirement +
                 '}';
     }
 }
