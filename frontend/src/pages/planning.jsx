@@ -7,10 +7,10 @@ import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 import html2canvas from 'html2canvas';
 import { UserContext } from "../data/user";
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const PlanDetails = ({ plan, setPlan }) => {
-    const { title, degree, majors = [], view } = plan;
+    const { planName, degree, firstMajor, secondMajor, view } = plan;
     const buttonData = [
         { value: 4, label: '4Y' },
         { value: 3, label: 'Y' },
@@ -21,17 +21,16 @@ const PlanDetails = ({ plan, setPlan }) => {
     return (
         <div className="px-6 py-4 w-fit rounded-3xl bg-white/50 flex flex-col gap-2">
             <div className="flex flex-col">
-                <p className="font-poppins font-bold text-text text-lg">{title}</p>
+                <p className="font-poppins font-bold text-text text-lg">{planName}</p>
                 <div className="flex text-text font-archivo gap-2 text-sm">
                     <p className="font-bold">Degree:</p>
-                    <p>{degree ? degree.degreeName : 'N/A'}</p>
+                    <p>{degree || 'N/A'}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
-                    <p className="font-bold">Major:</p>
+                    <p className="font-bold">Majors:</p>
                     <div className="flex flex-col">
-                        {majors.map((major, index) => (
-                            <p key={index}>{major.majorName}</p>
-                        ))}
+                        <p>{firstMajor || 'N/A'}</p>
+                        <p>{secondMajor || 'N/A'}</p>
                     </div>
                 </div>
             </div>
@@ -72,8 +71,8 @@ const PlanDetails = ({ plan, setPlan }) => {
                 </span>
             </div>
         </div>
-    )
-}
+    );
+};
 
 const ButtonGroup = ({ plan, setPlan }) => {
     const { isEditMode, title } = plan;
@@ -194,7 +193,7 @@ const ButtonGroup = ({ plan, setPlan }) => {
 const Dashboard = ({ plan, setPlan, mods }) => {
     return (
         <div className="mx-20 my-5 flex gap-5">
-            <PlanDetails plan={plan} />
+            <PlanDetails plan={plan} setPlan={setPlan} />
             <PlanBar plan={plan} setPlan={setPlan} mods={mods} />
             <ButtonGroup plan={plan} setPlan={setPlan} />
         </div>
@@ -218,8 +217,8 @@ function Content({ plan, setPlan, mods, setMods }) {
     const isGroupView = view === 1; // Determine if the view is group view
 
     const handleAddModule = async (moduleId, term) => {
-        const userId = plan.planKey.userId;
-        const planId = plan.planKey.planId;
+        const userId = plan.userId;
+        const planId = plan.planId;
 
         try {
             const response = await fetch(`http://localhost:8080/api/users/${userId}/plans/${planId}/edit`, {
@@ -243,8 +242,8 @@ function Content({ plan, setPlan, mods, setMods }) {
     };
 
     const handleDeleteModule = async (moduleId) => {
-        const userId = plan.planKey.userId;
-        const planId = plan.planKey.planId;
+        const userId = plan.userId;
+        const planId = plan.planId;
 
         try {
             const token = localStorage.getItem('jwt');
@@ -300,34 +299,20 @@ function Content({ plan, setPlan, mods, setMods }) {
 
 function Planning() {
     const { user } = useContext(UserContext);
-    const { id } = useParams();
+    const { id } = useParams(); // planId from the URL
     const [plan, setPlan] = useState(null);
     const [mods, setMods] = useState([]);
 
-    const fetchPlan = async () => {
+    useEffect(() => {
         if (user && user.userId) {
-            try {
-                const token = localStorage.getItem('jwt');
-                const response = await fetch(`http://localhost:8080/api/users/${user.userId}/plans/${id}/modules`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+            const selectedPlan = user.plans.find(p => p.planId === parseInt(id));
 
-                if (response.ok) {
-                    const fetchedPlan = await response.json();
-                    setPlan(fetchedPlan);
-                    setMods(fetchedPlan.planModuleGPAs || []);
-                } else {
-                    console.error('Failed to fetch plan:', response.statusText);
-                }
-            } catch (error) {
-                console.error('Error fetching plan:', error);
+            if (selectedPlan) {
+                setPlan(selectedPlan);
+                setMods(selectedPlan.planModuleGPAs || []);
             }
         }
-    };
-
-    useEffect(() => {
-        fetchPlan();
-    }, [user]);
+    }, [user, id]);
 
     if (!plan) {
         return <div>Loading...</div>;
