@@ -81,24 +81,14 @@ public class PlanController {
         return ResponseEntity.ok(planModules);
     }
 
-    @PutMapping("/{planId}/add")
-    public ResponseEntity<ModuleValidationResponse> addModule(
+    @PutMapping("/{planId}/update")
+    public ResponseEntity<ModuleValidationResponse> updateModule(
             @PathVariable Long planId,
             @PathVariable Long userId,
             @RequestParam String moduleId,
-            @RequestParam int term) {
-        checkUserAuthorization(userId);
-        ModuleValidationResponse response = planService.addModule(planId, userId, moduleId, term);
-        return ResponseEntity.ok(response);
-    }
-
-    @DeleteMapping("/{planId}/delete")
-    public ResponseEntity<ModuleValidationResponse> deleteModule(
-            @PathVariable Long planId,
-            @PathVariable Long userId,
-            @RequestParam String moduleId) {
-        checkUserAuthorization(userId);
-        ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
+            @RequestParam int term,
+            @RequestParam boolean isAdding) {
+        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding);
         return ResponseEntity.ok(response);
     }
 }
