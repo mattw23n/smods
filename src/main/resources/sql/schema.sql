@@ -147,7 +147,7 @@ delete from `plan`;
 INSERT INTO DEGREE (DEGREE_NAME)
 VALUES ('Computer Science'), ('Information Systems'), ('Software Engineering'), ('Computing & Law');
 
-INSERT INTO MAJOR (MAJOR_NAME, FIRST_MAJOR, SECOND_MAJOR_SAME_SCHOOL, SECOND_MAJOR_DIFFERENT_SCHOOL, DEGREE_NAME)
+INSERT INTO MAJOR (`MAJOR_NAME`, `FIRST_MAJOR?`, `SECOND_MAJOR_SAME_SCHOOL?`, `SECOND_MAJOR_DIFFERENT_SCHOOL?`, `DEGREE_NAME`)
 VALUES
     ('Artificial Intelligence', true, false, false, 'Computer Science'),
     ('Cybersecurity', true, false, false, 'Computer Science'),

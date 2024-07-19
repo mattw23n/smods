@@ -110,6 +110,7 @@ public class PlanService {
         }
 
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+        planModuleGPA.setModule(module);
         planModuleGPARepository.save(planModuleGPA);
 
         return validatePlanModules(planId, userId);
