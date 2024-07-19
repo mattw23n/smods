@@ -9,6 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "PLAN_MODULE_GPA")
 public class PlanModuleGPA {
+
     @EmbeddedId
     private PlanModuleGPAKey planModuleGPAId;
 
@@ -19,16 +20,15 @@ public class PlanModuleGPA {
     private int term;
 
     @ManyToOne
-    @MapsId("planId")
     @JoinColumns({
-            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
-            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID", insertable = false, updatable = false)
     })
+    @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
     @ManyToOne
-    @MapsId("moduleId")
-    @JoinColumn(name = "MODULE_ID")
+    @JoinColumn(name = "MODULE_ID", referencedColumnName = "MODULE_ID", insertable = false, updatable = false)
     private Module module;
 
     public PlanModuleGPA() {

@@ -1,20 +1,20 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import Mod from "./mods";
 import DropIndicator from "./dropIndicator";
 import allMods from "../data/allMods";
 
-const Term = ({term, plan, mods, setMods, type}) => {
+const Term = ({ term, plan, mods, setMods, type }) => {
     const [active, setActive] = useState(false);
-    const { isGPAOn, view } = plan
-    const isGroupView = view === 1
+    const { isGPAOn, view } = plan;
+    const isGroupView = view === 1;
 
     const typeDict = {
-        "uc":"UNI CORE",
-        "mc":"MAJOR CORE",
-        "tm":"TRACK MODULE",
-        "me":"MAJOR ELECTIVE",
-        "fe":"FREE ELECTIVE",
-    }
+        "uc": "UNI CORE",
+        "mc": "MAJOR CORE",
+        "tm": "TRACK MODULE",
+        "me": "MAJOR ELECTIVE",
+        "fe": "FREE ELECTIVE",
+    };
 
     const findValue = (dict, targetKey) => {
         for (const key in dict) {
@@ -25,7 +25,7 @@ const Term = ({term, plan, mods, setMods, type}) => {
         return null; // If the key is not found
     };
 
-    const typeFull = findValue(typeDict, type)
+    const typeFull = findValue(typeDict, type);
 
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("courseCode", module.courseCode);
@@ -35,11 +35,10 @@ const Term = ({term, plan, mods, setMods, type}) => {
         e.preventDefault();
         highlightIndicator(e);
         setActive(true);
-    }
+    };
 
     const highlightIndicator = (e) => {
         const indicators = getIndicators();
-        // console.log(indicators)
         clearHighlights(indicators);
         const el = getNearestIndicator(e, indicators);
         el.element.style.opacity = "1";
@@ -47,7 +46,6 @@ const Term = ({term, plan, mods, setMods, type}) => {
 
     const clearHighlights = (els) => {
         const indicators = els || getIndicators();
-
         indicators.forEach((i) => {
             i.style.opacity = "0";
         });
@@ -55,92 +53,96 @@ const Term = ({term, plan, mods, setMods, type}) => {
 
     const getNearestIndicator = (e, indicators) => {
         const DISTANCE_OFFSET = 50;
-
         const el = indicators.reduce(
             (closest, child) => {
                 const box = child.getBoundingClientRect();
                 const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-
-                if(offset < 0 && offset > closest.offset){
-                    return { offset: offset, element: child};
-                }else{
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
                     return closest;
                 }
             },
             {
                 offset: Number.NEGATIVE_INFINITY,
                 element: indicators[indicators.length - 1],
-
             }
         );
-
         return el;
-    }
+    };
 
     const getIndicators = (e) => {
         return Array.from(document.querySelectorAll(`[data-column="${term}"]`));
-    }
+    };
 
     const handleDragLeave = () => {
         setActive(false);
         clearHighlights();
-    }
+    };
 
-    const handleDragEnd = (e) => {
+    const handleDragEnd = async (e) => {
         setActive(false);
         clearHighlights();
 
-        const courseCode = e.dataTransfer.getData("courseCode")
+        const courseCode = e.dataTransfer.getData("courseCode");
         const indicators = getIndicators();
-        const {element} = getNearestIndicator(e, indicators);
-
+        const { element } = getNearestIndicator(e, indicators);
         const before = element.dataset.before || "-1";
 
-        if(before !== courseCode) {
+        if (before !== courseCode) {
             let copy = [...mods];
-
-            let searchMods = allMods
-
-            // console.log(copy)
+            let searchMods = allMods;
 
             let modToTransfer = copy.find((m) => m.courseCode === courseCode);
 
-            //From search bar
-            if(!modToTransfer){
+            if (!modToTransfer) {
                 modToTransfer = searchMods.find((m) => m.courseCode === courseCode);
-            }else{
+            } else {
                 copy = copy.filter((m) => m.courseCode !== courseCode);
             }
 
-            modToTransfer = {...modToTransfer, term};
-
+            modToTransfer = { ...modToTransfer, term };
 
             const moveToBack = before === "-1";
 
-            if(moveToBack){
+            if (moveToBack) {
                 copy.push(modToTransfer);
-            }else{
+            } else {
                 const insertAtIndex = copy.findIndex((el) => el.courseCode === before);
-                if(insertAtIndex === undefined) return;
-
+                if (insertAtIndex === undefined) return;
                 copy.splice(insertAtIndex, 0, modToTransfer);
             }
-            // console.log("copy")
-            // console.log(copy)
 
+            // Call the API to add the module
+            try {
+                const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/add`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    },
+                    body: JSON.stringify({ moduleId: modToTransfer.courseCode, term: modToTransfer.term })
+                });
 
-            //sets the mods array into the updated one with the updated term positioning from the drag
+                if (response.ok) {
+                    const validationResponse = await response.json();
+                    // Handle the validation response
+                    console.log("Validation Response:", validationResponse);
+                } else {
+                    console.error('Failed to add module:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error adding module:', error);
+            }
+
             setMods(copy);
-
-            // console.log(mods)
         }
-    }
-    // console.log(mods)
-    let filteredMods = []
-    if(isGroupView){
-        filteredMods = mods.filter((m) => m.courseType === type);
+    };
 
-    }else{
+    let filteredMods = [];
+    if (isGroupView) {
+        filteredMods = mods.filter((m) => m.courseType === type);
+    } else {
         filteredMods = mods.filter((m) => m.term === term);
     }
 
@@ -155,13 +157,13 @@ const Term = ({term, plan, mods, setMods, type}) => {
     });
 
     const totalTermGPA = filteredMods.reduce((accumulator, mod) => {
-        return accumulator + mod.GPA
-    }, 0)
-    const termGPA = totalTermGPA / parseFloat(filteredMods.length)
+        return accumulator + mod.GPA;
+    }, 0);
+    const termGPA = totalTermGPA / parseFloat(filteredMods.length);
 
-    return(
+    return (
         <div className={`px-4 py-4 rounded-3xl justify-center items-center h-fit 
-        ${isGroupView ? `bg-${type}-l`: "bg-white/50"}`}>
+        ${isGroupView ? `bg-${type}-l` : "bg-white/50"}`}>
             <div className="flex justify-between text-xs font-poppins">
                 {isGroupView && (
                     <p className="font-bold text-sm pb-2">{typeFull}</p>
@@ -184,17 +186,13 @@ const Term = ({term, plan, mods, setMods, type}) => {
 
                 {filteredMods.map((m) => {
                     return <Mod key={m.courseCode} module={m} plan={plan}
-                                handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods}/>
+                                handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} />
                 })}
-                <DropIndicator beforeId={-1} term={term}/>
-
-
-
+                <DropIndicator beforeId={-1} term={term} />
             </div>
-
         </div>
     );
-}
+};
 
 function Year({num, plan, mods, setMods}){
     mods.sort((m1, m2) => m1.term - m2.term)

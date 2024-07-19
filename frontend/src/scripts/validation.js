@@ -7,7 +7,7 @@ const prerequisiteCheck = ({ module, mods, validationResult, errorMods }) => {
       validationResult.message = message
     };
   
-    const { courseCode, isError, requirements } = module;
+    const { moduleId, isError, requirements } = module;
     const prereqs = requirements.prerequisites;
 
     // console.log(prereqs)
@@ -17,16 +17,16 @@ const prerequisiteCheck = ({ module, mods, validationResult, errorMods }) => {
         return true;
     }
   
-    const modPosition = mods.findIndex((m) => m.courseCode === courseCode);
+    const modPosition = mods.findIndex((m) => m.moduleId === moduleId);
     
 
     for (const pr of prereqs) {
-      const prPosition = mods.findIndex((m) => m.courseCode === pr);
+      const prPosition = mods.findIndex((m) => m.moduleId === pr);
 
       if (prPosition >= modPosition || prPosition === -1) {
 
         // Set isError to true
-        const tempCopy = mods.filter((m) => m.courseCode !== courseCode);
+        const tempCopy = mods.filter((m) => m.moduleId !== moduleId);
         const updatedModule = { ...module, isError: true };
 
         console.log(errorMods)
@@ -65,7 +65,7 @@ const corequisiteCheck = ({module, mods, validationResult, errorMods}) => {
         validationResult.message = message
     };
     
-    const { courseCode, isError, term, requirements } = module;
+    const { moduleId, isError, term, requirements } = module;
     const coreqs = requirements.corequisites;
     
     if (coreqs.length < 1) {
@@ -74,7 +74,7 @@ const corequisiteCheck = ({module, mods, validationResult, errorMods}) => {
     }
     
     const handleError = (message) => {
-        const tempCopy = mods.filter((m) => m.courseCode !== courseCode);
+        const tempCopy = mods.filter((m) => m.moduleId !== moduleId);
         const updatedModule = { ...module, isError: true };
 
 
@@ -88,7 +88,7 @@ const corequisiteCheck = ({module, mods, validationResult, errorMods}) => {
     };
     
     for (const cr of coreqs) {
-        const coReq = mods.find((m) => m.courseCode === cr);
+        const coReq = mods.find((m) => m.moduleId === cr);
     
         if (!coReq) {
             const message = "Corequisite not found! (" + coreqs + ")"
@@ -115,7 +115,7 @@ const mutuallyexclusiveCheck = ({module, mods, validationResult, errorMods}) => 
         validationResult.message = message
     };
     
-    const { courseCode, isError, term, requirements } = module;
+    const { moduleId, isError, term, requirements } = module;
     const mutualexes = requirements.mutuallyExclusive;
 
     
@@ -126,11 +126,11 @@ const mutuallyexclusiveCheck = ({module, mods, validationResult, errorMods}) => 
     
     
     for (const me of mutualexes) {
-        const mutualex = mods.findIndex((m) => m.courseCode === me);
+        const mutualex = mods.findIndex((m) => m.moduleId === me);
         
         //if found
         if (mutualex >= 0) {
-            const tempCopy = mods.filter((m) => m.courseCode !== courseCode);
+            const tempCopy = mods.filter((m) => m.moduleId !== moduleId);
             const updatedModule = { ...module, isError: true };
 
 

@@ -4,6 +4,7 @@ import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
+import com.smods.backend.dto.PlanRequest;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -21,14 +22,18 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
+    private final DegreeRepository degreeRepository;
+    private final MajorRepository majorRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, DegreeRepository degreeRepository, MajorRepository majorRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
+        this.degreeRepository = degreeRepository;
+        this.majorRepository = majorRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -38,19 +43,21 @@ public class PlanService {
     }
 
     @Transactional
-    public Plan createPlan(Long userId, Plan plan) {
+    public Plan createPlan(Long userId, PlanRequest planRequest) {
         authorizationService.checkUserAuthorization(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Check for duplicate plan name
-        if (planRepository.existsByUserAndPlanName(user, plan.getPlanName())) {
-            throw new PlanNameConflictException("A plan with the name '" + plan.getPlanName() + "' already exists.");
+        if (planRepository.existsByUserAndPlanName(user, planRequest.getPlanName())) {
+            throw new PlanNameConflictException("A plan with the name '" + planRequest.getPlanName() + "' already exists.");
         }
 
+        Degree degree = degreeRepository.findById(planRequest.getDegreeName()).orElseThrow(() -> new RuntimeException("Degree not found"));
+        Major firstMajor = majorRepository.findById(planRequest.getFirstMajorName()).orElseThrow(() -> new RuntimeException("First major not found"));
+        Major secondMajor = majorRepository.findById(planRequest.getSecondMajorName()).orElseThrow(() -> new RuntimeException("Second major not found"));
+
         Long nextPlanId = planRepository.findMaxPlanIdByUserId(userId) + 1;
-        plan.setPlanId(new PlanKey(nextPlanId, userId));
-        plan.setUser(user);
-        plan.setCreationDateTime(ZonedDateTime.now());
+        Plan plan = new Plan(new PlanKey(nextPlanId, userId), planRequest.getPlanName(), ZonedDateTime.now(), user, degree, firstMajor, secondMajor);
         return planRepository.save(plan);
     }
 
@@ -103,6 +110,7 @@ public class PlanService {
         }
 
         PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+        planModuleGPA.setModule(module);
         planModuleGPARepository.save(planModuleGPA);
 
         return validatePlanModules(planId, userId);

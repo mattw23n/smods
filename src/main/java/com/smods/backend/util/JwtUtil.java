@@ -1,5 +1,6 @@
 package com.smods.backend.util;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +18,19 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final SecretKey secretKey;
     private final long jwtExpirationInMs = 604800000; // 7 days
     private final long refreshExpirationInMs = 2592000000L; // 30 days
+
+    public JwtUtil() {
+        Dotenv dotenv = Dotenv.load();
+        String secret = dotenv.get("JWT_SECRET");
+        if (secret == null) {
+            throw new IllegalStateException("JWT_SECRET environment variable not set");
+        }
+        byte[] decodedKey = Base64.getDecoder().decode(secret);
+        this.secretKey = Keys.hmacShaKeyFor(decodedKey);
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

@@ -72,7 +72,7 @@ public class UserService {
         }
 
         List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> new PlanDTO(
-                plan.getPlanId().getPlanId(),
+                plan.getPlanKey().getPlanId(),
                 plan.getPlanName(),
                 plan.getDegree().getDegreeName(),
                 plan.getFirstMajor().getMajorName(),

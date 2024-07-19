@@ -1,28 +1,34 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Link, useNavigate} from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
-import {UserContext} from "../data/user";
+import { UserContext } from "../data/user";
 
 const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
     const { username, plans = [], userId } = user;
 
+    useEffect(() => {
+        console.log('User context in Content component:', user); // Debugging user context
+    }, [user]);
+
     const majors = [
-        { Title: "Computer Science", Tracks: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
-        { Title: "Information Systems", Tracks: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
-        { Title: "Software Engineering", Tracks: ["Not Applicable"] },
-        { Title: "Computing & Law", Tracks: ["Not Applicable"] },
+        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+        { Title: "Information Systems", Majors: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
+        { Title: "Software Engineering", Majors: ["Not Applicable"] },
+        { Title: "Computing & Law", Majors: ["Not Applicable"] },
     ];
 
     const [selectedTitle, setSelectedTitle] = useState("");
     const [selectedDegree, setSelectedDegree] = useState("");
-    const [selectedTrack, setSelectedTrack] = useState("");
+    const [selectedMajor1, setSelectedMajor1] = useState("");
+    const [selectedMajor2, setSelectedMajor2] = useState("");
     const [errors, setErrors] = useState({
         title: "",
         degree: "",
-        track: "",
+        major1: "",
+        major2: "",
     });
 
     useEffect(() => {
@@ -33,8 +39,12 @@ const Content = ({ user, setUser }) => {
         setSelectedDegree(event.target.value);
     };
 
-    const handleTrackChange = (event) => {
-        setSelectedTrack(event.target.value);
+    const handleMajor1Change = (event) => {
+        setSelectedMajor1(event.target.value);
+    };
+
+    const handleMajor2Change = (event) => {
+        setSelectedMajor2(event.target.value);
     };
 
     const handleTitleChange = (event) => {
@@ -48,7 +58,8 @@ const Content = ({ user, setUser }) => {
         const newErrors = {
             title: selectedTitle ? '' : 'Title is required',
             degree: selectedDegree ? '' : 'Degree is required',
-            track: selectedTrack ? '' : 'Track is required',
+            major1: selectedMajor1 ? '' : 'First major is required',
+            major2: selectedMajor2 ? '' : 'Second major is required',
         };
 
         setErrors(newErrors);
@@ -60,30 +71,16 @@ const Content = ({ user, setUser }) => {
         }
 
         // Check if there are no errors
-        if (!newErrors.title && !newErrors.degree && !newErrors.track) {
+        if (!newErrors.title && !newErrors.degree && !newErrors.major1 && !newErrors.major2) {
             // Form is valid, proceed with form submission
             console.log('Form submitted');
 
-            const { modules, handbook } = selectedDegree;
-
-            const newTracks = [selectedTrack];
-
             const newPlan = {
                 planName: selectedTitle,
-                degree: selectedDegree,
-                tracks: newTracks,
-                handbook: handbook,
-                mods: modules,
+                degreeName: selectedDegree,
+                firstMajorName: selectedMajor1,
+                secondMajorName: selectedMajor2,
             };
-
-            console.log('New plan:', newPlan); // Debugging new plan object
-            console.log('User ID:', userId); // Debugging userId
-
-            const jwtToken = localStorage.getItem('jwt');
-            if (!jwtToken) {
-                console.error('JWT token is not available');
-                return;
-            }
 
             try {
                 const response = await fetch(`http://localhost:8080/api/users/${userId}/plans`, {
@@ -102,7 +99,7 @@ const Content = ({ user, setUser }) => {
                         ...prevUser,
                         plans: updatedPlans,
                     }));
-                    navigate(`/plan/${createdPlan.planId.planId}`);
+                    navigate(`/plan/${createdPlan.planKey.planId}`);
                 } else {
                     console.error('Failed to create plan:', response.statusText);
                 }
@@ -112,8 +109,8 @@ const Content = ({ user, setUser }) => {
         }
     };
 
-    const selectedDegreeTracks = selectedDegree
-        ? majors.find((m) => m.Title === selectedDegree)?.Tracks || []
+    const selectedDegreeMajors = selectedDegree
+        ? majors.find((m) => m.Title === selectedDegree)?.Majors || []
         : [];
 
     return (
@@ -153,8 +150,9 @@ const Content = ({ user, setUser }) => {
                                 {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
                             </div>
                             <div>
-                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Degree </label>
+                                <label htmlFor="Degree" className="block text-xs font-bold font-poppins"> Degree </label>
                                 <select
+                                    id="Degree"
                                     className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
                                     value={selectedDegree}
                                     onChange={handleDegreeChange}>
@@ -168,20 +166,38 @@ const Content = ({ user, setUser }) => {
                                 {errors.degree && <p className="text-red-500 text-xs mt-1">{errors.degree}</p>}
                             </div>
                             <div>
-                                <label htmlFor="PlanName" className="block text-xs font-bold font-poppins"> Track </label>
+                                <label htmlFor="Major1" className="block text-xs font-bold font-poppins"> First Major </label>
                                 <select
+                                    id="Major1"
                                     className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
-                                    value={selectedTrack}
-                                    onChange={handleTrackChange}
+                                    value={selectedMajor1}
+                                    onChange={handleMajor1Change}
                                     disabled={!selectedDegree} >
-                                    <option disabled value="">Your Track</option>
-                                    {selectedDegreeTracks.map((track, index) => (
-                                        <option key={index} value={track}>
-                                            {track}
+                                    <option disabled value="">Select First Major</option>
+                                    {selectedDegreeMajors.map((major, index) => (
+                                        <option key={index} value={major}>
+                                            {major}
                                         </option>
                                     ))}
                                 </select>
-                                {errors.track && <p className="text-red-500 text-xs mt-1">{errors.track}</p>}
+                                {errors.major1 && <p className="text-red-500 text-xs mt-1">{errors.major1}</p>}
+                            </div>
+                            <div>
+                                <label htmlFor="Major2" className="block text-xs font-bold font-poppins"> Second Major </label>
+                                <select
+                                    id="Major2"
+                                    className="select mt-1 w-full rounded-xl border-gray-200 shadow-sm font-archivo sm:text-sm"
+                                    value={selectedMajor2}
+                                    onChange={handleMajor2Change}
+                                    disabled={!selectedDegree} >
+                                    <option disabled value="">Select Second Major</option>
+                                    {selectedDegreeMajors.map((major, index) => (
+                                        <option key={index} value={major}>
+                                            {major}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.major2 && <p className="text-red-500 text-xs mt-1">{errors.major2}</p>}
                             </div>
                             <button
                                 type="submit"

@@ -1,5 +1,7 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class Major {
 
     @ManyToOne
     @JoinColumn(name = "DEGREE_NAME")
+    @JsonBackReference
     private Degree degree;
 
     @ManyToMany
@@ -42,6 +45,10 @@ public class Major {
     private List<Module> trackModuleRequirement;
 
     public Major() {
+    }
+
+    public Major(String majorName) {
+        this.majorName = majorName;
     }
 
     public Major(String majorName, boolean firstMajor, boolean secondMajorSameSchool, boolean secondMajorDifferentSchool, Degree degree) {

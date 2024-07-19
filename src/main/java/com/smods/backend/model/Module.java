@@ -38,6 +38,7 @@ public class Module {
     };
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @JsonBackReference(value = "module-planModuleGPA")
     private  List<PlanModuleGPA> planModuleGPAs;
 
     @ManyToMany
@@ -46,6 +47,7 @@ public class Module {
             joinColumns = @JoinColumn(name = "MODULE_ID"),
             inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID")
     )
+    @JsonBackReference(value = "preRequisites")
     List<Module> preRequisites;
 
     @ManyToMany
@@ -54,6 +56,7 @@ public class Module {
             joinColumns = @JoinColumn(name = "MODULE_ID"),
             inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID")
     )
+    @JsonBackReference(value = "coRequisites")
     private List<Module> coRequisites;
 
     @ManyToMany
@@ -62,6 +65,7 @@ public class Module {
             joinColumns = @JoinColumn(name = "MODULE_ID"),
             inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID")
     )
+    @JsonBackReference(value = "mutuallyExclusives")
     private List<Module> mutuallyExclusives;
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)

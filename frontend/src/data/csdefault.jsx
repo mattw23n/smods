@@ -2,7 +2,7 @@ import React from "react"
 
 const DEFAULT_CS_MODULES = [
     {
-        courseCode: "COR3001", courseTitle: "Big Questions", courseType: "uc", courseLink: "",
+        moduleId: "COR3001", moduleName: "Big Questions", courseType: "uc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -12,7 +12,7 @@ const DEFAULT_CS_MODULES = [
         isError: false,
     },
     {
-        courseCode: "COR1201", courseTitle: "Calculus", courseType: "uc", courseLink: "",
+        moduleId: "COR1201", moduleName: "Calculus", courseType: "uc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],

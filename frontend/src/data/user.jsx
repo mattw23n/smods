@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { DEFAULT_PLANS, DEFAULT_TEMPLATES } from "./plans";
 
 const templates = [
-    { title: "Double", date: "30 June 2024", degree: "Computer Science", tracks: ["Artificial Intelligence", "Cybersecurity"] },
-    { title: "Skynet", date: "30 June 2024", degree: "Computer Science", tracks: ["Artificial Intelligence"] },
+    { title: "Double", date: "30 June 2024", degree: "Computer Science", majors: ["Artificial Intelligence", "Cybersecurity"] },
+    { title: "Skynet", date: "30 June 2024", degree: "Computer Science", majors: ["Artificial Intelligence"] },
 ];
 
 export const TemplateUser = {
