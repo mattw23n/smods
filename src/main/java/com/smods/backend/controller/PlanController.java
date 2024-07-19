@@ -1,9 +1,8 @@
 package com.smods.backend.controller;
 
 import com.smods.backend.dto.ModuleValidationResponse;
-import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.model.User;
+import com.smods.backend.model.*;
+import com.smods.backend.dto.PlanRequest;
 import com.smods.backend.service.PlanService;
 import com.smods.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,10 @@ public class PlanController {
     }
 
     @PostMapping
-    public ResponseEntity<Plan> createPlan(@PathVariable Long userId, @RequestBody Plan plan) {
-        checkUserAuthorization(userId);
-        Plan createdPlan = planService.createPlan(userId, plan);
+    public ResponseEntity<Plan> createPlan(
+            @PathVariable Long userId,
+            @RequestBody PlanRequest planRequest) {
+        Plan createdPlan = planService.createPlan(userId, planRequest);
         return ResponseEntity.ok(createdPlan);
     }
 

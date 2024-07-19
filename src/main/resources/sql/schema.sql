@@ -144,3 +144,19 @@ DELETE FROM `plan_module_gpa`;
 select * from `plan`;
 delete from `plan`;
 
+INSERT INTO DEGREE (DEGREE_NAME)
+VALUES ('Computer Science'), ('Information Systems'), ('Software Engineering'), ('Computing & Law');
+
+INSERT INTO MAJOR (MAJOR_NAME, FIRST_MAJOR, SECOND_MAJOR_SAME_SCHOOL, SECOND_MAJOR_DIFFERENT_SCHOOL, DEGREE_NAME)
+VALUES
+    ('Artificial Intelligence', true, false, false, 'Computer Science'),
+    ('Cybersecurity', true, false, false, 'Computer Science'),
+    ('Cyberphysical Systems', true, false, false, 'Computer Science'),
+    ('Business Analytics', true, false, false, 'Information Systems'),
+    ('Product Development', true, false, false, 'Information Systems'),
+    ('Financial Technology', true, false, false, 'Information Systems'),
+    ('Smart-City Management & Technology', true, false, false, 'Information Systems'),
+    ('Software Engineering', true, false, false, 'Software Engineering'),
+    ('Not Applicable', true, false, false, 'Computing & Law');
+
+

@@ -1,5 +1,7 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class Major {
 
     @ManyToOne
     @JoinColumn(name = "DEGREE_NAME")
+    @JsonBackReference
     private Degree degree;
 
     @ManyToMany
@@ -39,9 +42,13 @@ public class Major {
             joinColumns = @JoinColumn(name = "MAJOR_NAME"),
             inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
     )
-    private List<Module> trackModuleRequirment;
+    private List<Module> trackModuleRequirement;
 
     public Major() {
+    }
+
+    public Major(String majorName) {
+        this.majorName = majorName;
     }
 
     public Major(String majorName, boolean firstMajor, boolean secondMajorSameSchool, boolean secondMajorDifferentSchool, Degree degree) {
@@ -100,12 +107,12 @@ public class Major {
         this.additionalSecondMajorModuleRequirement = additionalSecondMajorModuleRequirement;
     }
 
-    public List<Module> getTrackModuleRequirment() {
-        return trackModuleRequirment;
+    public List<Module> getTrackModuleRequirement() {
+        return trackModuleRequirement;
     }
 
-    public void setTrackModuleRequirment(List<Module> trackModuleRequirment) {
-        this.trackModuleRequirment = trackModuleRequirment;
+    public void setTrackModuleRequirement(List<Module> trackModuleRequirement) {
+        this.trackModuleRequirement = trackModuleRequirement;
     }
 
     @Override
@@ -113,12 +120,12 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirment, major.trackModuleRequirment);
+        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirement, major.additionalSecondMajorModuleRequirement) && Objects.equals(trackModuleRequirement, major.trackModuleRequirement);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirment);
+        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, degree, additionalSecondMajorModuleRequirement, trackModuleRequirement);
     }
 
     @Override
@@ -130,7 +137,7 @@ public class Major {
                 ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
                 ", degree=" + degree +
                 ", additionalSecondMajorModuleRequirement=" + additionalSecondMajorModuleRequirement +
-                ", trackModuleRequirment=" + trackModuleRequirment +
+                ", trackModuleRequirement=" + trackModuleRequirement +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Map;
@@ -20,12 +21,17 @@ public class Degree {
     private Map<String, Double> gradRequirement;
 
     @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Major> majors;
 
     @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL)
     private List<MajorModuleRequirement> majorModuleRequirements;
 
     public Degree() {
+    }
+
+    public Degree(String degreeName) {
+        this.degreeName = degreeName;
     }
 
     public Degree(String degreeName, List<Major> majors) {

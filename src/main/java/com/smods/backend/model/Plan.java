@@ -24,9 +24,11 @@ public class Plan {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
+    @JsonBackReference(value = "user-plan")
     private User user;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "plan-planModuleGPA")
     private List<PlanModuleGPA> planModuleGPAs;
 
     @ManyToOne
@@ -44,10 +46,14 @@ public class Plan {
     public Plan() {
     }
 
-    public Plan(PlanKey planKey, String planName, ZonedDateTime creationDateTime) {
+    public Plan(PlanKey planKey, String planName, ZonedDateTime creationDateTime, User user, Degree degree, Major firstMajor, Major secondMajor) {
         this.planKey = planKey;
         this.planName = planName;
         this.creationDateTime = creationDateTime;
+        this.user = user;
+        this.degree = degree;
+        this.firstMajor = firstMajor;
+        this.secondMajor = secondMajor;
     }
 
     public PlanKey getPlanKey() {

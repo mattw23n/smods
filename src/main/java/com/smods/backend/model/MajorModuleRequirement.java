@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smods.backend.model.composite_key.MajorModuleRequirementKey;
 import jakarta.persistence.*;
 
@@ -17,11 +18,13 @@ public class MajorModuleRequirement {
     @ManyToOne
     @MapsId("moduleId")
     @JoinColumn(name = "MODULE_ID")
+    @JsonBackReference
     private Module module;
 
     @ManyToOne
     @MapsId("degreeName")
     @JoinColumn(name = "DEGREE_NAME")
+    @JsonBackReference
     private Degree degree;
 
     public MajorModuleRequirement() {
