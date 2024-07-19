@@ -15,6 +15,6 @@ public interface PlanRepository extends JpaRepository<Plan, PlanKey> {
 
     boolean existsByUserAndPlanName(User user, String planName);
 
-    @Query("SELECT COALESCE(MAX(p.planId.planId), 0) FROM Plan p WHERE p.user.userId = :userId")
+    @Query("SELECT COALESCE(MAX(p.planKey.planId), 0) FROM Plan p WHERE p.planKey.userId = :userId")
     Long findMaxPlanIdByUserId(Long userId);
 }

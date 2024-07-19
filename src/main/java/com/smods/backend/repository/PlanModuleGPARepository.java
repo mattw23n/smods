@@ -16,23 +16,23 @@ public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, Pl
 
     boolean existsById(@NonNull PlanModuleGPAKey id);
 
-    @Query("SELECT pmg FROM PlanModuleGPA pmg WHERE pmg.plan.planId.planId = :planId AND pmg.plan.planId.userId = :userId")
+    @Query("SELECT pmg FROM PlanModuleGPA pmg WHERE pmg.plan.planKey.planId = :planId AND pmg.plan.planKey.userId = :userId")
     List<PlanModuleGPA> findByPlanIdAndUserId(@Param("planId") Long planId, @Param("userId") Long userId);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.plan.planId.planId = :planId " +
-            "AND p.plan.planId.userId = :userId " +
+            "WHERE p.plan.planKey.planId = :planId " +
+            "AND p.plan.planKey.userId = :userId " +
             "AND p.term < :term")
     List<Module> findAllPlanModulesByIdBeforeTerm(@Param("planId") Long planId, @Param("userId") Long userId, @Param("term") int term);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.plan.planId.planId = :planId " +
-            "AND p.plan.planId.userId = :userId " +
+            "WHERE p.plan.planKey.planId = :planId " +
+            "AND p.plan.planKey.userId = :userId " +
             "AND p.term = :term")
     List<Module> findAllModulesByPlanIdAndTerm(@Param("planId") Long planId, @Param("userId") Long userId, @Param("term") int term);
 
     @Query("SELECT p.module FROM PlanModuleGPA p " +
-            "WHERE p.plan.planId.planId = :planId " +
-            "AND p.plan.planId.userId = :userId")
+            "WHERE p.plan.planKey.planId = :planId " +
+            "AND p.plan.planKey.userId = :userId")
     List<Module> findAllModulesByPlanId(@Param("planId") Long planId, @Param("userId") Long userId);
 }

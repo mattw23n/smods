@@ -13,7 +13,7 @@ import java.util.*;
 public class Plan {
 
     @EmbeddedId
-    private PlanKey planId;
+    private PlanKey planKey;
 
     @Column(name = "PLAN_NAME")
     private String planName;
@@ -44,18 +44,18 @@ public class Plan {
     public Plan() {
     }
 
-    public Plan(PlanKey planId, String planName, ZonedDateTime creationDateTime) {
-        this.planId = planId;
+    public Plan(PlanKey planKey, String planName, ZonedDateTime creationDateTime) {
+        this.planKey = planKey;
         this.planName = planName;
         this.creationDateTime = creationDateTime;
     }
 
-    public PlanKey getPlanId() {
-        return planId;
+    public PlanKey getPlanKey() {
+        return planKey;
     }
 
-    public void setPlanId(PlanKey planId) {
-        this.planId = planId;
+    public void setPlanKey(PlanKey planKey) {
+        this.planKey = planKey;
     }
 
     public String getPlanName() {
@@ -119,18 +119,18 @@ public class Plan {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(degree, plan.degree) && Objects.equals(firstMajor, plan.firstMajor) && Objects.equals(secondMajor, plan.secondMajor);
+        return Objects.equals(planKey, plan.planKey) && Objects.equals(planName, plan.planName) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(degree, plan.degree) && Objects.equals(firstMajor, plan.firstMajor) && Objects.equals(secondMajor, plan.secondMajor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, planName, creationDateTime, user, planModuleGPAs, degree, firstMajor, secondMajor);
+        return Objects.hash(planKey, planName, creationDateTime, user, planModuleGPAs, degree, firstMajor, secondMajor);
     }
 
     @Override
     public String toString() {
         return "Plan{" +
-                "planId=" + planId +
+                "planKey=" + planKey +
                 ", planName='" + planName + '\'' +
                 ", creationDateTime=" + creationDateTime +
                 ", user=" + user +
