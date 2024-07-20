@@ -12,13 +12,13 @@ public class MajorModuleRequirement {
     @EmbeddedId
     private  MajorModuleRequirementKey majorModuleRequirementId;
 
-    @Column(name = "IS_MAJOR_CORE?")
+    @Column(name = "IS_MAJOR_CORE?", nullable = false)
     private boolean isMajorCore;
 
-    @Column(name = "IS_SMU_CORE?")
+    @Column(name = "IS_SMU_CORE?", nullable = false)
     private boolean isSMUCore;
 
-    @Column(name = "BASKET")
+    @Column(name = "BASKET", nullable = false)
     private String basket;
 
     @Column(name = "SUBTYPE")
@@ -39,12 +39,11 @@ public class MajorModuleRequirement {
     public MajorModuleRequirement() {
     }
 
-    public MajorModuleRequirement(MajorModuleRequirementKey majorModuleRequirementId, boolean isMajorCore, boolean isSMUCore, String basket, String subtype) {
+    public MajorModuleRequirement(MajorModuleRequirementKey majorModuleRequirementId, boolean isMajorCore, boolean isSMUCore, String basket) {
         this.majorModuleRequirementId = majorModuleRequirementId;
         this.isMajorCore = isMajorCore;
         this.isSMUCore = isSMUCore;
         this.basket = basket;
-        this.subtype = subtype;
     }
 
     public MajorModuleRequirementKey getMajorModuleRequirementId() {

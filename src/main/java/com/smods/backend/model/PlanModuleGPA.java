@@ -17,19 +17,19 @@ public class PlanModuleGPA {
     @Column(name = "GPA")
     private double gpa;
 
-    @Column(name = "TERM")
+    @Column(name = "TERM", nullable = false)
     private int term;
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false),
-            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID", insertable = false, updatable = false)
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false, nullable = false),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID", insertable = false, updatable = false, nullable = false)
     })
     @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
     @ManyToOne
-    @JoinColumn(name = "MODULE_ID", referencedColumnName = "MODULE_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "MODULE_ID", referencedColumnName = "MODULE_ID", insertable = false, updatable = false, nullable = false)
     private Module module;
 
     public PlanModuleGPA() {

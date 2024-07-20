@@ -15,16 +15,16 @@ public class Plan {
     @EmbeddedId
     private PlanKey planKey;
 
-    @Column(name = "PLAN_NAME")
+    @Column(name = "PLAN_NAME", nullable = false)
     private String planName;
 
-    @Column(name = "CREATION_DATE")
+    @Column(name = "CREATION_DATE", nullable = false)
     private ZonedDateTime creationDateTime;
 
 
     @ManyToOne
     @MapsId("userId")
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "USER_ID", nullable = false)
     @JsonBackReference(value = "user-plan")
     private User user;
 
@@ -33,7 +33,7 @@ public class Plan {
     private List<PlanModuleGPA> planModuleGPAs;
 
     @ManyToOne
-    @JoinColumn(name = "DEGREE_NAME")
+    @JoinColumn(name = "DEGREE_NAME", nullable = false)
     private Degree degree;
 
     @ManyToOne

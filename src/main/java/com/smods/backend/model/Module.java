@@ -18,10 +18,10 @@ public class Module {
     @Column(name = "MODULE_ID")
     private String moduleId;
 
-    @Column(name = "MODULE_NAME")
+    @Column(name = "MODULE_NAME", nullable = false)
     private String moduleName;
 
-    @Column(name = "COURSE_UNIT")
+    @Column(name = "COURSE_UNIT", nullable = false)
     private Double courseUnit;
 
     public static final String[][] hierarchy = {
@@ -36,8 +36,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "PRE_REQUISITE",
-            joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID")
+            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID", nullable = false)
     )
     @JsonBackReference(value = "preRequisites")
     List<Module> preRequisites;
@@ -45,8 +45,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "CO_REQUISITE",
-            joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID")
+            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID", nullable = false)
     )
     @JsonBackReference(value = "coRequisites")
     private List<Module> coRequisites;
@@ -54,8 +54,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "MUTUALLY_EXCLUSIVE",
-            joinColumns = @JoinColumn(name = "MODULE_ID"),
-            inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID")
+            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID", nullable = false)
     )
     @JsonBackReference(value = "mutuallyExclusives")
     private List<Module> mutuallyExclusives;

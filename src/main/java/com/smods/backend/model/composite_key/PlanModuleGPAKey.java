@@ -10,7 +10,7 @@ import java.util.Objects;
 public class PlanModuleGPAKey implements Serializable {
     private PlanKey planKey;
 
-    @Column(name = "MODULE_ID")
+    @Column(name = "MODULE_ID", nullable = false)
     private String moduleId;
 
     public PlanModuleGPAKey() {

@@ -14,23 +14,23 @@ public class Major {
     @Column(name = "MAJOR_NAME")
     private String majorName;
 
-    @Column(name = "FIRST_MAJOR?")
+    @Column(name = "FIRST_MAJOR?", nullable = false)
     private boolean firstMajor;
 
-    @Column(name = "SECOND_MAJOR_SAME_SCHOOL?")
+    @Column(name = "SECOND_MAJOR_SAME_SCHOOL?", nullable = false)
     private boolean secondMajorSameSchool;
 
-    @Column(name = "SECOND_MAJOR_DIFFERENT_SCHOOL?")
+    @Column(name = "SECOND_MAJOR_DIFFERENT_SCHOOL?", nullable = false)
     private boolean secondMajorDifferentSchool;
 
-    @Column(name = "NUM_OF_SECOND_MAJOR_ELECTIVE")
+    @Column(name = "NUM_OF_SECOND_MAJOR_ELECTIVE", nullable = false)
     private Integer numOfSecondMajorElective;
 
-    @Column(name = "NUM_OF_FIRST_MAJOR_ELECTIVE")
+    @Column(name = "NUM_OF_FIRST_MAJOR_ELECTIVE", nullable = false)
     private Integer numOfFirstMajorElective;
 
     @ManyToOne
-    @JoinColumn(name = "DEGREE_NAME")
+    @JoinColumn(name = "DEGREE_NAME", nullable = false)
     @JsonBackReference
     private Degree degree;
 

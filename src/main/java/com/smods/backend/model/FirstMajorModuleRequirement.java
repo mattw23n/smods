@@ -12,17 +12,17 @@ public class FirstMajorModuleRequirement {
     @EmbeddedId
     private MajorModuleKey firstMajorModuleRequirementId;
 
-    @Column(name = "IS_COMPULSORY?")
+    @Column(name = "IS_COMPULSORY?", nullable = false)
     private boolean isCompulsory;
 
     @ManyToOne
-    @JoinColumn(name = "MAJOR_NAME")
+    @JoinColumn(name = "MAJOR_NAME", nullable = false)
     @MapsId("majorName")
     @JsonBackReference
     private Major major;
 
     @ManyToOne
-    @JoinColumn(name = "MODULE_ID")
+    @JoinColumn(name = "MODULE_ID", nullable = false)
     @MapsId("moduleId")
     private Module module;
 

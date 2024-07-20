@@ -8,10 +8,10 @@ import java.util.Objects;
 
 @Embeddable
 public class MajorModuleKey implements Serializable {
-    @Column(name = "MAJOR_NAME")
+    @Column(name = "MAJOR_NAME", nullable = false)
     private String majorName;
 
-    @Column(name = "MODULE_ID")
+    @Column(name = "MODULE_ID", nullable = false)
     private String moduleId;
 
     public MajorModuleKey() {

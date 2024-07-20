@@ -3,6 +3,7 @@ package com.smods.backend.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smods.backend.model.composite_key.MajorModuleKey;
 import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -12,17 +13,17 @@ public class AdditionalSecondMajorModuleRequirement {
     @EmbeddedId
     private MajorModuleKey additionalSecondMajorModuleRequirementId;
 
-    @Column(name = "IS_COMPULSORY?")
+    @Column(name = "IS_COMPULSORY?", nullable = false)
     private boolean isCompulsory;
 
     @ManyToOne
-    @JoinColumn(name = "MAJOR_NAME")
+    @JoinColumn(name = "MAJOR_NAME", nullable = false)
     @MapsId("majorName")
     @JsonBackReference
     private Major major;
 
     @ManyToOne
-    @JoinColumn(name = "MODULE_ID")
+    @JoinColumn(name = "MODULE_ID", nullable = false)
     @MapsId("moduleId")
     private Module module;
 

@@ -8,10 +8,10 @@ import java.util.Objects;
 
 @Embeddable
 public class MajorModuleRequirementKey implements Serializable {
-    @Column(name = "DEGREE_NAME")
+    @Column(name = "DEGREE_NAME", nullable = false)
     private String degreeName;
 
-    @Column(name = "MODULE_ID")
+    @Column(name = "MODULE_ID", nullable = false)
     private String moduleId;
 
     public MajorModuleRequirementKey() {

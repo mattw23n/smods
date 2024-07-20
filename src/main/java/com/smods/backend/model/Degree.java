@@ -16,8 +16,8 @@ public class Degree {
 
     @ElementCollection
     @CollectionTable(name = "GRAD_REQUIREMENT", joinColumns = @JoinColumn(name = "DEGREE_NAME"))
-    @MapKeyColumn(name = "REQUIREMENT_TYPE")
-    @Column(name = "COURSE_UNIT")
+    @MapKeyColumn(name = "REQUIREMENT_TYPE", nullable = false)
+    @Column(name = "COURSE_UNIT", nullable = false)
     private Map<String, Double> gradRequirement;
 
     @OneToMany(mappedBy = "degree", cascade = CascadeType.ALL)
