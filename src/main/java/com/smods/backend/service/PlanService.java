@@ -303,7 +303,7 @@ public class PlanService {
         List<PlanModuleGPA> planModules = plan.getPlanModuleGPAs();
 
         for (PlanModuleGPA planModule : planModules){
-            updatePlanRequirementProgress(planModule.getPlan(), targetRequirement, progressRequirement, planModule.getModule());
+            updatePlanRequirementProgress(plan, targetRequirement, progressRequirement, planModule.getModule());
         }
 
         return progressRequirement;
