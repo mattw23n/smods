@@ -220,7 +220,7 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
     const isGroupView = view === 1; // Determine if the view is group view
 
     const [errorDescription, setErrorDescription] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(true); // Track modal state
+    const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
 
     useEffect(() => {
         // Toggle modal visibility based on isModalOpen state
@@ -238,20 +238,19 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
         setIsModalOpen(false); // Close modal
     };
 
-    const renderValidationResponse = (res) => {
-        // const res = {
-        //     "unsatisfiedPreRequisites": ["forgot to take mod A", "forgor to Mod b", "i forgor"],
-        //     "unsatisfiedCoRequisites": ["COREQ", "COREQ", "COREQ"],
-        //     "mutuallyExclusive": ["MUTUALLY", "EXCLUSIVE"]
-        // };
+    const processValidationResponse = (res) => {
         if (!res || (!res.unsatisfiedPreRequisites.length && !res.unsatisfiedCoRequisites.length && !res.mutuallyExclusiveConflicts.length)) {
-            return null; // Return null if all arrays are empty
+            return []; // Return empty array if all arrays are empty
         }
         
         const errorDesc = [];
         
         for (const key in res) {
-            if (res[key].length > 0) {
+            if (key === 'planModuleGPAs') {
+                continue; // Skip the 'planModuleGPAs' attribute
+            }
+    
+            if (Array.isArray(res[key]) && res[key].length > 0) {
                 errorDesc.push({
                     title: key,
                     desc: res[key]
@@ -259,20 +258,47 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
             }
         }
         
-        setErrorDescription(errorDesc);
-    }; // Add dependencies if needed
+        return errorDesc;
+    };
     
 
     useEffect(() => {
-        if (validationResponse && !validationResponse.unsatisfiedPreRequisites.length && !validationResponse.unsatisfiedCoRequisites.length && !validationResponse.mutuallyExclusiveConflicts.length) {
-            setValidationResponse(null);
+        if (validationResponse) {
+            const processedErrors = processValidationResponse(validationResponse);
+            setErrorDescription(processedErrors);
+            if (processedErrors.length > 0) {
+                setIsModalOpen(true);
+            }
         }
-    }, [validationResponse, setValidationResponse]);
+    }, [validationResponse]);
 
     return (
         <div className="flex-grow">
             <Dashboard plan={plan} setPlan={setPlan} mods={mods} setValidationResponse={setValidationResponse}></Dashboard>
-            {validationResponse && renderValidationResponse(validationResponse)}
+            {validationResponse && (
+                <dialog id="validation_modal" className="modal rounded-xl">
+                    <div className="bg-white/30 rounded-xl p-4 relative">
+                        <button  onClick={closeValidationModal} className="absolute right-4 top-4">✕</button>
+                        <p className="font-bold text font-poppins mb-2">Error</p>
+
+                        <div className="rounded-lg bg-gray-100 max-w-72 items-center justify-between py-2 px-4 font-archivo">
+                            {errorDescription.map(str => (
+                                <div className="mb-2">
+                                    <p className="font-bold">{str.title}</p>
+                                    <ul className="list-disc text-sm mx-3">
+                                        {str.desc.map((desc, index) => (
+                                            <li key={index}>{desc}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                                                    
+                        </div>                
+                    </div>
+                </dialog> 
+            )
+            
+            }
             <div className={`${isEditMode ? `px-20 mb-10 flex gap-5` : "px-20 mb-10"}`}>
                 <div>
                     {!isGroupView && (
@@ -301,26 +327,7 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
                 )}
             </div>
 
-            <dialog id="validation_modal" className="modal rounded-xl">
-                <div className="bg-white/30 rounded-xl p-4 relative">
-                    <button  onClick={closeValidationModal} className="absolute right-4 top-4">✕</button>
-                    <p className="font-bold text font-poppins mb-2">Error</p>
-
-                    <div className="rounded-lg bg-gray-100 max-w-72 items-center justify-between py-2 px-4 font-archivo">
-                        {errorDescription.map(str => (
-                            <div className="mb-2">
-                                <p className="font-bold">{str.title}</p>
-                                <ul className="list-disc text-sm mx-3">
-                                    {str.desc.map((desc, index) => (
-                                        <li key={index}>{desc}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                                                
-                    </div>                
-                </div>
-            </dialog>  
+             
         </div>
     );
 }

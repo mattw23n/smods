@@ -3,7 +3,7 @@ import Mod from "./mods";
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
-        e.dataTransfer.setData("moduleId", module.moduleId);
+        e.dataTransfer.setData("moduleId", module.module.moduleId);
     };
 
     const isEmpty = searchResult.length === 0
