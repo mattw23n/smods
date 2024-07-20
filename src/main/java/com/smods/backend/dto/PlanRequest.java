@@ -1,6 +1,9 @@
 package com.smods.backend.dto;
 
+import jakarta.validation.constraints.Size;
+
 public class PlanRequest {
+    @Size(max = 16, message = "Plan name must be less than 16 characters")
     private String planName;
     private String degreeName;
     private String firstMajorName;
