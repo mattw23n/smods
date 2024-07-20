@@ -8,6 +8,7 @@ import CourseSearch from "../components/courseSearch";
 import Background from "../components/background";
 import html2canvas from 'html2canvas';
 import { useParams } from "react-router-dom";
+import Loading from "./loading";
 
 const PlanDetails = ({ plan, setPlan }) => {
     const { planName, degree, firstMajor, secondMajor, view } = plan;
@@ -27,7 +28,7 @@ const PlanDetails = ({ plan, setPlan }) => {
                     <p>{degree || 'N/A'}</p>
                 </div>
                 <div className="flex text-text font-archivo gap-2 text-sm">
-                    <p className="font-bold">Major:</p>
+                    <p className="font-bold">Majors:</p>
                     <div className="flex flex-col">
                         <p>{firstMajor || 'N/A'}</p>
                         <p>{secondMajor || 'N/A'}</p>
@@ -217,7 +218,7 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
     const isGroupView = view === 1; // Determine if the view is group view
 
     const renderValidationResponse = (response) => {
-        if (!response || !response.unsatisfiedPreRequisites.length && !response.unsatisfiedCoRequisites.length && !response.mutuallyExclusiveConflicts.length) {
+        if (!response || (!response.unsatisfiedPreRequisites.length && !response.unsatisfiedCoRequisites.length && !response.mutuallyExclusiveConflicts.length)) {
             return null; // Return null if all arrays are empty
         }
 
@@ -315,8 +316,11 @@ function Planning() {
                 setMods(selectedPlan.planModuleGPAs || []);
             }
         }
-    }, [user, id]
-);
+    }, [user, id]);
+
+    if (!plan) {
+        return <Loading />;
+    }
 
     return (
         <div className="relative flex flex-col min-h-screen">

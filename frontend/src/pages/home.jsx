@@ -90,6 +90,11 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
         }
     };
 
+    console.log('Plan:', plan);
+    console.log('Degree:', degree);
+    console.log('First Major:', firstMajor);
+    console.log('Second Major:', secondMajor);
+
     return (
         <div className="relative isolate z-10 backdrop-blur-sm shadow-lg ring-1 ring-black/5 bg-white/50 px-4 py-4 max-w-[260px] flex flex-col gap-y-4 rounded-3xl h-fit w-fit
         transform transition-transform hover:-translate-y-1 hover:border-accent hover:shadow-accent/50 hover:bg-white/70">
@@ -134,12 +139,12 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
                 <p className="text-xs font-archivo">{new Date(creationDateTime).toLocaleDateString()}</p>
             </div>
             <div className="px-4 py-2 bg-white/50 rounded-2xl text-sm font-archivo">
-                <p>Degree: {degree}</p>
+                <p>Degree: {degree || "N/A"}</p>
                 <div className="flex gap-x-1">
                     <p>Majors: </p>
                     <div className="flex flex-col w-40">
-                        {firstMajor && <span>{firstMajor}</span>}
-                        {secondMajor && <span>{secondMajor}</span>}
+                        {firstMajor ? <span>{firstMajor}</span> : <span>N/A</span>}
+                        {secondMajor ? <span>{secondMajor}</span> : <span>N/A</span>}
                     </div>
                 </div>
             </div>

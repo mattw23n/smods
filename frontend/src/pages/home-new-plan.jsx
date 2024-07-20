@@ -31,6 +31,8 @@ const Content = ({ user, setUser }) => {
         major2: "",
     });
 
+    const [confirmationMessage, setConfirmationMessage] = useState("");
+
     useEffect(() => {
         console.log('User context:', user); // Debugging user context
     }, [user]);
@@ -99,7 +101,7 @@ const Content = ({ user, setUser }) => {
                         ...prevUser,
                         plans: updatedPlans,
                     }));
-                    navigate(`/home`);
+                    setConfirmationMessage("Plan created successfully!");
                 } else {
                     console.error('Failed to create plan:', response.statusText);
                 }
@@ -135,6 +137,11 @@ const Content = ({ user, setUser }) => {
                     </div>
                     <div className="max-w-none flex flex-col gap-2 text-text">
                         <p className="text-l font-poppins font-bold">🪄Create a New Plan</p>
+                        {confirmationMessage && (
+                            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+                                <p>{confirmationMessage}</p>
+                            </div>
+                        )}
                         <form className="isolate w-[600px] shadow-lg ring-1 ring-black/5 px-4 py-4 bg-white/50 rounded-3xl flex flex-col gap-5 text-text"
                               onSubmit={handleSubmit}>
                             <div>

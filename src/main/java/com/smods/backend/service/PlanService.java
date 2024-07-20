@@ -225,6 +225,12 @@ public class PlanService {
             requirementProgress.put(category, requirementProgress.get(category) + courseUnit);
         }
     }
+
+    public Optional<Plan> getPlanById(Long userId, Long planId) {
+        PlanKey planKey = new PlanKey(userId, planId);
+        return planRepository.findByPlanKey(planKey);
+    }
+
     private boolean isMajorCore(Plan plan, Module module){
         return moduleRepository
                 .findAllMajorCore(plan.getDegree().getDegreeName())
