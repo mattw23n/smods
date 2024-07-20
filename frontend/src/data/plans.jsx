@@ -8,7 +8,7 @@ export const DEFAULT_PLANS = [
         title:"Academic Weapon fr fr",
         date: "30 June 2024",
         degree:"Computer Science",
-        tracks:["Artificial Intelligence", "Cybersecurity"],
+        majors:["Artificial Intelligence", "Cybersecurity"],
         handbook:{
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",
@@ -23,7 +23,7 @@ export const DEFAULT_PLANS = [
         title:"Gilchris' Master Plan",
         date: "30 June 2024",
         degree:"Computer Science",
-        tracks:["Artificial Intelligence"],
+        majors:["Artificial Intelligence"],
         handbook:{
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",
@@ -38,7 +38,7 @@ export const DEFAULT_PLANS = [
         title:"I'm not him",
         date: "30 June 2024",
         degree:"Computer Science",
-        tracks:["Cyberphysical Systems"],
+        majors:["Cyberphysical Systems"],
         handbook:{
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",
@@ -53,7 +53,7 @@ export const DEFAULT_PLANS = [
         title:"hackerman 😎",
         date: "30 June 2024",
         degree:"Computer Science",
-        tracks:["Cybersecurity"],
+        majors:["Cybersecurity"],
         handbook:{
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",
@@ -72,7 +72,7 @@ export const DEFAULT_TEMPLATES = [
         title:"Skynet",
         date: "30 June 2024",
         degree:"Computer Science",
-        tracks:["Artificial Intelligence", "Cybersecurity"],
+        majors:["Artificial Intelligence", "Cybersecurity"],
         handbook:{
             name:"CSAcademicHandbook",
             link:"https://computing.smu.edu.sg/bsc-computer-science",

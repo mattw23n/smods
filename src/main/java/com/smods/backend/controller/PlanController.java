@@ -4,9 +4,8 @@ import java.util.*;
 
 import com.smods.backend.model.Module;
 import com.smods.backend.dto.ModuleValidationResponse;
-import com.smods.backend.model.Plan;
-import com.smods.backend.model.PlanModuleGPA;
-import com.smods.backend.model.User;
+import com.smods.backend.model.*;
+import com.smods.backend.dto.PlanRequest;
 import com.smods.backend.service.PlanService;
 import com.smods.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users/{userId}/plans")
@@ -54,9 +53,10 @@ public class PlanController {
     }
 
     @PostMapping
-    public ResponseEntity<Plan> createPlan(@PathVariable Long userId, @RequestBody Plan plan) {
-        checkUserAuthorization(userId);
-        Plan createdPlan = planService.createPlan(userId, plan);
+    public ResponseEntity<Plan> createPlan(
+            @PathVariable Long userId,
+            @RequestBody PlanRequest planRequest) {
+        Plan createdPlan = planService.createPlan(userId, planRequest);
         return ResponseEntity.ok(createdPlan);
     }
 
@@ -84,24 +84,30 @@ public class PlanController {
         return ResponseEntity.ok(planModules);
     }
 
-    @PutMapping("/{planId}/edit")
-    public ResponseEntity<ModuleValidationResponse> addModule(
+    @PutMapping("/{planId}/update")
+    public ResponseEntity<ModuleValidationResponse> updateModule(
             @PathVariable Long planId,
             @PathVariable Long userId,
             @RequestParam String moduleId,
-            @RequestParam int term) {
-        checkUserAuthorization(userId);
-        ModuleValidationResponse response = planService.addModule(planId, userId, moduleId, term);
+            @RequestParam int term,
+            @RequestParam(required = false) Boolean isAdding,
+            @RequestParam(required = false) Double gpa) {
+        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding, gpa);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{planId}/edit")
-    public ResponseEntity<ModuleValidationResponse> deleteModule(
-            @PathVariable Long planId,
-            @PathVariable Long userId,
-            @RequestParam String moduleId) {
+
+    @GetMapping("/{planId}/gradRequirement")
+    public ResponseEntity<Map<String, Double>> getPlanRequirementProgress(@PathVariable Long userId, @PathVariable Long planId) {
         checkUserAuthorization(userId);
-        ModuleValidationResponse response = planService.deleteModule(planId, userId, moduleId);
-        return ResponseEntity.ok(response);
+        Map<String, Double> requirementProgress = planService.getPlanRequirementProgress(userId, planId);
+        return ResponseEntity.ok(requirementProgress);
+    }
+
+    @GetMapping("/{planId}")
+    public ResponseEntity<Plan> getPlanById(@PathVariable Long userId, @PathVariable Long planId) {
+        Optional<Plan> plan = planService.getPlanById(userId, planId);
+        return plan.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }

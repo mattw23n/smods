@@ -4,6 +4,8 @@ import com.smods.backend.model.Module;
 import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -54,23 +56,19 @@ public class User {
     @Column(name = "DEGREE")
     private String degree;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "user-plan")
     private List<Plan> plans;
 
-    // Default constructor
-    public User() {}
+    public User() {
+    }
 
-    // Constructor
     public User(String username, String password, String email, String role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.emailVerified = false;
     }
-
-    // Getters and Setters
 
     public Long getUserId() {
         return userId;
@@ -152,14 +150,6 @@ public class User {
         this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
     }
 
-    public List<Plan> getPlans() {
-        return plans;
-    }
-
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
-    }
-
     public Year getAdmissionYear() {
         return admissionYear;
     }
@@ -176,23 +166,31 @@ public class User {
         this.degree = degree;
     }
 
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(userId, user.userId) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(role, user.role) && Objects.equals(emailVerified, user.emailVerified) && Objects.equals(verificationToken, user.verificationToken) && Objects.equals(tokenExpiryDate, user.tokenExpiryDate) && Objects.equals(passwordResetToken, user.passwordResetToken) && Objects.equals(passwordResetTokenExpiryDate, user.passwordResetTokenExpiryDate) && Objects.equals(admissionYear, user.admissionYear) && Objects.equals(degree, user.degree) && Objects.equals(plans, user.plans);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(userId, username, password, email, role, emailVerified, verificationToken, tokenExpiryDate, passwordResetToken, passwordResetTokenExpiryDate, admissionYear, degree, plans);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + userId +
+                "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
@@ -202,6 +200,8 @@ public class User {
                 ", tokenExpiryDate=" + tokenExpiryDate +
                 ", passwordResetToken='" + passwordResetToken + '\'' +
                 ", passwordResetTokenExpiryDate=" + passwordResetTokenExpiryDate +
+                ", admissionYear=" + admissionYear +
+                ", degree='" + degree + '\'' +
                 ", plans=" + plans +
                 '}';
     }

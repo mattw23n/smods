@@ -1,18 +1,23 @@
 import React, { useState } from "react";
-import Mod from "./mods";
-import allMods from "../data/allMods";
-
-const ALL_MODULES = allMods;
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
-        e.dataTransfer.setData("courseCode", module.moduleId);
+        e.dataTransfer.setData("moduleId", module.moduleId);
     };
 
     return (
-        <div className="bg-white p-2 rounded-3xl">
+        <div className="bg-white p-2 rounded-3xl max-w-full overflow-auto">
             {searchResult.map((m) => {
-                return <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={handleDragStart} />;
+                return (
+                    <div
+                        key={m.moduleId}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, m)}
+                        className="bg-gray-100 p-2 rounded-lg mb-2 cursor-pointer"
+                    >
+                        {m.moduleId} - {m.moduleName}
+                    </div>
+                );
             })}
         </div>
     );
@@ -106,7 +111,7 @@ const SearchBar = ({ plan }) => {
                 E.g. {getExampleByFilter(selectedFilter)}
             </div>
 
-            <form className="max-w-md mx-auto min-w-[400px] mb-4" onSubmit={handleSearchSubmit}>
+            <form className="max-w-full mb-4" onSubmit={handleSearchSubmit}>
                 <label htmlFor="default-search" className="mb-2 text-sm font-archivo text-gray-900 sr-only">Search</label>
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -138,7 +143,7 @@ const SearchBar = ({ plan }) => {
 
 const CourseSearch = ({ plan }) => {
     return (
-        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit">
+        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit max-w-full overflow-auto">
             <div>
                 <p className="font-poppins font-bold text-sm mb-2">Course Search</p>
                 <SearchBar plan={plan}></SearchBar>

@@ -1,33 +1,51 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Entity
 @Table(name = "MAJOR")
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Major {
     @Id
     @Column(name = "MAJOR_NAME")
     private String majorName;
 
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<MajorGradRequirement> majorGradRequirements;
+    @Column(name = "FIRST_MAJOR?")
+    private boolean firstMajor;
+
+    @Column(name = "SECOND_MAJOR_SAME_SCHOOL?")
+    private boolean secondMajorSameSchool;
+
+    @Column(name = "SECOND_MAJOR_DIFFERENT_SCHOOL?")
+    private boolean secondMajorDifferentSchool;
+
+    @Column(name = "NUM_OF_SECOND_MAJOR_ELECTIVE")
+    private Integer numOfSecondMajorElective;
+
+    @Column(name = "NUM_OF_FIRST_MAJOR_ELECTIVE")
+    private Integer numOfFirstMajorElective;
+
+    @ManyToOne
+    @JoinColumn(name = "DEGREE_NAME")
+    @JsonBackReference
+    private Degree degree;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<MajorModule> majorModules;
+    private List<AdditionalSecondMajorModuleRequirement> additionalSecondMajorModuleRequirements;
+
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<PreassignedModule> preassignedModules;
-
-    @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
-    private List<Plan> plans;
+    private List<FirstMajorModuleRequirement> firstMajorModuleRequirements;
 
     public Major() {
+    }
+
+    public Major(String majorName) {
+        this.majorName = majorName;
     }
 
     public String getMajorName() {
@@ -38,36 +56,68 @@ public class Major {
         this.majorName = majorName;
     }
 
-    public List<MajorGradRequirement> getMajorGradRequirements() {
-        return majorGradRequirements;
+    public boolean isFirstMajor() {
+        return firstMajor;
     }
 
-    public void setMajorGradRequirements(List<MajorGradRequirement> majorGradRequirements) {
-        this.majorGradRequirements = majorGradRequirements;
+    public void setFirstMajor(boolean firstMajor) {
+        this.firstMajor = firstMajor;
     }
 
-    public List<MajorModule> getMajorModules() {
-        return majorModules;
+    public boolean isSecondMajorSameSchool() {
+        return secondMajorSameSchool;
     }
 
-    public void setMajorModules(List<MajorModule> majorModules) {
-        this.majorModules = majorModules;
+    public void setSecondMajorSameSchool(boolean secondMajorSameSchool) {
+        this.secondMajorSameSchool = secondMajorSameSchool;
     }
 
-    public List<PreassignedModule> getPreassignedModules() {
-        return preassignedModules;
+    public boolean isSecondMajorDifferentSchool() {
+        return secondMajorDifferentSchool;
     }
 
-    public void setPreassignedModules(List<PreassignedModule> preassignedModules) {
-        this.preassignedModules = preassignedModules;
+    public void setSecondMajorDifferentSchool(boolean secondMajorDifferentSchool) {
+        this.secondMajorDifferentSchool = secondMajorDifferentSchool;
     }
 
-    public List<Plan> getPlans() {
-        return plans;
+    public Integer getNumOfSecondMajorElective() {
+        return numOfSecondMajorElective;
     }
 
-    public void setPlans(List<Plan> plans) {
-        this.plans = plans;
+    public void setNumOfSecondMajorElective(Integer numOfSecondMajorElective) {
+        this.numOfSecondMajorElective = numOfSecondMajorElective;
+    }
+
+    public Integer getNumOfFirstMajorElective() {
+        return numOfFirstMajorElective;
+    }
+
+    public void setNumOfFirstMajorElective(Integer numOfFirstMajorElective) {
+        this.numOfFirstMajorElective = numOfFirstMajorElective;
+    }
+
+    public Degree getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Degree degree) {
+        this.degree = degree;
+    }
+
+    public List<AdditionalSecondMajorModuleRequirement> getAdditionalSecondMajorModuleRequirements() {
+        return additionalSecondMajorModuleRequirements;
+    }
+
+    public void setAdditionalSecondMajorModuleRequirements(List<AdditionalSecondMajorModuleRequirement> additionalSecondMajorModuleRequirements) {
+        this.additionalSecondMajorModuleRequirements = additionalSecondMajorModuleRequirements;
+    }
+
+    public List<FirstMajorModuleRequirement> getFirstMajorModuleRequirements() {
+        return firstMajorModuleRequirements;
+    }
+
+    public void setFirstMajorModuleRequirements(List<FirstMajorModuleRequirement> firstMajorModuleRequirements) {
+        this.firstMajorModuleRequirements = firstMajorModuleRequirements;
     }
 
     @Override
@@ -75,23 +125,26 @@ public class Major {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Major major = (Major) o;
-        return Objects.equals(majorName, major.majorName) && Objects.equals(majorGradRequirements, major.majorGradRequirements) && Objects.equals(majorModules, major.majorModules) && Objects.equals(preassignedModules, major.preassignedModules) && Objects.equals(plans, major.plans);
+        return firstMajor == major.firstMajor && secondMajorSameSchool == major.secondMajorSameSchool && secondMajorDifferentSchool == major.secondMajorDifferentSchool && numOfSecondMajorElective == major.numOfSecondMajorElective && numOfFirstMajorElective == major.numOfFirstMajorElective && Objects.equals(majorName, major.majorName) && Objects.equals(degree, major.degree) && Objects.equals(additionalSecondMajorModuleRequirements, major.additionalSecondMajorModuleRequirements) && Objects.equals(firstMajorModuleRequirements, major.firstMajorModuleRequirements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorName, majorGradRequirements, majorModules, preassignedModules, plans);
+        return Objects.hash(majorName, firstMajor, secondMajorSameSchool, secondMajorDifferentSchool, numOfSecondMajorElective, numOfFirstMajorElective, degree, additionalSecondMajorModuleRequirements, firstMajorModuleRequirements);
     }
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "Major{" +
                 "majorName='" + majorName + '\'' +
-                ", majorGradRequirements=" + majorGradRequirements +
-                ", majorModules=" + majorModules +
-                ", preassignedModules=" + preassignedModules +
-                ", plans=" + plans +
+                ", firstMajor=" + firstMajor +
+                ", secondMajorSameSchool=" + secondMajorSameSchool +
+                ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
+                ", numOfSecondMajorElective=" + numOfSecondMajorElective +
+                ", numOfFirstMajorElective=" + numOfFirstMajorElective +
+                ", degree=" + degree +
+                ", additionalSecondMajorModuleRequirements=" + additionalSecondMajorModuleRequirements +
+                ", firstMajorModuleRequirements=" + firstMajorModuleRequirements +
                 '}';
     }
 }

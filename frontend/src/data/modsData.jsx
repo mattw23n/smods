@@ -1,6 +1,6 @@
 const modulesData = [
     {
-        courseCode: "COR3001", courseTitle: "Big Questions", courseType: "uc", courseLink: "",
+        moduleId: "COR3001", moduleName: "Big Questions", courseType: "uc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -9,7 +9,7 @@ const modulesData = [
         term:1, GPA: 0,
         isError: false,
     },{
-        courseCode: "CS104", courseTitle: "Math Fund. for Computing", courseType: "mc", courseLink: "",
+        moduleId: "CS104", moduleName: "Math Fund. for Computing", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -18,7 +18,7 @@ const modulesData = [
         term:1, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS101", courseTitle: "Programming Fundamentals I", courseType: "mc", courseLink: "",
+        moduleId: "CS101", moduleName: "Programming Fundamentals I", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -27,7 +27,7 @@ const modulesData = [
         term:1, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "COR1202", courseTitle: "Calculus", courseType: "uc", courseLink: "",
+        moduleId: "COR1202", moduleName: "Calculus", courseType: "uc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -36,7 +36,7 @@ const modulesData = [
         term:1, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "IS211", courseTitle: "Interactive Design Prot.", courseType: "mc", courseLink: "",
+        moduleId: "IS211", moduleName: "Interactive Design Prot.", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -45,7 +45,7 @@ const modulesData = [
         term:1, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS102", courseTitle: "Intro to Programming II", courseType: "mc", courseLink: "",
+        moduleId: "CS102", moduleName: "Intro to Programming II", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: ["CS101"],
@@ -54,7 +54,7 @@ const modulesData = [
         term:2, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS106", courseTitle: "Comp. Hardware", courseType: "mc", courseLink: "",
+        moduleId: "CS106", moduleName: "Comp. Hardware", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -63,7 +63,7 @@ const modulesData = [
         term:2, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS105", courseTitle: "Stats for Data Science", courseType: "mc", courseLink: "",
+        moduleId: "CS105", moduleName: "Stats for Data Science", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -72,7 +72,7 @@ const modulesData = [
         term:2, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "IS112", courseTitle: "Data Management", courseType: "mc", courseLink: "",
+        moduleId: "IS112", moduleName: "Data Management", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -81,7 +81,7 @@ const modulesData = [
         term:2, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS103", courseTitle: "Linear Algebra for Comp.", courseType: "mc", courseLink: "",
+        moduleId: "CS103", moduleName: "Linear Algebra for Comp.", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -90,7 +90,7 @@ const modulesData = [
         term:3, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS202", courseTitle: "Design & Analysis of Algo.", courseType: "mc", courseLink: "",
+        moduleId: "CS202", moduleName: "Design & Analysis of Algo.", courseType: "mc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -99,7 +99,7 @@ const modulesData = [
         term:4, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS301", courseTitle: "IT Solution Architecture", courseType: "tm", courseLink: "",
+        moduleId: "CS301", moduleName: "IT Solution Architecture", courseType: "tm", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -108,7 +108,7 @@ const modulesData = [
         term:5, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "CS701", courseTitle: "Major Elective", courseType: "me", courseLink: "",
+        moduleId: "CS701", moduleName: "Major Elective", courseType: "me", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -117,7 +117,7 @@ const modulesData = [
         term:6, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "COR3031", courseTitle: "Korean", courseType: "uc", courseLink: "",
+        moduleId: "COR3031", moduleName: "Korean", courseType: "uc", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],
@@ -126,7 +126,7 @@ const modulesData = [
         term:7, GPA: 0.0,
         isError: false,
     },{
-        courseCode: "LAW101", courseTitle: "Law Mod", courseType: "fe", courseLink: "",
+        moduleId: "LAW101", moduleName: "Law Mod", courseType: "fe", courseLink: "",
         requirements:{
             mutuallyExclusive: [],
             prerequisites: [],

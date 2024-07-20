@@ -2,9 +2,9 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.exception.PlanNameConflictException;
-import com.smods.backend.exception.TrackNotFoundException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
+import com.smods.backend.dto.PlanRequest;
 import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 
 @Service
 public class PlanService {
@@ -23,20 +22,18 @@ public class PlanService {
     private final ModuleRepository moduleRepository;
     private final PlanModuleGPARepository planModuleGPARepository;
     private final UserRepository userRepository;
+    private final DegreeRepository degreeRepository;
     private final MajorRepository majorRepository;
-    private final TrackRepository trackRepository;
-    private final MajorModuleRepository majorModuleRepository;
     private final AuthorizationService authorizationService;
 
     @Autowired
-    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, MajorRepository majorRepository, TrackRepository trackRepository, MajorModuleRepository majorModuleRepository, AuthorizationService authorizationService) {
+    public PlanService(PlanRepository planRepository, ModuleRepository moduleRepository, PlanModuleGPARepository planModuleGPARepository, UserRepository userRepository, DegreeRepository degreeRepository, MajorRepository majorRepository, AuthorizationService authorizationService) {
         this.planRepository = planRepository;
         this.moduleRepository = moduleRepository;
         this.planModuleGPARepository = planModuleGPARepository;
         this.userRepository = userRepository;
+        this.degreeRepository = degreeRepository;
         this.majorRepository = majorRepository;
-        this.trackRepository = trackRepository;
-        this.majorModuleRepository = majorModuleRepository;
         this.authorizationService = authorizationService;
     }
 
@@ -46,19 +43,21 @@ public class PlanService {
     }
 
     @Transactional
-    public Plan createPlan(Long userId, Plan plan) {
+    public Plan createPlan(Long userId, PlanRequest planRequest) {
         authorizationService.checkUserAuthorization(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Check for duplicate plan name
-        if (planRepository.existsByUserAndPlanName(user, plan.getPlanName())) {
-            throw new PlanNameConflictException("A plan with the name '" + plan.getPlanName() + "' already exists.");
+        if (planRepository.existsByUserAndPlanName(user, planRequest.getPlanName())) {
+            throw new PlanNameConflictException("A plan with the name '" + planRequest.getPlanName() + "' already exists.");
         }
 
+        Degree degree = degreeRepository.findById(planRequest.getDegreeName()).orElseThrow(() -> new RuntimeException("Degree not found"));
+        Major firstMajor = majorRepository.findById(planRequest.getFirstMajorName()).orElseThrow(() -> new RuntimeException("First major not found"));
+        Major secondMajor = majorRepository.findById(planRequest.getSecondMajorName()).orElseThrow(() -> new RuntimeException("Second major not found"));
+
         Long nextPlanId = planRepository.findMaxPlanIdByUserId(userId) + 1;
-        plan.setPlanId(new PlanKey(nextPlanId, userId));
-        plan.setUser(user);
-        plan.setCreationDateTime(ZonedDateTime.now());
+        Plan plan = new Plan(new PlanKey(nextPlanId, userId), planRequest.getPlanName(), ZonedDateTime.now(), user, degree, firstMajor, secondMajor);
         return planRepository.save(plan);
     }
 
@@ -92,49 +91,44 @@ public class PlanService {
     }
 
     @Transactional
-    public ModuleValidationResponse addModule(Long planId, Long userId, String moduleId, int term) {
+    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, Boolean isAdding, Double gpa) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
-        // check if plan exists
+        // Check if plan exists
         Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
-        // check if module exists
+        // Check if module exists
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
-        // check if module is already in plan
         PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
-        if (planModuleGPARepository.existsById(planModuleGPAKey)) {
-            throw new RuntimeException("Module is already in plan");
+
+        if (isAdding != null) {
+            if (isAdding) {
+                // Check if module is already in plan
+                if (planModuleGPARepository.existsById(planModuleGPAKey)) {
+                    throw new RuntimeException("Module is already in plan");
+                }
+
+                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+                planModuleGPA.setModule(module);
+                planModuleGPARepository.save(planModuleGPA);
+            } else {
+                // Check if module is in the plan
+                PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                        .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+
+                planModuleGPARepository.delete(planModuleGPA);
+            }
+        } else if (gpa != null) {
+            // Update GPA if isAdding is not provided and GPA is provided
+            PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                    .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+            planModuleGPA.setGpa(gpa);
+            planModuleGPARepository.save(planModuleGPA);
         }
-
-        PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, plan, module, term);
-        planModuleGPARepository.save(planModuleGPA);
-
-        return validatePlanModules(planId, userId);
-    }
-
-    @Transactional
-    public ModuleValidationResponse deleteModule(Long planId, Long userId, String moduleId) {
-        authorizationService.checkUserAuthorization(userId);
-        PlanKey planKey = new PlanKey(planId, userId);
-
-        // check if plan exists
-        Plan plan = planRepository.findById(planKey)
-                .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
-
-        // check if module exists
-        Module module = moduleRepository.findById(moduleId)
-                .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
-
-        // check if module is in the plan
-        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
-        PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
-                .orElseThrow(() -> new RuntimeException("Module not found in plan"));
-
-        planModuleGPARepository.delete(planModuleGPA);
 
         return validatePlanModules(planId, userId);
     }
@@ -181,62 +175,85 @@ public class PlanService {
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
     }
 
-    public Map<String, Map<String, Double>> getGradRequirements(Plan plan) {
-        Map<String, Map<String, Double>> gradRequirements = new HashMap<>();
+    public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
+        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-        // Get all majors and tracks
-        Major major = plan.getMajor();
-        List<Track> tracks = getTracksFromPlan(plan);
+        Map<String, Double> targetRequirement = getPlanTargetRequirement(userId, planId);
+        Map<String, Double> progressRequirement = new HashMap<>();
 
-        List<MajorGradRequirement> majorRequirements = major.getMajorGradRequirements();
+        List<PlanModuleGPA> planModules = plan.getPlanModuleGPAs();
 
-        // Loop through all modules in the plan
-        for (PlanModuleGPA planModuleGPA : plan.getPlanModuleGPAs()) {
-            Module module = planModuleGPA.getModule();
-            SimpleEntry<String, String> gradRequirement = findGradRequirementAndBasket(tracks, major, module);
-
-            if (gradRequirement != null) {
-                String requirement = gradRequirement.getKey();
-                String basket = gradRequirement.getValue();
-
-                gradRequirements.putIfAbsent(requirement, new HashMap<>());
-
-                // TODO: given module requirement and current state of plan requirements, evaluate major requirements to decide which requirement to put module in
-
-                gradRequirements.get(requirement).merge(basket, module.getCourseUnit(), Double::sum);
-            }
+        for (PlanModuleGPA planModule : planModules){
+            updatePlanRequirementProgress(planModule.getPlan(), targetRequirement, progressRequirement, planModule.getModule());
         }
-        return gradRequirements;
+
+        return progressRequirement;
+    }
+    private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
+        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
+        return plan.getDegree().getGradRequirement();
     }
 
-    private List<Track> getTracksFromPlan(Plan plan) {
-        List<Track> tracks = new ArrayList<>();
-        if (plan.getTrack1() != null) {
-            tracks.add(trackRepository.findByTrackName(plan.getTrack1())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack1())));
+
+    private void updatePlanRequirementProgress(Plan plan,
+                                               Map<String, Double> targetRequirement,
+                                               Map<String, Double> requirementProgress,
+                                               Module module){
+        Double courseUnit = module.getCourseUnit();
+
+        if (isSMUCore(plan, module)){
+            incrementPlanRequirement("Uni Core", targetRequirement, requirementProgress, courseUnit);
         }
-        if (plan.getTrack2() != null) {
-            tracks.add(trackRepository.findByTrackName(plan.getTrack2())
-                    .orElseThrow(() -> new TrackNotFoundException("Track not found: " + plan.getTrack2())));
+        else if (isMajorCore(plan, module)){
+            incrementPlanRequirement("Major Core", targetRequirement, requirementProgress, courseUnit);
         }
-        return tracks;
+        else if (isMajorElective(plan, module)){
+            incrementPlanRequirement("Major Elective", targetRequirement, requirementProgress, courseUnit);
+        }
+        else{
+            incrementPlanRequirement("Free Elective", targetRequirement, requirementProgress, courseUnit);
+        }
     }
 
-    private SimpleEntry<String, String> findGradRequirementAndBasket(List<Track> tracks, Major major, Module module) {
-        for (Track track : tracks) {
-            MajorModule majorModule = majorModuleRepository.findByTrackNameAndModule(track.getTrackName(), module);
-            if (majorModule != null) {
-                return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
-            }
-        }
+    private void incrementPlanRequirement(String category,
+                                          Map<String, Double> targetRequirement,
+                                          Map<String, Double> requirementProgress,
+                                          Double courseUnit){
 
-        MajorModule majorModule = majorModuleRepository.findByMajorAndModule(major, module);
-        if (majorModule != null) {
-            return new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket());
+        if (Double.compare(targetRequirement.get(category), requirementProgress.get(category)) <= 0) {
+            incrementPlanRequirement(Module.getLowerHierarchy(category), targetRequirement, requirementProgress, courseUnit);
         }
-
-        majorModule = majorModuleRepository.findByModule(module);
-        return majorModule != null ? new SimpleEntry<String, String>(majorModule.getGradRequirement(), majorModule.getBasket()) : null;
+//        else if (Double.compare(targetRequirement.get(category), requirementProgress.get(category) + courseUnit) <= 0) {
+//
+//        }
+        else {
+            requirementProgress.put(category, requirementProgress.get(category) + courseUnit);
+        }
     }
 
+    public Optional<Plan> getPlanById(Long userId, Long planId) {
+        PlanKey planKey = new PlanKey(userId, planId);
+        return planRepository.findByPlanKey(planKey);
+    }
+
+    private boolean isMajorCore(Plan plan, Module module){
+        return moduleRepository
+                .findAllMajorCore(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
+
+    private boolean isSMUCore(Plan plan, Module module){
+        return moduleRepository
+                .findAllSMUCore(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
+
+    private boolean isMajorElective(Plan plan, Module module){
+        return moduleRepository
+                .findAllMajorElective(plan.getDegree().getDegreeName())
+                .contains(module);
+    }
 }

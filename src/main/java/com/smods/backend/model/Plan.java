@@ -35,61 +35,55 @@ public class Plan {
     @Column(name = "plannedModules")
     private Set<Module> plannedModules = new HashSet<>();
     @EmbeddedId
-    private PlanKey planId;
+    private PlanKey planKey;
 
     @Column(name = "PLAN_NAME")
     private String planName;
 
-    @Column(name = "DEGREE")
-    private String degree;
-
-    @Column(name = "TRACK1")
-    private String track1;
-
-    @Column(name = "TRACK2")
-    private String track2;
-
     @Column(name = "CREATION_DATE")
     private ZonedDateTime creationDateTime;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")
     @JsonBackReference(value = "user-plan")
     private User user;
 
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "plan-planModuleGPA")
-    private List<PlanModuleGPA> planModuleGPAs = new ArrayList<>();
-
-    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "plan-planModulePreassignedGPA")
-    private List<PreassignedModule> planModulePreassignedGPAs = new ArrayList<>();
+    private List<PlanModuleGPA> planModuleGPAs;
 
     @ManyToOne
-    @JoinColumn(name = "MAJOR")
-    private Major major;
+    @JoinColumn(name = "DEGREE_NAME")
+    private Degree degree;
 
-    // Default constructor
+    @ManyToOne
+    @JoinColumn(name = "FIRST_MAJOR")
+    private Major firstMajor;
+
+    @ManyToOne
+    @JoinColumn(name = "SECOND_MAJOR")
+    private Major secondMajor;
+
     public Plan() {
     }
 
-    public Plan(PlanKey planId, String planName, String degree, String track1, String track2, ZonedDateTime creationDateTime) {
-        this.planId = planId;
+    public Plan(PlanKey planKey, String planName, ZonedDateTime creationDateTime, User user, Degree degree, Major firstMajor, Major secondMajor) {
+        this.planKey = planKey;
         this.planName = planName;
-        this.degree = degree;
-        this.track1 = track1;
-        this.track2 = track2;
         this.creationDateTime = creationDateTime;
+        this.user = user;
+        this.degree = degree;
+        this.firstMajor = firstMajor;
+        this.secondMajor = secondMajor;
     }
 
-    // Getters and setters
-    public PlanKey getPlanId() {
-        return planId;
+    public PlanKey getPlanKey() {
+        return planKey;
     }
 
-    public void setPlanId(PlanKey planId) {
-        this.planId = planId;
+    public void setPlanKey(PlanKey planKey) {
+        this.planKey = planKey;
     }
 
     public String getPlanName() {
@@ -100,28 +94,12 @@ public class Plan {
         this.planName = planName;
     }
 
-    public String getDegree() {
-        return degree;
+    public ZonedDateTime getCreationDateTime() {
+        return creationDateTime;
     }
 
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-
-    public String getTrack1() {
-        return track1;
-    }
-
-    public void setTrack1(String track1) {
-        this.track1 = track1;
-    }
-
-    public String getTrack2() {
-        return track2;
-    }
-
-    public void setTrack2(String track2) {
-        this.track2 = track2;
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 
     public User getUser() {
@@ -132,14 +110,6 @@ public class Plan {
         this.user = user;
     }
 
-    public ZonedDateTime getCreationDateTime() {
-        return creationDateTime;
-    }
-
-    public void setCreationDateTime(ZonedDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
-    }
-
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
@@ -148,50 +118,54 @@ public class Plan {
         this.planModuleGPAs = planModuleGPAs;
     }
 
-    public List<PreassignedModule> getPlanModulePreassignedGPAs() {
-        return planModulePreassignedGPAs;
+    public Degree getDegree() {
+        return degree;
     }
 
-    public void setPlanModulePreassignedGPAs(List<PreassignedModule> planModulePreassignedGPAs) {
-        this.planModulePreassignedGPAs = planModulePreassignedGPAs;
+    public void setDegree(Degree degree) {
+        this.degree = degree;
     }
 
-    public Major getMajor() {
-        return major;
+    public Major getFirstMajor() {
+        return firstMajor;
     }
 
-    public void setMajor(Major major) {
-        this.major = Plan.this.major;
+    public void setFirstMajor(Major firstMajor) {
+        this.firstMajor = firstMajor;
     }
 
-    // Equals and hashCode methods
+    public Major getSecondMajor() {
+        return secondMajor;
+    }
+
+    public void setSecondMajor(Major secondMajor) {
+        this.secondMajor = secondMajor;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Plan plan = (Plan) o;
-        return Objects.equals(planId, plan.planId) && Objects.equals(planName, plan.planName) && Objects.equals(degree, plan.degree) && Objects.equals(track1, plan.track1) && Objects.equals(track2, plan.track2) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(planModulePreassignedGPAs, plan.planModulePreassignedGPAs) && Objects.equals(major, plan.major);
+        return Objects.equals(planKey, plan.planKey) && Objects.equals(planName, plan.planName) && Objects.equals(creationDateTime, plan.creationDateTime) && Objects.equals(user, plan.user) && Objects.equals(planModuleGPAs, plan.planModuleGPAs) && Objects.equals(degree, plan.degree) && Objects.equals(firstMajor, plan.firstMajor) && Objects.equals(secondMajor, plan.secondMajor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planId, planName, degree, track1, track2, creationDateTime, user, planModuleGPAs, planModulePreassignedGPAs, major);
+        return Objects.hash(planKey, planName, creationDateTime, user, planModuleGPAs, degree, firstMajor, secondMajor);
     }
 
     @Override
     public String toString() {
         return "Plan{" +
-                "planId=" + planId +
+                "planKey=" + planKey +
                 ", planName='" + planName + '\'' +
-                ", degree='" + degree + '\'' +
-                ", track1='" + track1 + '\'' +
-                ", track2='" + track2 + '\'' +
                 ", creationDateTime=" + creationDateTime +
                 ", user=" + user +
                 ", planModuleGPAs=" + planModuleGPAs +
-                ", planModulePreassignedGPAs=" + planModulePreassignedGPAs +
-                ", major=" + major +
+                ", degree=" + degree +
+                ", firstMajor=" + firstMajor +
+                ", secondMajor=" + secondMajor +
                 '}';
     }
 }

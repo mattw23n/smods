@@ -7,26 +7,27 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class PlanModuleGPAKey implements Serializable {
-    private PlanKey planKey;
+public class MajorModuleRequirementKey implements Serializable {
+    @Column(name = "DEGREE_NAME")
+    private String degreeName;
 
     @Column(name = "MODULE_ID")
     private String moduleId;
 
-    public PlanModuleGPAKey() {
+    public MajorModuleRequirementKey() {
     }
 
-    public PlanModuleGPAKey(PlanKey planKey, String moduleId) {
-        this.planKey = planKey;
+    public MajorModuleRequirementKey(String degreeName, String moduleId) {
+        this.degreeName = degreeName;
         this.moduleId = moduleId;
     }
 
-    public PlanKey getPlanKey() {
-        return planKey;
+    public String getDegreeName() {
+        return degreeName;
     }
 
-    public void setPlanKey(PlanKey planKey) {
-        this.planKey = planKey;
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
     }
 
     public String getModuleId() {
@@ -41,19 +42,19 @@ public class PlanModuleGPAKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PlanModuleGPAKey that = (PlanModuleGPAKey) o;
-        return Objects.equals(planKey, that.planKey) && Objects.equals(moduleId, that.moduleId);
+        MajorModuleRequirementKey that = (MajorModuleRequirementKey) o;
+        return Objects.equals(degreeName, that.degreeName) && Objects.equals(moduleId, that.moduleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planKey, moduleId);
+        return Objects.hash(degreeName, moduleId);
     }
 
     @Override
     public String toString() {
-        return "PlanModuleGPAKey{" +
-                "planKey=" + planKey +
+        return "MajorModuleRequirementKey{" +
+                "degreeName='" + degreeName + '\'' +
                 ", moduleId='" + moduleId + '\'' +
                 '}';
     }

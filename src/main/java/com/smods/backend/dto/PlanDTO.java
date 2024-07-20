@@ -6,41 +6,64 @@ public class PlanDTO {
     private Long planId;
     private String planName;
     private String degree;
-    private String track1;
-    private String track2;
+    private String firstMajor;
+    private String secondMajor;
     private ZonedDateTime creationDateTime;
 
-    public PlanDTO(Long planId, String planName, String degree, String track1, String track2, ZonedDateTime creationDateTime) {
+    public PlanDTO(Long planId, String planName, String degree, String firstMajor, String secondMajor, ZonedDateTime creationDateTime) {
         this.planId = planId;
         this.planName = planName;
         this.degree = degree;
-        this.track1 = track1;
-        this.track2 = track2;
+        this.firstMajor = firstMajor;
+        this.secondMajor = secondMajor;
         this.creationDateTime = creationDateTime;
     }
 
-    // Getters
     public Long getPlanId() {
         return planId;
+    }
+
+    public void setPlanId(Long planId) {
+        this.planId = planId;
     }
 
     public String getPlanName() {
         return planName;
     }
 
+    public void setPlanName(String planName) {
+        this.planName = planName;
+    }
+
     public String getDegree() {
         return degree;
     }
 
-    public String getTrack1() {
-        return track1;
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
-    public String getTrack2() {
-        return track2;
+    public String getFirstMajor() {
+        return firstMajor;
+    }
+
+    public void setFirstMajor(String firstMajor) {
+        this.firstMajor = firstMajor;
+    }
+
+    public String getSecondMajor() {
+        return secondMajor;
+    }
+
+    public void setSecondMajor(String secondMajor) {
+        this.secondMajor = secondMajor;
     }
 
     public ZonedDateTime getCreationDateTime() {
         return creationDateTime;
+    }
+
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 }
