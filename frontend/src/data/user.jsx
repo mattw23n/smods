@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Loading from '../pages/loading';
-import { useNavigate } from 'react-router-dom';
 import { DEFAULT_PLANS, DEFAULT_TEMPLATES } from "./plans";
+import {useNavigate} from "react-router-dom";
 
 const templates = [
     { title: "Double", date: "30 June 2024", degree: "Computer Science", majors: ["Artificial Intelligence", "Cybersecurity"] },
@@ -63,13 +63,8 @@ export const UserProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(userData)); // Persist user state
     };
 
-    const logoutUser = () => {
-        setUser(null);
-        localStorage.removeItem('user'); // Clear user state
-    };
-
     return (
-        <UserContext.Provider value={{ user, setUser, loginUser, logoutUser, loading }}>
+        <UserContext.Provider value={{ user, setUser, loginUser, loading }}>
             {children}
         </UserContext.Provider>
     );

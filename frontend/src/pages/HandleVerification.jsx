@@ -29,7 +29,7 @@ function HandleVerification() {
             localStorage.setItem('jwt', jwt);
             localStorage.setItem('refreshToken', refreshToken);
             loginUser({ username, email: username });
-            navigate('/home'); // Redirect to home page
+            navigate('/'); // Redirect to home page
         } else {
             console.error('Verification failed: Missing tokens');
             navigate('/error'); // Redirect to an error page or handle error gracefully

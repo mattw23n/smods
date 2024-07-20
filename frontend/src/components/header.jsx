@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../data/user';
 import logo from '../images/smods-logo-dark.png';
+import { logoutUser } from '../helpers/userHelpers'; // Adjust the import based on the actual path
 
 function Avatar({ src, alt }) {
     return <img loading="lazy" src={src} alt={alt} className="shrink-0 self-stretch rounded-full aspect-square w-[46px]" />;
@@ -30,9 +31,13 @@ function NavItem({ title, link }) {
     );
 }
 
-function Header({showLogIn = true}) {
-    const { user, logoutUser } = useContext(UserContext);
+function Header({ showLogIn = true }) {
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
+    const handleLogout = () => {
+        logoutUser(setUser, navigate);
+    };
 
     return (
         <header className="top-0 left-0 w-full z-50 bg-white/30 backdrop-blur border-b">
@@ -53,7 +58,7 @@ function Header({showLogIn = true}) {
                             {user ? (
                                 <div className="flex items-center gap-4">
                                     <span className="font-poppins font-bold">{user.username}</span>
-                                    <button onClick={logoutUser} className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow">
+                                    <button onClick={handleLogout} className="rounded-xl bg-primary px-5 py-2.5 text-sm font-poppins font-bold text-white shadow">
                                         Logout
                                     </button>
                                 </div>
