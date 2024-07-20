@@ -201,7 +201,7 @@ VALUES ('CS69', 'Computer Science', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS6969', 'Computer Science', 1.0);
 
-insert into PRE_REQUISITE (module_id, module_id2)
+insert into PRE_REQUISITE (module_id, pre_requisite_module_id)
 VALUES ('CS69', 'CS6969');
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
@@ -210,14 +210,14 @@ VALUES ('CS1234', 'Computer Science', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS5678', 'Computer Science', 1.0);
 
-insert into CO_REQUISITE (module_id, module_id2)
+insert into CO_REQUISITE (module_id, co_requisite_module_id)
 VALUES ('CS1234', 'CS5678');
 
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('IS111', 'Python', 1.0);
 
-insert into MUTUALLY_EXCLUSIVE (module_id, module_id2)
+insert into MUTUALLY_EXCLUSIVE (module_id, mutually_exclusive_module_id)
 VALUES ('IS111', 'CS101');
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
@@ -226,7 +226,7 @@ VALUES ('CS0', 'testing prereq', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS1', 'testing prereq', 1.0);
 
-insert into pre_requisite (module_id, module_id2)
+insert into pre_requisite (module_id, pre_requisite_module_id)
 VALUES ('CS102', 'CS1');
 
 SELECT * FROM `plan_module_gpa`;

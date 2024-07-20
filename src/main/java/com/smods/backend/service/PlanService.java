@@ -1,6 +1,7 @@
 package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
+import com.smods.backend.dto.PlanModuleGPADTO;
 import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PlanService {
@@ -139,10 +141,12 @@ public class PlanService {
         List<String> unsatisfiedPreRequisites = new ArrayList<>();
         List<String> unsatisfiedCoRequisites = new ArrayList<>();
         List<String> mutuallyExclusiveConflicts = new ArrayList<>();
+        Map<String, Boolean> moduleErrors = new HashMap<>();
 
         for (PlanModuleGPA planModule : planModules) {
             String moduleId = planModule.getModule().getModuleId();
             int term = planModule.getTerm();
+            boolean isError = false;
 
             List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
             List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
@@ -150,6 +154,7 @@ public class PlanService {
             for (Module preReq : preRequisites) {
                 if (!takenModulesBeforeTerm.contains(preReq)) {
                     unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
+                    isError = true;
                 }
             }
 
@@ -159,6 +164,7 @@ public class PlanService {
             for (Module coReq : coRequisites) {
                 if (!takenModulesInTerm.contains(coReq)) {
                     unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
+                    isError = true;
                 }
             }
 
@@ -168,11 +174,24 @@ public class PlanService {
             for (Module conflict : mutuallyExclusives) {
                 if (takenModules.contains(conflict)) {
                     mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
+                    isError = true;
                 }
             }
+
+            moduleErrors.put(moduleId, isError);
         }
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
+        List<PlanModuleGPADTO> planModuleGPADTOs = planModules.stream().map(pgpa ->
+                new PlanModuleGPADTO(
+                        pgpa.getModule().getModuleId(),
+                        pgpa.getModule().getModuleName(),
+                        pgpa.getGpa(),
+                        pgpa.getTerm(),
+                        moduleErrors.getOrDefault(pgpa.getModule().getModuleId(), false)
+                )
+        ).collect(Collectors.toList());
+
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs);
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){

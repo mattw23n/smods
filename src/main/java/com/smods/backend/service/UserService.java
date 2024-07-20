@@ -78,7 +78,8 @@ public class UserService {
                             pgpa.getModule().getModuleId(),
                             pgpa.getModule().getModuleName(),
                             pgpa.getGpa(),
-                            pgpa.getTerm()
+                            pgpa.getTerm(),
+                            false // Set isError to false initially
                     )
             ).collect(Collectors.toList());
             return new PlanDTO(
