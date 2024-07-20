@@ -311,9 +311,15 @@ function Planning() {
             console.log("User plans:", user.plans);
             const selectedPlan = user.plans.find(p => p.planId === parseInt(id));
             console.log("Selected Plan:", selectedPlan);
+            console.log(selectedPlan.planModuleGPAs);
             if (selectedPlan) {
+                const mappedMods = selectedPlan.planModuleGPAs.map(pgpa => ({
+                    ...pgpa.module,
+                    term: pgpa.term,
+                    GPA: pgpa.gpa,
+                }));
                 setPlan({ ...selectedPlan, view: 4, userId: user.userId });
-                setMods(selectedPlan.planModuleGPAs || []);
+                setMods(mappedMods);
             }
         }
     }, [user, id]);

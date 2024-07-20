@@ -1,6 +1,7 @@
 package com.smods.backend.service;
 
 import com.smods.backend.dto.PlanDTO;
+import com.smods.backend.dto.PlanModuleGPADTO;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.dto.UserDetailsDTO;
 import com.smods.backend.model.Plan;
@@ -71,14 +72,25 @@ public class UserService {
             return null;
         }
 
-        List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> new PlanDTO(
-                plan.getPlanKey().getPlanId(),
-                plan.getPlanName(),
-                plan.getDegree().getDegreeName(),
-                plan.getFirstMajor().getMajorName(),
-                plan.getSecondMajor().getMajorName(),
-                plan.getCreationDateTime()
-        )).collect(Collectors.toList());
+        List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> {
+            List<PlanModuleGPADTO> planModuleGPADTOs = plan.getPlanModuleGPAs().stream()
+                    .map(planModuleGPA -> new PlanModuleGPADTO(
+                            planModuleGPA.getModule().getModuleId(),
+                            planModuleGPA.getGpa(),
+                            planModuleGPA.getTerm()
+                    ))
+                    .collect(Collectors.toList());
+
+            return new PlanDTO(
+                    plan.getPlanKey().getPlanId(),
+                    plan.getPlanName(),
+                    plan.getDegree().getDegreeName(),
+                    plan.getFirstMajor().getMajorName(),
+                    plan.getSecondMajor().getMajorName(),
+                    plan.getCreationDateTime(),
+                    planModuleGPADTOs // Include the planModuleGPADTOs
+            );
+        }).collect(Collectors.toList());
 
         return new UserDetailsDTO(
                 user.getUserId(),
