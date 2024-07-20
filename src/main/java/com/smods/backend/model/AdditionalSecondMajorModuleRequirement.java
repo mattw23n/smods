@@ -1,5 +1,6 @@
 package com.smods.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smods.backend.model.composite_key.MajorModuleKey;
 import jakarta.persistence.*;
 
@@ -17,6 +18,7 @@ public class AdditionalSecondMajorModuleRequirement {
     @ManyToOne
     @JoinColumn(name = "MAJOR_NAME")
     @MapsId("majorName")
+    @JsonBackReference
     private Major major;
 
     @ManyToOne

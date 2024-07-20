@@ -35,10 +35,12 @@ public class Major {
     private Degree degree;
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<AdditionalSecondMajorModuleRequirement> additionalSecondMajorModuleRequirements;
 
 
     @OneToMany(mappedBy = "major", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<FirstMajorModuleRequirement> firstMajorModuleRequirements;
 
     public Major() {

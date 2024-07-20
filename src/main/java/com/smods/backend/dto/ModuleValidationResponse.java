@@ -7,18 +7,21 @@ public class ModuleValidationResponse {
     private List<String> unsatisfiedPreRequisites;
     private List<String> unsatisfiedCoRequisites;
     private List<String> mutuallyExclusiveConflicts;
-    private List<PlanModuleGPADTO> planModuleGPAs;
-    private Map<String, Double> progress;
+    private List<PlanModuleGPADTO> planModuleGPADTOs;
+    private List<String> compulsoryModules;
+    private Map<String, Double> planRequirementProgress;
 
-    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPADTO> planModuleGPAs, Map<String, Double> progress) {
+    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPADTO> planModuleGPADTOs, List<String> compulsoryModules, Map<String, Double> planRequirementProgress) {
         this.unsatisfiedPreRequisites = unsatisfiedPreRequisites;
         this.unsatisfiedCoRequisites = unsatisfiedCoRequisites;
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
-        this.planModuleGPAs = planModuleGPAs;
-        this.progress = progress;
+        this.planModuleGPADTOs = planModuleGPADTOs;
+        this.compulsoryModules = compulsoryModules;
+        this.planRequirementProgress = planRequirementProgress;
     }
 
     // Getters and Setters
+
     public List<String> getUnsatisfiedPreRequisites() {
         return unsatisfiedPreRequisites;
     }
@@ -43,19 +46,27 @@ public class ModuleValidationResponse {
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
     }
 
-    public List<PlanModuleGPADTO> getPlanModuleGPAs() {
-        return planModuleGPAs;
+    public List<PlanModuleGPADTO> getPlanModuleGPADTOs() {
+        return planModuleGPADTOs;
     }
 
-    public void setPlanModuleGPAs(List<PlanModuleGPADTO> planModuleGPAs) {
-        this.planModuleGPAs = planModuleGPAs;
+    public void setPlanModuleGPADTOs(List<PlanModuleGPADTO> planModuleGPADTOs) {
+        this.planModuleGPADTOs = planModuleGPADTOs;
     }
 
-    public Map<String, Double> getProgress() {
-        return progress;
+    public List<String> getCompulsoryModules() {
+        return compulsoryModules;
     }
 
-    public void setProgress(Map<String, Double> progress) {
-        this.progress = progress;
+    public void setCompulsoryModules(List<String> compulsoryModules) {
+        this.compulsoryModules = compulsoryModules;
+    }
+
+    public Map<String, Double> getPlanRequirementProgress() {
+        return planRequirementProgress;
+    }
+
+    public void setPlanRequirementProgress(Map<String, Double> planRequirementProgress) {
+        this.planRequirementProgress = planRequirementProgress;
     }
 }

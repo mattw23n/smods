@@ -135,7 +135,7 @@ public class PlanService {
         // Validate modules and calculate progress
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
         Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
-        validationResponse.setProgress(progress);
+        validationResponse.setPlanRequirementProgress(progress);
 
         return validationResponse;
     }
@@ -196,10 +196,13 @@ public class PlanService {
                 )
         ).collect(Collectors.toList());
 
-        // Calculate progress
-        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+        // Get compulsory modules
+        List<String> compulsoryModules = getCompulsoryModules(userId, planId);
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs, progress);
+        // Get requirement progress
+        Map<String, Double> requirementProgress = getPlanRequirementProgress(userId, planId);
+
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs, compulsoryModules, requirementProgress);
     }
 
     public List<String> getCompulsoryModules(Long userId, Long planId){
