@@ -120,7 +120,7 @@ public class PlanService {
                     throw new RuntimeException("Module is already in plan");
                 }
 
-                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, module, planKey, term);
+                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
             } else {
@@ -303,7 +303,7 @@ public class PlanService {
         List<PlanModuleGPA> planModules = plan.getPlanModuleGPAs();
 
         for (PlanModuleGPA planModule : planModules){
-            updatePlanRequirementProgress(plan, targetRequirement, progressRequirement, planModule.getModule());
+            updatePlanRequirementProgress(planModule.getPlan(), targetRequirement, progressRequirement, planModule.getModule());
         }
 
         return progressRequirement;

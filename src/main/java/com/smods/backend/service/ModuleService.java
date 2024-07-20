@@ -27,6 +27,6 @@ public class ModuleService {
         PlanKey planKey = new PlanKey(planId, userId);
         return modules.stream().map(module -> {
             PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, module.getModuleId());
-            return new PlanModuleGPA(planModuleGPAKey, module, planKey,0);
+            return new PlanModuleGPA(planModuleGPAKey, module, planKey, 0.0, 0); // Default GPA and term, adjust as needed
         }).collect(Collectors.toList());
     }}

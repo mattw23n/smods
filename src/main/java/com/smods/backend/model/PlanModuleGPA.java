@@ -35,7 +35,12 @@ public class PlanModuleGPA {
     public PlanModuleGPA() {
     }
 
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Module module, PlanKey planKey, int term) {
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
+        this.planModuleGPAId = planModuleGPAId;
+        this.term = term;
+    }
+
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Module module, PlanKey planKey, double gpa, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.module = module;
         this.plan = new Plan(planKey);
