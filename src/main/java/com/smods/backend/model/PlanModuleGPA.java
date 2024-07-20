@@ -44,7 +44,6 @@ public class PlanModuleGPA {
         this.planModuleGPAId = planModuleGPAId;
         this.module = module;
         this.plan = new Plan(planKey);
-        this.gpa = gpa;
         this.term = term;
     }
 
@@ -108,7 +107,7 @@ public class PlanModuleGPA {
                 ", gpa=" + gpa +
                 ", term=" + term +
                 ", plan=" + plan +
-                ", module=" + module +
+                ", module=" + module.getModuleId() +
                 '}';
     }
 }

@@ -49,4 +49,12 @@ public class PlanKey implements Serializable {
     public int hashCode() {
         return Objects.hash(planId, userId);
     }
+
+    @Override
+    public String toString() {
+        return "PlanKey{" +
+                "planId=" + planId +
+                ", userId=" + userId +
+                '}';
+    }
 }

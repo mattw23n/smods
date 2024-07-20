@@ -144,11 +144,6 @@ public class Plan {
                 "planKey=" + planKey +
                 ", planName='" + planName + '\'' +
                 ", creationDateTime=" + creationDateTime +
-                ", user=" + user +
-                ", planModuleGPAs=" + planModuleGPAs +
-                ", degree=" + degree +
-                ", firstMajor=" + firstMajor +
-                ", secondMajor=" + secondMajor +
                 '}';
     }
 }
