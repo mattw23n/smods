@@ -74,7 +74,7 @@ public class PlanService {
     public void deletePlan(Long userId, Long planId) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
-        Plan plan = planRepository.findById(planKey).orElseThrow(() -> new RuntimeException("Plan not found"));
+        Plan plan = planRepository.findByPlanKey(planKey).orElseThrow(() -> new RuntimeException("Plan not found"));
         planRepository.delete(plan);
     }
 
@@ -82,7 +82,7 @@ public class PlanService {
     public Plan renamePlan(Long userId, Long planId, String newPlanName) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
-        Plan plan = planRepository.findById(planKey)
+        Plan plan = planRepository.findByPlanKey(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         // Check for duplicate plan name
@@ -105,7 +105,7 @@ public class PlanService {
         PlanKey planKey = new PlanKey(planId, userId);
 
         // Check if plan exists
-        Plan plan = planRepository.findById(planKey)
+        Plan plan = planRepository.findByPlanKey(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
         // Check if module exists
@@ -124,13 +124,13 @@ public class PlanService {
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
             } else {
-                PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
                         .orElseThrow(() -> new RuntimeException("Module not found in plan"));
 
                 planModuleGPARepository.delete(planModuleGPA);
             }
         } else if (gpa != null) {
-            PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+            PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
                     .orElseThrow(() -> new RuntimeException("Module not found in plan"));
             planModuleGPA.setGpa(gpa);
             planModuleGPARepository.save(planModuleGPA);
@@ -200,7 +200,7 @@ public class PlanService {
     }
 
     public List<String> getCompulsoryModules(Long userId, Long planId){
-        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         // Get degree and majors
@@ -212,77 +212,60 @@ public class PlanService {
         Set<Module> cores = new HashSet<>();
         List<Entry<Integer, List<Module>>> electives = new ArrayList<>();
 
-
         String degreeName = degree.getDegreeName();
 
         // Add all unsatisfied major cores
         cores.addAll(moduleRepository.findAllMajorCore(degreeName)
                 .stream()
-                .filter((module) -> !moduleIsInPlan(userId
-                                                , planId
-                                                , module.getModuleId()))
+                .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                 .toList());
 
         // Add all unsatisfied uni cores
         cores.addAll(moduleRepository.findAllSMUCore(degreeName)
                 .stream()
-                .filter((module) -> !moduleIsInPlan(userId
-                        , planId
-                        , module.getModuleId()))
+                .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                 .toList());
-
 
         if (firstMajor != null) {
             // Add all unsatisfied first major (track) core
             String firstMajorName = firstMajor.getMajorName();
             cores.addAll(moduleRepository.findAllFirstMajorCore(firstMajorName)
                     .stream()
-                    .filter((module) -> !moduleIsInPlan(userId
-                            , planId
-                            , module.getModuleId()))
+                    .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                     .toList());
 
             // Add all unsatisfied first major elective
             List<Module> firstMajorElectives = moduleRepository.findAllFirstMajorElective(firstMajor.getMajorName());
             List<Module> unsatisfiedFirstMajorElectives = firstMajorElectives.stream()
-                    .filter((module) -> !moduleIsInPlan(userId
-                            , planId
-                            , module.getModuleId()))
+                    .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                     .toList();
-            int numOfRemainingFirstMajorElective = firstMajor.getNumOfFirstMajorElective() - (firstMajorElectives.size() - unsatisfiedFirstMajorElectives.size());
-            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingFirstMajorElective, unsatisfiedFirstMajorElectives));
-
+            int numOfRemainingFirstMajorElective = (firstMajor.getNumOfFirstMajorElective() != null ? firstMajor.getNumOfFirstMajorElective() : 0) - (firstMajorElectives.size() - unsatisfiedFirstMajorElectives.size());
+            electives.add(new SimpleEntry<>(numOfRemainingFirstMajorElective, unsatisfiedFirstMajorElectives));
         }
 
-        if (secondMajor != null){
+        if (secondMajor != null) {
             // Add all unsatisfied second major core if any
             String secondMajorName = secondMajor.getMajorName();
             cores.addAll(moduleRepository.findAllAdditionalSecondMajorModuleCore(secondMajorName)
                     .stream()
-                    .filter((module) -> !moduleIsInPlan(userId
-                            , planId
-                            , module.getModuleId()))
+                    .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                     .toList());
 
             // Add all unsatisfied second major elective
             List<Module> secondMajorElectives = moduleRepository.findAllFirstMajorElective(secondMajorName);
             List<Module> unsatisfiedSecondMajorElectives = secondMajorElectives.stream()
-                    .filter((module) -> !moduleIsInPlan(userId
-                            , planId
-                            , module.getModuleId()))
+                    .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                     .toList();
-            int numOfRemainingSecondMajorElective = secondMajor.getNumOfFirstMajorElective() - (secondMajorElectives.size() - unsatisfiedSecondMajorElectives.size());
-            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingSecondMajorElective, unsatisfiedSecondMajorElectives));
+            int numOfRemainingSecondMajorElective = (secondMajor.getNumOfFirstMajorElective() != null ? secondMajor.getNumOfFirstMajorElective() : 0) - (secondMajorElectives.size() - unsatisfiedSecondMajorElectives.size());
+            electives.add(new SimpleEntry<>(numOfRemainingSecondMajorElective, unsatisfiedSecondMajorElectives));
 
             // Add all unsatisfied additional second major elective
             List<Module> secondMajorAdditionalElectives = moduleRepository.findAllAdditionalSecondMajorModuleElective(secondMajorName);
             List<Module> unsatisfiedSecondMajorAdditionalElectives = secondMajorAdditionalElectives.stream()
-                    .filter((module) -> !moduleIsInPlan(userId
-                            , planId
-                            , module.getModuleId()))
+                    .filter((module) -> !moduleIsInPlan(userId, planId, module.getModuleId()))
                     .toList();
-            int numOfRemainingSecondMajorAdditionalElective = secondMajor.getNumOfSecondMajorElective() - (secondMajorAdditionalElectives.size() - unsatisfiedSecondMajorAdditionalElectives.size());
-            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingSecondMajorAdditionalElective, unsatisfiedSecondMajorAdditionalElectives));
+            int numOfRemainingSecondMajorAdditionalElective = (secondMajor.getNumOfSecondMajorElective() != null ? secondMajor.getNumOfSecondMajorElective() : 0) - (secondMajorAdditionalElectives.size() - unsatisfiedSecondMajorAdditionalElectives.size());
+            electives.add(new SimpleEntry<>(numOfRemainingSecondMajorAdditionalElective, unsatisfiedSecondMajorAdditionalElectives));
         }
 
         List<String> compulsoryModules = new ArrayList<>();
@@ -311,7 +294,7 @@ public class PlanService {
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
-        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         Map<String, Double> targetRequirement = getPlanTargetRequirement(userId, planId);
@@ -327,7 +310,7 @@ public class PlanService {
     }
 
     private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
-        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         return plan.getDegree().getGradRequirement();

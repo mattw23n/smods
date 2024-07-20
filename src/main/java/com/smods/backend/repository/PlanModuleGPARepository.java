@@ -10,6 +10,7 @@ import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, PlanModuleGPAKey> {
@@ -35,4 +36,7 @@ public interface PlanModuleGPARepository extends JpaRepository<PlanModuleGPA, Pl
             "WHERE p.plan.planKey.planId = :planId " +
             "AND p.plan.planKey.userId = :userId")
     List<Module> findAllModulesByPlanId(@Param("planId") Long planId, @Param("userId") Long userId);
+
+    @Query("SELECT pmg FROM PlanModuleGPA pmg WHERE pmg.planModuleGPAId = :planModuleGPAKey")
+    Optional<PlanModuleGPA> findByPlanModuleGPAKey(@Param("planModuleGPAKey") PlanModuleGPAKey planModuleGPAKey);
 }
