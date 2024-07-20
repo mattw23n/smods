@@ -157,7 +157,6 @@ public class PlanService {
         for (PlanModuleGPA planModule : planModules) {
             String moduleId = planModule.getModule().getModuleId();
             int term = planModule.getTerm();
-            boolean isError = false;
 
             List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
             List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
@@ -165,7 +164,6 @@ public class PlanService {
             for (Module preReq : preRequisites) {
                 if (!takenModulesBeforeTerm.stream().anyMatch(m -> m.getModuleId().equals(preReq.getModuleId()))) {
                     unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
-                    isError = true;
                 }
             }
 
@@ -175,7 +173,6 @@ public class PlanService {
             for (Module coReq : coRequisites) {
                 if (!takenModulesInTerm.stream().anyMatch(m -> m.getModuleId().equals(coReq.getModuleId()))) {
                     unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
-                    isError = true;
                 }
             }
 
@@ -185,11 +182,9 @@ public class PlanService {
             for (Module conflict : mutuallyExclusives) {
                 if (takenModules.stream().anyMatch(m -> m.getModuleId().equals(conflict.getModuleId()))) {
                     mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
-                    isError = true;
                 }
             }
 
-            planModule.setError(isError);
             planModuleGPARepository.save(planModule);
         }
 

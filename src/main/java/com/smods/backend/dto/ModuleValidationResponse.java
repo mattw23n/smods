@@ -9,7 +9,6 @@ public class ModuleValidationResponse {
     private List<String> unsatisfiedPreRequisites;
     private List<String> unsatisfiedCoRequisites;
     private List<String> mutuallyExclusiveConflicts;
-    private List<PlanModuleGPA> planModuleGPAs;
     private List<String> compulsoryModules;
     private Map<String, Double> planRequirementProgress;
 
@@ -17,7 +16,6 @@ public class ModuleValidationResponse {
         this.unsatisfiedPreRequisites = unsatisfiedPreRequisites;
         this.unsatisfiedCoRequisites = unsatisfiedCoRequisites;
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
-        this.planModuleGPAs = planModuleGPAs;
         this.compulsoryModules = compulsoryModules;
         this.planRequirementProgress = planRequirementProgress;
     }
@@ -46,14 +44,6 @@ public class ModuleValidationResponse {
 
     public void setMutuallyExclusiveConflicts(List<String> mutuallyExclusiveConflicts) {
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
-    }
-
-    public List<PlanModuleGPA> getPlanModuleGPAs() {
-        return planModuleGPAs;
-    }
-
-    public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
-        this.planModuleGPAs = planModuleGPAs;
     }
 
     public List<String> getCompulsoryModules() {

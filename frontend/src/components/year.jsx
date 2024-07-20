@@ -189,6 +189,14 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             if (addResponse.ok) {
                 const validationResponse = await addResponse.json();
                 setValidationResponse(validationResponse);
+
+                // Iterate over all modules and set isError based on validation response
+                copy.forEach(mod => {
+                    const moduleId = mod.module.moduleId;
+                    mod.isError = validationResponse.unsatisfiedPreRequisites.some(pr => pr.includes(moduleId)) ||
+                        validationResponse.unsatisfiedCoRequisites.some(cr => cr.includes(moduleId)) ||
+                        validationResponse.mutuallyExclusiveConflicts.some(mc => mc.includes(moduleId));
+                });
             } else {
                 console.error('Failed to add module to the new term:', addResponse.statusText);
             }
