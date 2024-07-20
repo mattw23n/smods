@@ -12,8 +12,12 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyStore;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.AbstractMap.SimpleEntry;
 
 @Service
 public class PlanService {
@@ -173,6 +177,117 @@ public class PlanService {
         }
 
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
+    }
+
+    public List<String> getCompulsoryModules(Long userId, Long planId){
+        Plan plan = planRepository.findById(new PlanKey(userId, planId))
+                .orElseThrow(() -> new RuntimeException("Plan not found"));
+
+        // Get degree and majors
+        Degree degree = plan.getDegree();
+        Major firstMajor = plan.getFirstMajor();
+        Major secondMajor = plan.getSecondMajor();
+
+        // Prepare separate core modules and electives
+        Set<Module> cores = new HashSet<>();
+        List<Entry<Integer, List<Module>>> electives = new ArrayList<>();
+
+
+        String degreeName = degree.getDegreeName();
+
+        // Add all unsatisfied major cores
+        cores.addAll(moduleRepository.findAllMajorCore(degreeName)
+                .stream()
+                .filter((module) -> !moduleIsInPlan(userId
+                                                , planId
+                                                , module.getModuleId()))
+                .toList());
+
+        // Add all unsatisfied uni cores
+        cores.addAll(moduleRepository.findAllSMUCore(degreeName)
+                .stream()
+                .filter((module) -> !moduleIsInPlan(userId
+                        , planId
+                        , module.getModuleId()))
+                .toList());
+
+
+        if (firstMajor != null) {
+            // Add all unsatisfied first major (track) core
+            String firstMajorName = firstMajor.getMajorName();
+            cores.addAll(moduleRepository.findAllFirstMajorCore(firstMajorName)
+                    .stream()
+                    .filter((module) -> !moduleIsInPlan(userId
+                            , planId
+                            , module.getModuleId()))
+                    .toList());
+
+            // Add all unsatisfied first major elective
+            List<Module> firstMajorElectives = moduleRepository.findAllFirstMajorElective(firstMajor.getMajorName());
+            List<Module> unsatisfiedFirstMajorElectives = firstMajorElectives.stream()
+                    .filter((module) -> !moduleIsInPlan(userId
+                            , planId
+                            , module.getModuleId()))
+                    .toList();
+            int numOfRemainingFirstMajorElective = firstMajor.getNumOfFirstMajorElective() - (firstMajorElectives.size() - unsatisfiedFirstMajorElectives.size());
+            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingFirstMajorElective, unsatisfiedFirstMajorElectives));
+
+        }
+
+        if (secondMajor != null){
+            // Add all unsatisfied second major core if any
+            String secondMajorName = secondMajor.getMajorName();
+            cores.addAll(moduleRepository.findAllAdditionalSecondMajorModuleCore(secondMajorName)
+                    .stream()
+                    .filter((module) -> !moduleIsInPlan(userId
+                            , planId
+                            , module.getModuleId()))
+                    .toList());
+
+            // Add all unsatisfied second major elective
+            List<Module> secondMajorElectives = moduleRepository.findAllFirstMajorElective(secondMajorName);
+            List<Module> unsatisfiedSecondMajorElectives = secondMajorElectives.stream()
+                    .filter((module) -> !moduleIsInPlan(userId
+                            , planId
+                            , module.getModuleId()))
+                    .toList();
+            int numOfRemainingSecondMajorElective = secondMajor.getNumOfFirstMajorElective() - (secondMajorElectives.size() - unsatisfiedSecondMajorElectives.size());
+            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingSecondMajorElective, unsatisfiedSecondMajorElectives));
+
+            // Add all unsatisfied additional second major elective
+            List<Module> secondMajorAdditionalElectives = moduleRepository.findAllAdditionalSecondMajorModuleElective(secondMajorName);
+            List<Module> unsatisfiedSecondMajorAdditionalElectives = secondMajorAdditionalElectives.stream()
+                    .filter((module) -> !moduleIsInPlan(userId
+                            , planId
+                            , module.getModuleId()))
+                    .toList();
+            int numOfRemainingSecondMajorAdditionalElective = secondMajor.getNumOfSecondMajorElective() - (secondMajorAdditionalElectives.size() - unsatisfiedSecondMajorAdditionalElectives.size());
+            electives.add(new SimpleEntry<Integer, List<Module>>(numOfRemainingSecondMajorAdditionalElective, unsatisfiedSecondMajorAdditionalElectives));
+        }
+
+        List<String> compulsoryModules = new ArrayList<>();
+
+        String notice = "You must take:";
+        for (Module module : cores){
+            notice += " " + module.getModuleId();
+        }
+
+        compulsoryModules.add(notice);
+
+        for (Entry<Integer, List<Module>> entry : electives){
+            notice = "You must take any " + entry.getKey() + " of:";
+            for (Module module : entry.getValue()){
+                notice += " " + module.getModuleId();
+            }
+
+            compulsoryModules.add(notice);
+        }
+
+        return compulsoryModules;
+    }
+
+    public boolean moduleIsInPlan(Long userId, Long planId, String moduleId){
+        return planModuleGPARepository.existsById(new PlanModuleGPAKey(new PlanKey(userId, planId), moduleId));
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){

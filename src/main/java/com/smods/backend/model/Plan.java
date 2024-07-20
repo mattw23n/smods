@@ -21,6 +21,7 @@ public class Plan {
     @Column(name = "CREATION_DATE")
     private ZonedDateTime creationDateTime;
 
+
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "USER_ID")

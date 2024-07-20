@@ -33,4 +33,19 @@ public interface ModuleRepository extends JpaRepository<Module, String> {
 
     @Query("SELECT DISTINCT mmr.module FROM MajorModuleRequirement mmr WHERE mmr.degree.degreeName = :degreeName AND mmr.isSMUCore = false")
     List<Module> findAllMajorElective(@Param("degreeName") String degreeName);
+
+
+    @Query("SELECT DISTINCT fmmr.module FROM FirstMajorModuleRequirement fmmr WHERE fmmr.major.majorName = :majorName AND fmmr.isCompulsory = true")
+    List<Module> findAllFirstMajorCore(@Param("majorName") String majorName);
+
+    @Query("SELECT DISTINCT fmmr.module FROM FirstMajorModuleRequirement fmmr WHERE fmmr.major.majorName = :majorName AND fmmr.isCompulsory = false")
+    List<Module> findAllFirstMajorElective(@Param("majorName") String majorName);
+
+    @Query("SELECT DISTINCT asmmr.module FROM AdditionalSecondMajorModuleRequirement asmmr WHERE asmmr.major.majorName = :majorName AND asmmr.isCompulsory = true")
+    List<Module> findAllAdditionalSecondMajorModuleCore(@Param("majorName") String majorName);
+
+    @Query("SELECT DISTINCT asmmr.module FROM AdditionalSecondMajorModuleRequirement asmmr WHERE asmmr.major.majorName = :majorName AND asmmr.isCompulsory = false")
+    List<Module> findAllAdditionalSecondMajorModuleElective(@Param("majorName") String majorName);
+
+
 }
