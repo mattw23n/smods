@@ -33,4 +33,6 @@ public interface ModuleRepository extends JpaRepository<Module, String> {
 
     @Query("SELECT DISTINCT mmr.module FROM MajorModuleRequirement mmr WHERE mmr.degree.degreeName = :degreeName AND mmr.isSMUCore = false")
     List<Module> findAllMajorElective(@Param("degreeName") String degreeName);
+
+    List<Module> findByModuleIdContainingIgnoreCase(String searchTerm);
 }

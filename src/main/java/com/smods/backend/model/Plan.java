@@ -56,6 +56,10 @@ public class Plan {
         this.secondMajor = secondMajor;
     }
 
+    public Plan(PlanKey planKey) {
+        this.planKey = planKey;
+    }
+
     public PlanKey getPlanKey() {
         return planKey;
     }

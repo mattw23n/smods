@@ -1,6 +1,7 @@
 package com.smods.backend.controller;
 
 import com.smods.backend.model.Module;
+import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class ModuleController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Module>> searchModules(@RequestParam String searchTerm) {
-        List<Module> modules = moduleService.searchModules(searchTerm);
-        return ResponseEntity.ok(modules);
+    public ResponseEntity<List<PlanModuleGPA>> searchModules(@RequestParam String searchTerm, @RequestParam Long planId, @RequestParam Long userId) {
+        List<PlanModuleGPA> planModuleGPAs = moduleService.searchModules(searchTerm, planId, userId);
+        return ResponseEntity.ok(planModuleGPAs);
     }
 }
