@@ -5,10 +5,7 @@ import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,11 @@ public class ModuleController {
             @RequestParam Long userId) {
         List<PlanModuleGPA> planModuleGPAs = moduleService.searchModules(searchTerm, filter, planId, userId);
         return ResponseEntity.ok(planModuleGPAs);
+    }
+
+    @GetMapping("/{moduleId}")
+    public ResponseEntity<Module> getModuleDetails(@PathVariable String moduleId) {
+        Module module = moduleService.getModuleDetails(moduleId);
+        return ResponseEntity.ok(module);
     }
 }

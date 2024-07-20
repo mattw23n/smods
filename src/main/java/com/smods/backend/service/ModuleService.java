@@ -35,8 +35,15 @@ public class ModuleService {
         return modules.stream().map(module -> {
             PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, module.getModuleId());
             PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, 0);
-            planModuleGPA.setModule(module);
+            planModuleGPA.setModule(module); // Ensure module details are included
+            planModuleGPA.setError(false); // Default to no errors
             return planModuleGPA;
         }).collect(Collectors.toList());
     }
+
+    public Module getModuleDetails(String moduleId) {
+        return moduleRepository.findById(moduleId)
+                .orElseThrow(() -> new RuntimeException("Module not found"));
+    }
 }
+

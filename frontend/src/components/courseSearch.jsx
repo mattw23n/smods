@@ -3,9 +3,10 @@ import Mod from "./mods";
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
-        console.log('Drag started for module:', module);
-        e.dataTransfer.setData("moduleId", module.module.moduleId);
-        e.dataTransfer.setData("originTerm", 0);
+        if (module && module.module) {
+            e.dataTransfer.setData("moduleId", module.module.moduleId);
+            e.dataTransfer.setData("originTerm", 0);
+        }
     };
 
     const isEmpty = !searchResult || searchResult.length === 0;
@@ -15,6 +16,7 @@ const ModuleRepository = ({ searchResult, plan }) => {
             <div className="bg-white p-2 rounded-3xl">
                 {!isEmpty && searchResult.map((m, index) => {
                     if (!m || !m.module) {
+                        console.warn(`Skipping invalid module at index ${index}`, m);
                         return null;
                     }
 

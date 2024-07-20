@@ -20,7 +20,10 @@ public class PlanModuleGPA {
     @Column(name = "TERM", nullable = false)
     private int term;
 
-    @ManyToOne
+    @Column(name = "IS_ERROR", nullable = false)
+    private boolean isError = false;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false, nullable = false),
             @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID", insertable = false, updatable = false, nullable = false)
@@ -28,7 +31,7 @@ public class PlanModuleGPA {
     @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MODULE_ID", referencedColumnName = "MODULE_ID", insertable = false, updatable = false, nullable = false)
     private Module module;
 
@@ -40,7 +43,7 @@ public class PlanModuleGPA {
         this.term = term;
     }
 
-    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Module module, PlanKey planKey, double gpa, int term) {
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Module module, PlanKey planKey, int term) {
         this.planModuleGPAId = planModuleGPAId;
         this.module = module;
         this.plan = new Plan(planKey);
@@ -69,6 +72,14 @@ public class PlanModuleGPA {
 
     public void setTerm(int term) {
         this.term = term;
+    }
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public void setError(boolean error) {
+        isError = error;
     }
 
     public Plan getPlan() {
