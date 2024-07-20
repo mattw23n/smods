@@ -2,6 +2,7 @@ package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
 import com.smods.backend.dto.PlanModuleGPADTO;
+import com.smods.backend.exception.MaximumNumberOfPlansException;
 import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
@@ -51,6 +52,10 @@ public class PlanService {
     public Plan createPlan(Long userId, PlanRequest planRequest) {
         authorizationService.checkUserAuthorization(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getPlans().size() >= 8) {
+            throw new MaximumNumberOfPlansException("Maximum number of plans reached.");
+        }
 
         // Check for duplicate plan name
         if (planRepository.existsByUserAndPlanName(user, planRequest.getPlanName())) {
