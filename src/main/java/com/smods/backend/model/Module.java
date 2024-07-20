@@ -36,8 +36,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "PRE_REQUISITE",
-            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID", nullable = false)
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "PRE_REQUISITE_MODULE_ID")
     )
     @JsonBackReference(value = "preRequisites")
     List<Module> preRequisites;
@@ -45,8 +45,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "CO_REQUISITE",
-            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID", nullable = false)
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "CO_REQUISITE_MODULE_ID")
     )
     @JsonBackReference(value = "coRequisites")
     private List<Module> coRequisites;
@@ -54,8 +54,8 @@ public class Module {
     @ManyToMany
     @JoinTable(
             name = "MUTUALLY_EXCLUSIVE",
-            joinColumns = @JoinColumn(name = "MODULE_ID", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID", nullable = false)
+            joinColumns = @JoinColumn(name = "MODULE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MUTUALLY_EXCLUSIVE_MODULE_ID")
     )
     @JsonBackReference(value = "mutuallyExclusives")
     private List<Module> mutuallyExclusives;

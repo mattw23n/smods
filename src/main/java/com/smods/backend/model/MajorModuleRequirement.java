@@ -123,8 +123,8 @@ public class MajorModuleRequirement {
                 ", isSMUCore=" + isSMUCore +
                 ", basket='" + basket + '\'' +
                 ", subtype='" + subtype + '\'' +
-                ", module=" + module +
-                ", degree=" + degree +
+                ", module=" + module.getModuleId() +
+                ", degree=" + degree.getDegreeName() +
                 '}';
     }
 }

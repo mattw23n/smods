@@ -2,12 +2,14 @@ package com.smods.backend.model.composite_key;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
 public class PlanModuleGPAKey implements Serializable {
+    @Embedded
     private PlanKey planKey;
 
     @Column(name = "MODULE_ID", nullable = false)

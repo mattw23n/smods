@@ -144,7 +144,7 @@ public class Major {
                 ", secondMajorDifferentSchool=" + secondMajorDifferentSchool +
                 ", numOfSecondMajorElective=" + numOfSecondMajorElective +
                 ", numOfFirstMajorElective=" + numOfFirstMajorElective +
-                ", degree=" + degree +
+                ", degree=" + degree.getDegreeName() +
                 ", additionalSecondMajorModuleRequirements=" + additionalSecondMajorModuleRequirements +
                 ", firstMajorModuleRequirements=" + firstMajorModuleRequirements +
                 '}';

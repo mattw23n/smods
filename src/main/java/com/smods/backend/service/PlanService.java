@@ -10,6 +10,7 @@ import com.smods.backend.model.composite_key.PlanKey;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import com.smods.backend.repository.*;
 import jakarta.transaction.Transactional;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,8 +122,10 @@ public class PlanService {
                 }
 
                 PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+                planModuleGPA.setPlan(plan);
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
+
             } else {
                 PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
                         .orElseThrow(() -> new RuntimeException("Module not found in plan"));
@@ -294,23 +297,23 @@ public class PlanService {
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
-        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
+        Plan plan = planRepository.findByPlanKey(new PlanKey(planId, userId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
-        Map<String, Double> targetRequirement = getPlanTargetRequirement(userId, planId);
+        Map<String, Double> targetRequirement = getPlanTargetRequirement(planId, userId);
         Map<String, Double> progressRequirement = new HashMap<>();
 
         List<PlanModuleGPA> planModules = plan.getPlanModuleGPAs();
 
         for (PlanModuleGPA planModule : planModules){
-            updatePlanRequirementProgress(planModule.getPlan(), targetRequirement, progressRequirement, planModule.getModule());
+            updatePlanRequirementProgress(plan, targetRequirement, progressRequirement, planModule.getModule());
         }
 
         return progressRequirement;
     }
 
-    private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
-        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
+    private Map<String, Double> getPlanTargetRequirement(Long planId, Long userId) {
+        Plan plan = planRepository.findByPlanKey(new PlanKey(planId, userId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         return plan.getDegree().getGradRequirement();
@@ -341,6 +344,14 @@ public class PlanService {
                                           Map<String, Double> targetRequirement,
                                           Map<String, Double> requirementProgress,
                                           Double courseUnit){
+
+        if (targetRequirement.get(category) == null){
+            targetRequirement.put(category, 0.0);
+        }
+
+        if (requirementProgress.get(category) == null){
+            requirementProgress.put(category, 0.0);
+        }
 
         if (Double.compare(targetRequirement.get(category), requirementProgress.get(category)) <= 0) {
             incrementPlanRequirement(Module.getLowerHierarchy(category), targetRequirement, requirementProgress, courseUnit);
