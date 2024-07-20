@@ -73,14 +73,15 @@ public class UserService {
         }
 
         List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> {
-            List<PlanModuleGPADTO> planModuleGPADTOs = plan.getPlanModuleGPAs().stream()
-                    .map(planModuleGPA -> new PlanModuleGPADTO(
-                            planModuleGPA.getModule().getModuleId(),
-                            planModuleGPA.getGpa(),
-                            planModuleGPA.getTerm()
-                    ))
-                    .collect(Collectors.toList());
-
+            List<PlanModuleGPADTO> planModuleGPADTOs = plan.getPlanModuleGPAs().stream().map(pgpa ->
+                    new PlanModuleGPADTO(
+                            pgpa.getModule().getModuleId(),
+                            pgpa.getModule().getModuleName(),
+                            pgpa.getGpa(),
+                            pgpa.getTerm(),
+                            false // Set isError to false initially
+                    )
+            ).collect(Collectors.toList());
             return new PlanDTO(
                     plan.getPlanKey().getPlanId(),
                     plan.getPlanName(),
@@ -88,7 +89,7 @@ public class UserService {
                     plan.getFirstMajor().getMajorName(),
                     plan.getSecondMajor().getMajorName(),
                     plan.getCreationDateTime(),
-                    planModuleGPADTOs // Include the planModuleGPADTOs
+                    planModuleGPADTOs // Pass the list of PlanModuleGPADTO
             );
         }).collect(Collectors.toList());
 

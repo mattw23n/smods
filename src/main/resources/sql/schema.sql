@@ -1,7 +1,101 @@
 DROP DATABASE `SMODS`;
 CREATE DATABASE IF NOT EXISTS `smods`;
 USE `smods`;
+	
+-- Drop tables if they exist (in reverse order of dependencies)
+DROP TABLE IF EXISTS `MUTUALLY_EXCLUSIVE`;
+DROP TABLE IF EXISTS `CO_REQUISITE`;
+DROP TABLE IF EXISTS `PRE_REQUISITE`;
+DROP TABLE IF EXISTS `GRAD_REQUIREMENTS`;
+DROP TABLE IF EXISTS `PLAN_MODULE_PREASSIGNED_GPA`;
+DROP TABLE IF EXISTS `PLAN_MODULE_GPA`;
+DROP TABLE IF EXISTS `USERS`;
+DROP TABLE IF EXISTS `PLAN`;
+DROP TABLE IF EXISTS `MODULE`;
 
+-- Create PLAN table
+CREATE TABLE `PLAN` (
+    `PID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `PName` VARCHAR(100) DEFAULT NULL,
+    `Degree` VARCHAR(100) DEFAULT NULL,
+    `Track` VARCHAR(100) DEFAULT NULL
+);
+
+-- Create USERS table
+CREATE TABLE `USERS` (
+    `ID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `Username` VARCHAR(255) NOT NULL,
+    `Password` VARCHAR(100) NOT NULL,
+    `Email` VARCHAR(255) NOT NULL,
+    `Role` VARCHAR(50) NOT NULL,
+    `EmailVerified` BOOLEAN NOT NULL,
+    `VerificationCode` VARCHAR(255) NOT NULL,
+    `PID` INT,
+    FOREIGN KEY (`PID`) REFERENCES `PLAN` (`PID`)
+);
+
+-- Create MODULE table
+CREATE TABLE `MODULE` (
+    `CID` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `CName` VARCHAR(100) DEFAULT NULL,
+    `CU` INT DEFAULT NULL
+);
+
+-- Create PLAN_MODULE_GPA table
+CREATE TABLE `PLAN_MODULE_GPA` (
+    `PID` INT NOT NULL,
+    `CID` INT NOT NULL,
+    `GPA` FLOAT,
+    PRIMARY KEY (`PID`, `CID`),
+    FOREIGN KEY (`PID`) REFERENCES `PLAN` (`PID`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`)
+);
+
+-- Create PLAN_MODULE_PREASSIGNED_GPA table
+CREATE TABLE `PLAN_MODULE_PREASSIGNED_GPA` (
+    `PID` INT NOT NULL,
+    `CID` INT NOT NULL,
+    `GPA` FLOAT,
+    `Term` VARCHAR(100),
+    PRIMARY KEY (`PID`, `CID`),
+    FOREIGN KEY (`PID`) REFERENCES `PLAN` (`PID`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`)
+);
+
+-- Create GRAD_REQUIREMENTS table
+CREATE TABLE `GRAD_REQUIREMENTS` (
+    `CID` INT NOT NULL,
+    `Requirements` VARCHAR(100),
+    PRIMARY KEY (`CID`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`)
+);
+
+-- Create PRE_REQUISITE table
+CREATE TABLE `PRE_REQUISITE` (
+    `CID` INT NOT NULL,
+    `CID2` INT NOT NULL,
+    PRIMARY KEY (`CID`, `CID2`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`),
+    FOREIGN KEY (`CID2`) REFERENCES `MODULE` (`CID`)
+);
+
+-- Create CO_REQUISITE table
+CREATE TABLE `CO_REQUISITE` (
+    `CID` INT NOT NULL,
+    `CID2` INT NOT NULL,
+    PRIMARY KEY (`CID`, `CID2`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`),
+    FOREIGN KEY (`CID2`) REFERENCES `MODULE` (`CID`)
+);
+
+-- Create MUTUALLY_EXCLUSIVE table
+CREATE TABLE `MUTUALLY_EXCLUSIVE` (
+    `CID` INT NOT NULL,
+    `CID2` INT NOT NULL,
+    PRIMARY KEY (`CID`, `CID2`),
+    FOREIGN KEY (`CID`) REFERENCES `MODULE` (`CID`),
+    FOREIGN KEY (`CID2`) REFERENCES `MODULE` (`CID`)
+);
 DROP TABLE IF EXISTS `PLAN`;
 DROP TABLE IF EXISTS `MUTUALLY_EXCLUSIVE`;
 DROP TABLE IF EXISTS `CO_REQUISITE`;
@@ -107,7 +201,7 @@ VALUES ('CS69', 'Computer Science', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS6969', 'Computer Science', 1.0);
 
-insert into PRE_REQUISITE (module_id, module_id2)
+insert into PRE_REQUISITE (module_id, pre_requisite_module_id)
 VALUES ('CS69', 'CS6969');
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
@@ -116,14 +210,14 @@ VALUES ('CS1234', 'Computer Science', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS5678', 'Computer Science', 1.0);
 
-insert into CO_REQUISITE (module_id, module_id2)
+insert into CO_REQUISITE (module_id, co_requisite_module_id)
 VALUES ('CS1234', 'CS5678');
 
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('IS111', 'Python', 1.0);
 
-insert into MUTUALLY_EXCLUSIVE (module_id, module_id2)
+insert into MUTUALLY_EXCLUSIVE (module_id, mutually_exclusive_module_id)
 VALUES ('IS111', 'CS101');
 
 INSERT INTO MODULE (module_id, module_name, course_unit)
@@ -132,7 +226,7 @@ VALUES ('CS0', 'testing prereq', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS1', 'testing prereq', 1.0);
 
-insert into pre_requisite (module_id, module_id2)
+insert into pre_requisite (module_id, pre_requisite_module_id)
 VALUES ('CS102', 'CS1');
 
 SELECT * FROM `plan_module_gpa`;

@@ -201,7 +201,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         filteredMods = mods.filter((m) => m.term === term);
     }
 
-    filteredMods.sort((f1, f2) => f1.moduleId.localeCompare(f2.moduleId));
+    // filteredMods.sort((f1, f2) => f1.moduleId.localeCompare(f2.moduleId));
 
     const totalTermGPA = filteredMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
     const termGPA = totalTermGPA / filteredMods.length;
@@ -231,9 +231,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
                 {filteredMods.map((m) => {
                     return (
-                        <div key={m.moduleId} className="flex items-center justify-between">
-                            <Mod module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
-                        </div>
+                            <Mod key={m.module.moduleId} module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
                     )
                 })}
                 <DropIndicator beforeId={-1} term={term} />
@@ -243,6 +241,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 };
 
 function Year({ num, plan, mods, setMods, setValidationResponse }) {
+
     mods.sort((m1, m2) => m1.term - m2.term);
     const { isGPAOn, isEditMode, view } = plan;
     const isGroupView = view === 1;
@@ -260,7 +259,7 @@ function Year({ num, plan, mods, setMods, setValidationResponse }) {
     return (
         <>
             {!isGroupView && (
-                <div className="h-fit p-4 bg-white/30 rounded-3xl opacity-100 flex flex-col justify-left gap-y-2 transition all">
+                <div className="h-fit p-4 bg-white/30 rounded-3xl flex flex-col justify-left gap-y-2 transition all">
                     <div className="flex justify-between">
                         <p className="font-poppins font-bold text-sm">Year {num}</p>
                         {isGPAOn && (<p className="font-poppins text-sm">{yearGPA.toFixed(2)}/4.0</p>)}

@@ -1,24 +1,29 @@
 import React, { useState } from "react";
+import Mod from "./mods";
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("moduleId", module.moduleId);
     };
 
+    const isEmpty = searchResult.length === 0
+
+    console.log("search result", searchResult)
+
     return (
-        <div className="bg-white p-2 rounded-3xl max-w-full overflow-auto">
-            {searchResult.map((m) => {
-                return (
-                    <div
-                        key={m.moduleId}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, m)}
-                        className="bg-gray-100 p-2 rounded-lg mb-2 cursor-pointer"
-                    >
-                        {m.moduleId} - {m.moduleName}
+        <div className="overflow-y-auto max-h-[400px]">
+                <div className="bg-white p-2 rounded-3xl">
+                {!isEmpty && searchResult.map((m) => {
+                    return <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={handleDragStart}/>
+                })}
+                {isEmpty && (
+                    <div className="p-2 font-archivo text-center my-5">
+    
+                        <p className="font-bold">No mods matching that description :(</p>
+                        <p className="text-sm">Try searching with a different filter or keyword</p>
                     </div>
-                );
-            })}
+                )}
+                </div>
         </div>
     );
 };
@@ -27,6 +32,7 @@ const SearchBar = ({ plan }) => {
     const [selectedFilter, setFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
+    const [error, setError] = useState("")
 
     const typeDict = [
         { type: "uc", fullType: "Uni Core" },
@@ -56,6 +62,7 @@ const SearchBar = ({ plan }) => {
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
+        setError("")
     };
 
     const handleInputChange = (event) => {
@@ -64,9 +71,16 @@ const SearchBar = ({ plan }) => {
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
+
+        if (selectedFilter === '') {
+            setError("Please select a filter.");
+            return
+        } 
+
+
         const jwtToken = localStorage.getItem('jwt');
         const authHeader = `Bearer ${jwtToken}`;
-        const apiUrl = `http://localhost:8080/api/modules/search?searchTerm=${searchTerm}`;
+        const apiUrl = `http://localhost:8080/api/modules/search?searchTerm=${searchTerm}&planId=${plan.planId}&userId=${plan.userId}`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -110,6 +124,7 @@ const SearchBar = ({ plan }) => {
                 </select>
                 E.g. {getExampleByFilter(selectedFilter)}
             </div>
+            {error && <p className="text-red-500 text-sm mb-2 font-archivo">{error}</p>}
 
             <form className="max-w-full mb-4" onSubmit={handleSearchSubmit}>
                 <label htmlFor="default-search" className="mb-2 text-sm font-archivo text-gray-900 sr-only">Search</label>
@@ -143,7 +158,7 @@ const SearchBar = ({ plan }) => {
 
 const CourseSearch = ({ plan }) => {
     return (
-        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit max-w-full overflow-auto">
+        <div className="bg-white/50 p-4 rounded-3xl flex flex-col gap-10 mb-10 max-h-[500px] h-fit min-w-[400px] overflow-auto">
             <div>
                 <p className="font-poppins font-bold text-sm mb-2">Course Search</p>
                 <SearchBar plan={plan}></SearchBar>

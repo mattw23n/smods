@@ -3,6 +3,7 @@ package com.smods.backend.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.smods.backend.model.composite_key.PlanModuleGPAKey;
 import jakarta.persistence.*;
+import com.smods.backend.model.composite_key.PlanKey;
 
 import java.util.Objects;
 
@@ -36,6 +37,14 @@ public class PlanModuleGPA {
 
     public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, int term) {
         this.planModuleGPAId = planModuleGPAId;
+        this.term = term;
+    }
+
+    public PlanModuleGPA(PlanModuleGPAKey planModuleGPAId, Module module, PlanKey planKey, double gpa, int term) {
+        this.planModuleGPAId = planModuleGPAId;
+        this.module = module;
+        this.plan = new Plan(planKey);
+        this.gpa = gpa;
         this.term = term;
     }
 

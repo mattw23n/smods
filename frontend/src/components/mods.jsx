@@ -3,11 +3,57 @@ import { motion } from "framer-motion";
 import DeleteButton from "./deleteButton";
 import DropIndicator from "./dropIndicator";
 
+// {
+//     "planModuleGPAId": {
+//         "planId": {
+//             "planId": 0,
+//             "userId": 1234
+//         },
+//         "moduleId": "CS101"
+//     },
+//     "gpa": 0.0,
+//     "term": 1,
+//     "plan": {
+//         "planId": {
+//             "planId": 0,
+//             "userId": 1234
+//         },
+//         "planName": "Matteo gay",
+//         "creationDateTime": "2024-07-19T11:25:40.36652+07:00",
+//         "user": null,
+//         "planModuleGPAs": null,
+//         "degree": null,
+//         "firstMajor": null,
+//         "secondMajor": null
+//     },
+//     "module": {
+//         "moduleId": "CS101",
+//         "moduleName": "Programming Fundamentals I",
+//         "courseUnit": 1.0,
+//         "baskets": [
+//             "i forgot"
+//         ],
+//         "subtype": null,
+//         "planModuleGPAs": null,
+//         "preRequisites": null,
+//         "coRequisites": null,
+//         "mutuallyExclusives": null,
+//         "majorModuleRequirements": null
+//     }
+// }
+
+
 const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationResponse }) => {
-    const { moduleName, moduleId, courseUnit, gradRequirement, gradSubrequirement, preRequisites, coRequisites, mutuallyExclusives, major, term, GPA, isError, courseType, courseLink } = module;
+    // const { moduleName, moduleId, courseUnit, gradRequirement, gradSubrequirement, preRequisites, coRequisites, mutuallyExclusives, major, term, gpa, isError, subtype, courseLink } = module;
+    
+    const { gpa, term, isError } = module
+    const { moduleId, moduleName, subtype } = module.module
+    const courseLink = "https://www.afterclass.io/course/" + moduleId.toLowerCase()
+
+
     const { isEditMode, isGPAOn, view } = plan;
     const isGroupView = view === 1;
-    const isSearchMode = term === -1;
+    const isSearchMode = term === 0;
 
     const grades = [
         { letter: "A+", value: 4.3 },
@@ -33,7 +79,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
         return letter ? letter.letter : "";
     };
 
-    const [selectedGPA, setGPA] = useState(getLetterValue(GPA));
+    const [selectedGPA, setGPA] = useState("");
     const [selectedTerm, setTerm] = useState(term);
 
     const handleTermChange = (event) => {
@@ -89,7 +135,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
                     ${isGPAOn ? 'min-w-72' : 'min-w-64'} 
                     ${isGPAOn && isGroupView ? 'min-w-[320px]' : 'min-w-64'} 
                     ${isGroupView ? 'min-w-80' : 'min-w-64'} 
-                    ${isError ? 'bg-red-500' : `bg-${courseType}-l`}
+                    ${isError ? 'bg-red-500' : `bg-${subtype}-l`}
                 rounded-full items-center font-archivo 
                 text-xs flex gap-1 justify-between
                 cursor-grab active:cursor-grabbing`}
@@ -127,7 +173,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
                     {isGPAOn && !isSearchMode &&
                         <div>
                             {!isEditMode && (
-                                getLetterValue(GPA)
+                                getLetterValue(gpa)
                             )}
                             {isEditMode && (
                                 <select
@@ -135,7 +181,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
                                     value={selectedGPA || ""}
                                     onChange={handleGPAChange}
                                 >
-                                    <option>{getLetterValue(GPA)}</option>
+                                    <option>{getLetterValue(gpa)}</option>
                                     {grades.map((g, index) => (
                                         <option key={index} value={g.letter}>
                                             {g.letter}

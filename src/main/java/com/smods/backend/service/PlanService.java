@@ -1,6 +1,7 @@
 package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
+import com.smods.backend.dto.PlanModuleGPADTO;
 import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
 import com.smods.backend.model.Module;
@@ -111,7 +112,6 @@ public class PlanService {
 
         if (isAdding != null) {
             if (isAdding) {
-                // Check if module is already in plan
                 if (planModuleGPARepository.existsById(planModuleGPAKey)) {
                     throw new RuntimeException("Module is already in plan");
                 }
@@ -120,21 +120,24 @@ public class PlanService {
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
             } else {
-                // Check if module is in the plan
                 PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                         .orElseThrow(() -> new RuntimeException("Module not found in plan"));
 
                 planModuleGPARepository.delete(planModuleGPA);
             }
         } else if (gpa != null) {
-            // Update GPA if isAdding is not provided and GPA is provided
             PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                     .orElseThrow(() -> new RuntimeException("Module not found in plan"));
             planModuleGPA.setGpa(gpa);
             planModuleGPARepository.save(planModuleGPA);
         }
 
-        return validatePlanModules(planId, userId);
+        // Validate modules and calculate progress
+        ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
+        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+        validationResponse.setProgress(progress);
+
+        return validationResponse;
     }
 
     public ModuleValidationResponse validatePlanModules(Long planId, Long userId) {
@@ -143,10 +146,12 @@ public class PlanService {
         List<String> unsatisfiedPreRequisites = new ArrayList<>();
         List<String> unsatisfiedCoRequisites = new ArrayList<>();
         List<String> mutuallyExclusiveConflicts = new ArrayList<>();
+        Map<String, Boolean> moduleErrors = new HashMap<>();
 
         for (PlanModuleGPA planModule : planModules) {
             String moduleId = planModule.getModule().getModuleId();
             int term = planModule.getTerm();
+            boolean isError = false;
 
             List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
             List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
@@ -154,6 +159,7 @@ public class PlanService {
             for (Module preReq : preRequisites) {
                 if (!takenModulesBeforeTerm.contains(preReq)) {
                     unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
+                    isError = true;
                 }
             }
 
@@ -163,6 +169,7 @@ public class PlanService {
             for (Module coReq : coRequisites) {
                 if (!takenModulesInTerm.contains(coReq)) {
                     unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
+                    isError = true;
                 }
             }
 
@@ -172,11 +179,27 @@ public class PlanService {
             for (Module conflict : mutuallyExclusives) {
                 if (takenModules.contains(conflict)) {
                     mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
+                    isError = true;
                 }
             }
+
+            moduleErrors.put(moduleId, isError);
         }
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts);
+        List<PlanModuleGPADTO> planModuleGPADTOs = planModules.stream().map(pgpa ->
+                new PlanModuleGPADTO(
+                        pgpa.getModule().getModuleId(),
+                        pgpa.getModule().getModuleName(),
+                        pgpa.getGpa(),
+                        pgpa.getTerm(),
+                        moduleErrors.getOrDefault(pgpa.getModule().getModuleId(), false)
+                )
+        ).collect(Collectors.toList());
+
+        // Calculate progress
+        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs, progress);
     }
 
     public List<String> getCompulsoryModules(Long userId, Long planId){
@@ -305,6 +328,7 @@ public class PlanService {
 
         return progressRequirement;
     }
+
     private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
         Plan plan = planRepository.findById(new PlanKey(userId, planId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
