@@ -103,39 +103,44 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             console.log("origin term", originTerm)
             console.log("module Id", moduleId)
 
-            // Call the API to delete the module from the original term
-            try {
-                const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                    }
-                });
+            if(originTerm !== 0){
+                // Call the API to delete the module from the original term
+                try {
+                    const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                        }
+                    });
 
-                if (deleteResponse.ok) {
-                    console.log("Module successfully removed from the original term.");
-                } else {
-                    console.error('Failed to remove module from the original term:', deleteResponse.statusText);
+                    if (deleteResponse.ok) {
+                        console.log("Module successfully removed from the original term.");
+                    } else {
+                        console.error('Failed to remove module from the original term:', deleteResponse.statusText);
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error removing module from the original term:', error);
                     return;
                 }
-            } catch (error) {
-                console.error('Error removing module from the original term:', error);
-                return;
             }
+
+            
         }
 
         if (!modToTransfer) {
             // Add new module
             modToTransfer = { moduleId, term };
             copy.push(modToTransfer);
+
         } else {
             // Insert the module in the new term
             const moveToBack = before === "-1";
             if (moveToBack) {
                 copy.push(modToTransfer);
             } else {
-                const insertAtIndex = copy.findIndex((el) => el.moduleId === before);
+                const insertAtIndex = copy.findIndex((el) => el.module.moduleId === before);
                 if (insertAtIndex === undefined) return;
                 copy.splice(insertAtIndex, 0, modToTransfer);
             }
@@ -192,7 +197,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
                 setValidationResponse(validationResponse);  // Update the validation response state
 
                 // Update the frontend state to remove the module
-                setMods((prevMods) => prevMods.filter((mod) => mod.moduleId !== moduleId));
+                setMods((prevMods) => prevMods.filter((mod) => mod.module.moduleId !== moduleId));
             } else {
                 console.error('Failed to delete module:', response.statusText);
             }
@@ -211,7 +216,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     // filteredMods.sort((f1, f2) => f1.moduleId.localeCompare(f2.moduleId));
 
-    const totalTermGPA = filteredMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
+    const totalTermGPA = filteredMods.reduce((accumulator, mod) => accumulator + mod.gpa, 0);
     const termGPA = totalTermGPA / filteredMods.length;
 
     return (
@@ -259,10 +264,10 @@ function Year({ num, plan, mods, setMods, setValidationResponse }) {
 
     const yearMods = term1.concat(term2);
 
-    const totalYearGPA = yearMods.reduce((accumulator, mod) => accumulator + mod.GPA, 0);
+    const totalYearGPA = yearMods.reduce((accumulator, mod) => accumulator + mod.gpa, 0);
     const yearGPA = totalYearGPA / yearMods.length;
 
-    const groups = ["uc", "mc", "me", "tm", "fe"];
+    const groups = ["uc", "mc", "me", "fe"];
 
     return (
         <>

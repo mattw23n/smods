@@ -84,7 +84,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
 
     const handleTermChange = (event) => {
         const updatedTerm = parseInt(event.target.value);
-        const tempCopy = mods.map(m => m.moduleId === moduleId ? { ...m, term: updatedTerm } : m);
+        const tempCopy = mods.map(m => m.module.moduleId === moduleId ? { ...m, term: updatedTerm } : m);
 
         setMods(tempCopy);
         setTerm(updatedTerm);
@@ -94,11 +94,11 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
     const handleGPAChange = (event) => {
         const updatedGPA = event.target.value;
         console.log("Selected GPA:", updatedGPA);
-        const tempCopy = mods.map(m => m.moduleId === moduleId ? { ...m, GPA: getGradeValue(updatedGPA) } : m);
+        const tempCopy = mods.map(m => m.module.moduleId === moduleId ? { ...m, gpa: getGradeValue(updatedGPA) } : m);
 
         setMods(tempCopy);
         setGPA(updatedGPA);
-        updateModule({ ...module, GPA: getGradeValue(updatedGPA) }); // Save module changes
+        updateModule({ ...module, gpa: getGradeValue(updatedGPA) }); // Save module changes
     };
 
     const updateModule = async (updatedModule) => {

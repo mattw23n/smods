@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 const DeleteButton = ({ setMods, module, plan, setValidationResponse }) => {
     const [active, setActive] = useState(false);
-    const moduleId = module.moduleId;
+    const moduleId = module.module.moduleId;
 
     const handleHover = (e) => {
         e.preventDefault();
@@ -37,7 +37,7 @@ const DeleteButton = ({ setMods, module, plan, setValidationResponse }) => {
                 }
 
                 // Update the frontend state to remove the module
-                setMods((prevMods) => prevMods.filter((mod) => mod.moduleId !== moduleId));
+                setMods((prevMods) => prevMods.filter((mod) => mod.module.moduleId !== moduleId));
             } else {
                 console.error('Failed to delete module:', response.statusText);
             }

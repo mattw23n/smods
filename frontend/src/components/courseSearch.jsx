@@ -4,6 +4,7 @@ import Mod from "./mods";
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
         e.dataTransfer.setData("moduleId", module.module.moduleId);
+        e.dataTransfer.setData("originTerm", 0);
     };
 
     const isEmpty = searchResult.length === 0
