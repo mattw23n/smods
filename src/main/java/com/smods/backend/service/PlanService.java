@@ -138,8 +138,8 @@ public class PlanService {
 
         // Validate modules and calculate progress
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
-//        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
-//        validationResponse.setPlanRequirementProgress(progress);
+        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+        validationResponse.setPlanRequirementProgress(progress);
 
         return validationResponse;
     }
