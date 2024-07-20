@@ -1,5 +1,7 @@
 package com.smods.backend.dto;
 
+import com.smods.backend.model.PlanModuleGPA;
+
 import java.util.List;
 import java.util.Map;
 
@@ -7,15 +9,15 @@ public class ModuleValidationResponse {
     private List<String> unsatisfiedPreRequisites;
     private List<String> unsatisfiedCoRequisites;
     private List<String> mutuallyExclusiveConflicts;
-    private List<PlanModuleGPADTO> planModuleGPADTOs;
+    private List<PlanModuleGPA> planModuleGPAs;
     private List<String> compulsoryModules;
     private Map<String, Double> planRequirementProgress;
 
-    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPADTO> planModuleGPADTOs, List<String> compulsoryModules, Map<String, Double> planRequirementProgress) {
+    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPA> planModuleGPAs, List<String> compulsoryModules, Map<String, Double> planRequirementProgress) {
         this.unsatisfiedPreRequisites = unsatisfiedPreRequisites;
         this.unsatisfiedCoRequisites = unsatisfiedCoRequisites;
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
-        this.planModuleGPADTOs = planModuleGPADTOs;
+        this.planModuleGPAs = planModuleGPAs;
         this.compulsoryModules = compulsoryModules;
         this.planRequirementProgress = planRequirementProgress;
     }
@@ -46,12 +48,12 @@ public class ModuleValidationResponse {
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
     }
 
-    public List<PlanModuleGPADTO> getPlanModuleGPADTOs() {
-        return planModuleGPADTOs;
+    public List<PlanModuleGPA> getPlanModuleGPAs() {
+        return planModuleGPAs;
     }
 
-    public void setPlanModuleGPADTOs(List<PlanModuleGPADTO> planModuleGPADTOs) {
-        this.planModuleGPADTOs = planModuleGPADTOs;
+    public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
+        this.planModuleGPAs = planModuleGPAs;
     }
 
     public List<String> getCompulsoryModules() {

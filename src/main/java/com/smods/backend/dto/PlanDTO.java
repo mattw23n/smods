@@ -1,5 +1,6 @@
 package com.smods.backend.dto;
 
+import com.smods.backend.model.PlanModuleGPA;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -10,9 +11,9 @@ public class PlanDTO {
     private String firstMajor;
     private String secondMajor;
     private ZonedDateTime creationDateTime;
-    private List<PlanModuleGPADTO> planModuleGPAs;
+    private List<PlanModuleGPA> planModuleGPAs;
 
-    public PlanDTO(Long planId, String planName, String degree, String firstMajor, String secondMajor, ZonedDateTime creationDateTime, List<PlanModuleGPADTO> planModuleGPAs) {
+    public PlanDTO(Long planId, String planName, String degree, String firstMajor, String secondMajor, ZonedDateTime creationDateTime, List<PlanModuleGPA> planModuleGPAs) {
         this.planId = planId;
         this.planName = planName;
         this.degree = degree;
@@ -21,6 +22,8 @@ public class PlanDTO {
         this.creationDateTime = creationDateTime;
         this.planModuleGPAs = planModuleGPAs;
     }
+
+    // Getters and setters
 
     public Long getPlanId() {
         return planId;
@@ -70,11 +73,11 @@ public class PlanDTO {
         this.creationDateTime = creationDateTime;
     }
 
-    public List<PlanModuleGPADTO> getPlanModuleGPAs() {
+    public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
 
-    public void setPlanModuleGPAs(List<PlanModuleGPADTO> planModuleGPAs) {
+    public void setPlanModuleGPAs(List<PlanModuleGPA> planModuleGPAs) {
         this.planModuleGPAs = planModuleGPAs;
     }
 }

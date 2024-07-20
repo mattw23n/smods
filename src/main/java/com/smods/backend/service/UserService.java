@@ -1,10 +1,9 @@
 package com.smods.backend.service;
 
 import com.smods.backend.dto.PlanDTO;
-import com.smods.backend.dto.PlanModuleGPADTO;
 import com.smods.backend.dto.UserDTO;
 import com.smods.backend.dto.UserDetailsDTO;
-import com.smods.backend.model.Plan;
+import com.smods.backend.model.PlanModuleGPA;
 import com.smods.backend.model.User;
 import com.smods.backend.repository.PlanRepository;
 import com.smods.backend.repository.UserRepository;
@@ -73,15 +72,7 @@ public class UserService {
         }
 
         List<PlanDTO> planDTOs = user.getPlans().stream().map(plan -> {
-            List<PlanModuleGPADTO> planModuleGPADTOs = plan.getPlanModuleGPAs().stream().map(pgpa ->
-                    new PlanModuleGPADTO(
-                            pgpa.getModule().getModuleId(),
-                            pgpa.getModule().getModuleName(),
-                            pgpa.getGpa(),
-                            pgpa.getTerm(),
-                            false // Set isError to false initially
-                    )
-            ).collect(Collectors.toList());
+            List<PlanModuleGPA> planModuleGPAs = plan.getPlanModuleGPAs();
             return new PlanDTO(
                     plan.getPlanKey().getPlanId(),
                     plan.getPlanName(),
@@ -89,7 +80,7 @@ public class UserService {
                     plan.getFirstMajor().getMajorName(),
                     plan.getSecondMajor().getMajorName(),
                     plan.getCreationDateTime(),
-                    planModuleGPADTOs // Pass the list of PlanModuleGPADTO
+                    planModuleGPAs // Pass the list of PlanModuleGPA
             );
         }).collect(Collectors.toList());
 

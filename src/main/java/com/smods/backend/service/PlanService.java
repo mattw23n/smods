@@ -1,7 +1,6 @@
 package com.smods.backend.service;
 
 import com.smods.backend.dto.ModuleValidationResponse;
-import com.smods.backend.dto.PlanModuleGPADTO;
 import com.smods.backend.exception.MaximumNumberOfPlansException;
 import com.smods.backend.exception.PlanNameConflictException;
 import com.smods.backend.model.*;
@@ -191,23 +190,13 @@ public class PlanService {
             moduleErrors.put(moduleId, isError);
         }
 
-        List<PlanModuleGPADTO> planModuleGPADTOs = planModules.stream().map(pgpa ->
-                new PlanModuleGPADTO(
-                        pgpa.getModule().getModuleId(),
-                        pgpa.getModule().getModuleName(),
-                        pgpa.getGpa(),
-                        pgpa.getTerm(),
-                        moduleErrors.getOrDefault(pgpa.getModule().getModuleId(), false)
-                )
-        ).collect(Collectors.toList());
-
         // Get compulsory modules
         List<String> compulsoryModules = getCompulsoryModules(userId, planId);
 
         // Get requirement progress
         Map<String, Double> requirementProgress = getPlanRequirementProgress(userId, planId);
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs, compulsoryModules, requirementProgress);
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, compulsoryModules, requirementProgress);
     }
 
     public List<String> getCompulsoryModules(Long userId, Long planId){
