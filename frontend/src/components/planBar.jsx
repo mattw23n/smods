@@ -75,12 +75,13 @@ const Tabs = ({ tabData }) => {
 };
 
 const PlanBar = ({ plan, setPlan, mods }) => {
+    const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
     // const [asiaStudiesMods, setAsiaStudiesMods] = useState([]);
     // const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([]);
 
-    // const { isGPAOn } = plan;
+    
     // const { tracks, degree } = plan;
 
     // const degreeInfo = defaultMods;
@@ -250,7 +251,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     const tabData = [
         { id: 0, curr: 0, max: 36, label: " CUs", content: Tab1 },
         { id: 1, curr: 0, max: 4, label: " Grad. Requirements", content: Tab2 },
-        { id: 2, curr: 0, max: "4.0", label: " cum. GPA", content: Tab3 }, // Optional tab
+        ...(isGPAOn ? [{ id: 2, curr: 0, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
     ];
 
     return (

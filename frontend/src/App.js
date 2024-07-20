@@ -15,7 +15,6 @@ import HandleVerification from './pages/HandleVerification.jsx';
 import { UserProvider, UserLoader } from "./data/user";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ResetPassword from "./pages/ResetPassword";
-import Statistics from './pages/Statistics.jsx';
 
 function App() {
     return (
@@ -36,7 +35,6 @@ function App() {
                     <Route path="/handle-verification" element={<HandleVerification />} />
                     <Route path="/password-recovery" element={<RequestPasswordReset />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/stats" element={<Statistics />} />
 
                 </Routes>
             </Router>

@@ -269,10 +269,10 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
             <Dashboard plan={plan} setPlan={setPlan} mods={mods} setValidationResponse={setValidationResponse}></Dashboard>
             {validationResponse && renderValidationResponse(validationResponse)}
             <div className={`${isEditMode ? `px-20 mb-10 flex gap-5` : "px-20 mb-10"}`}>
-                <div className="flex">
+                <div>
                     {!isGroupView && (
                         <div className={viewTailwind}>
-                            <div className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-[580px] overflow-y-auto` : viewTailwindChild}`}>
+                            <div className={`${isEditMode ? `grid grid-cols-2 gap-5 container h-fit max-h-[580px] overflow-y-auto` : viewTailwindChild}`}>
                                 {yearNums.map(num => (
                                     <Year key={num} num={num} plan={plan} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
                                 ))}
@@ -286,16 +286,96 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
                             </div>
                         </div>
                     )}
-                    {isEditMode && (
-                        <div className="ml-5">
-                            <CourseSearch plan={plan}></CourseSearch>
-                        </div>
-                    )}
+                    
                 </div>
+                    {isEditMode && (
+                            <div className="ml-5">
+                                <CourseSearch plan={plan}></CourseSearch>
+                            </div>
+                        )}
             </div>
         </div>
     );
 }
+
+const hardCodedMods = [
+    {
+        "planModuleGPAId": {
+            "planId": {
+                "planId": 0,
+                "userId": 1234
+            },
+            "moduleId": "CS101"
+        },
+        "gpa": 0.0,
+        "term": 1,
+        "plan": {
+            "planId": {
+                "planId": 0,
+                "userId": 1234
+            },
+            "planName": "Matteo gay",
+            "creationDateTime": "2024-07-19T11:25:40.36652+07:00",
+            "user": null,
+            "planModuleGPAs": null,
+            "degree": null,
+            "firstMajor": null,
+            "secondMajor": null
+        },
+        "module": {
+            "moduleId": "CS101",
+            "moduleName": "Programming Fundamentals I",
+            "courseUnit": 1.0,
+            "baskets": [
+                "i forgot"
+            ],
+            "subtype": null,
+            "planModuleGPAs": null,
+            "preRequisites": null,
+            "coRequisites": null,
+            "mutuallyExclusives": null,
+            "majorModuleRequirements": null
+        }
+    },
+    {
+        "planModuleGPAId": {
+            "planId": {
+                "planId": 0,
+                "userId": 1234
+            },
+            "moduleId": "CS101"
+        },
+        "gpa": 0.0,
+        "term": 1,
+        "plan": {
+            "planId": {
+                "planId": 0,
+                "userId": 1234
+            },
+            "planName": "Matteo gay",
+            "creationDateTime": "2024-07-19T11:25:40.36652+07:00",
+            "user": null,
+            "planModuleGPAs": null,
+            "degree": null,
+            "firstMajor": null,
+            "secondMajor": null
+        },
+        "module": {
+            "moduleId": "CS102",
+            "moduleName": "Programming Fundamentals II",
+            "courseUnit": 1.0,
+            "baskets": [
+                "i forgot"
+            ],
+            "subtype": null,
+            "planModuleGPAs": null,
+            "preRequisites": null,
+            "coRequisites": null,
+            "mutuallyExclusives": null,
+            "majorModuleRequirements": null
+        }
+    },
+]
 
 function Planning() {
     const { user } = useContext(UserContext);
@@ -313,13 +393,14 @@ function Planning() {
             console.log("Selected Plan:", selectedPlan);
             console.log(selectedPlan.planModuleGPAs);
             if (selectedPlan) {
-                const mappedMods = selectedPlan.planModuleGPAs.map(pgpa => ({
-                    ...pgpa.module,
-                    term: pgpa.term,
-                    GPA: pgpa.gpa,
-                }));
+                // const mappedMods = selectedPlan.planModuleGPAs.map(pgpa => ({
+                //     ...pgpa.module,
+                //     term: pgpa.term,
+                //     GPA: pgpa.gpa,
+                // }));
                 setPlan({ ...selectedPlan, view: 4, userId: user.userId });
-                setMods(mappedMods);
+                // setMods(mappedMods);
+                setMods(hardCodedMods)
             }
         }
     }, [user, id]);
