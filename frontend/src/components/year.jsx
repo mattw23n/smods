@@ -82,6 +82,12 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
         const moduleId = e.dataTransfer.getData("moduleId");
         const originTerm = e.dataTransfer.getData("originTerm");
+
+        if (originTerm === term.toString()) {
+            // Do nothing if the term is the same
+            return;
+        }
+
         const indicators = getIndicators();
         const { element } = getNearestIndicator(e, indicators);
         const before = element.dataset.before || "-1";
