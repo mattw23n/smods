@@ -24,8 +24,12 @@ public class ModuleController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PlanModuleGPA>> searchModules(@RequestParam String searchTerm, @RequestParam Long planId, @RequestParam Long userId) {
-        List<PlanModuleGPA> planModuleGPAs = moduleService.searchModules(searchTerm, planId, userId);
+    public ResponseEntity<List<PlanModuleGPA>> searchModules(
+            @RequestParam String searchTerm,
+            @RequestParam String filter,
+            @RequestParam Long planId,
+            @RequestParam Long userId) {
+        List<PlanModuleGPA> planModuleGPAs = moduleService.searchModules(searchTerm, filter, planId, userId);
         return ResponseEntity.ok(planModuleGPAs);
     }
 }
