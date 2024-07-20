@@ -153,7 +153,6 @@ public class PlanService {
         List<String> unsatisfiedPreRequisites = new ArrayList<>();
         List<String> unsatisfiedCoRequisites = new ArrayList<>();
         List<String> mutuallyExclusiveConflicts = new ArrayList<>();
-        Map<String, Boolean> moduleErrors = new HashMap<>();
 
         for (PlanModuleGPA planModule : planModules) {
             String moduleId = planModule.getModule().getModuleId();
@@ -164,7 +163,7 @@ public class PlanService {
             List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
 
             for (Module preReq : preRequisites) {
-                if (!takenModulesBeforeTerm.contains(preReq)) {
+                if (!takenModulesBeforeTerm.stream().anyMatch(m -> m.getModuleId().equals(preReq.getModuleId()))) {
                     unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
                     isError = true;
                 }
@@ -174,7 +173,7 @@ public class PlanService {
             List<Module> takenModulesInTerm = planModuleGPARepository.findAllModulesByPlanIdAndTerm(planId, userId, term);
 
             for (Module coReq : coRequisites) {
-                if (!takenModulesInTerm.contains(coReq)) {
+                if (!takenModulesInTerm.stream().anyMatch(m -> m.getModuleId().equals(coReq.getModuleId()))) {
                     unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
                     isError = true;
                 }
@@ -184,13 +183,14 @@ public class PlanService {
             List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(planId, userId);
 
             for (Module conflict : mutuallyExclusives) {
-                if (takenModules.contains(conflict)) {
+                if (takenModules.stream().anyMatch(m -> m.getModuleId().equals(conflict.getModuleId()))) {
                     mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
                     isError = true;
                 }
             }
 
-            moduleErrors.put(moduleId, isError);
+            planModule.setError(isError);
+            planModuleGPARepository.save(planModule);
         }
 
         // Get compulsory modules
