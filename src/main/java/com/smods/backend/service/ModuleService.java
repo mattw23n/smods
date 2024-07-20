@@ -8,6 +8,7 @@ import com.smods.backend.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +22,21 @@ public class ModuleService {
         this.moduleRepository = moduleRepository;
     }
 
-    public List<PlanModuleGPA> searchModules(String searchTerm, Long planId, Long userId) {
-        List<Module> modules = moduleRepository.findByModuleIdContainingIgnoreCase(searchTerm);
+    public List<PlanModuleGPA> searchModules(String searchTerm, String filter, Long planId, Long userId) {
+        List<Module> modules = switch (filter.toLowerCase()) {
+            case "course code" -> moduleRepository.findByModuleIdContainingIgnoreCase(searchTerm);
+            case "course title" -> moduleRepository.findByModuleNameContainingIgnoreCase(searchTerm);
+            case "major core" -> moduleRepository.findAllMajorCore(searchTerm);
+            case "smu core" -> moduleRepository.findAllSMUCore(searchTerm);
+            default -> new ArrayList<>();
+        };
 
         PlanKey planKey = new PlanKey(planId, userId);
         return modules.stream().map(module -> {
             PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, module.getModuleId());
-            return new PlanModuleGPA(planModuleGPAKey, module, planKey, 0.0, 0); // Default GPA and term, adjust as needed
+            PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, 0);
+            planModuleGPA.setModule(module);
+            return planModuleGPA;
         }).collect(Collectors.toList());
-    }}
+    }
+}

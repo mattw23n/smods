@@ -3,28 +3,37 @@ import Mod from "./mods";
 
 const ModuleRepository = ({ searchResult, plan }) => {
     const handleDragStart = (e, module) => {
+        console.log('Drag started for module:', module);
         e.dataTransfer.setData("moduleId", module.module.moduleId);
         e.dataTransfer.setData("originTerm", 0);
     };
 
-    const isEmpty = searchResult.length === 0
-
-    console.log("search result", searchResult)
+    const isEmpty = !searchResult || searchResult.length === 0;
 
     return (
         <div className="overflow-y-auto max-h-[400px]">
-                <div className="bg-white p-2 rounded-3xl">
-                {!isEmpty && searchResult.map((m) => {
-                    return <Mod key={m.module.moduleId} module={m} plan={plan} handleDragStart={handleDragStart}/>
+            <div className="bg-white p-2 rounded-3xl">
+                {!isEmpty && searchResult.map((m, index) => {
+                    if (!m || !m.module) {
+                        return null;
+                    }
+
+                    return (
+                        <Mod
+                            key={m.module.moduleId}
+                            module={m}
+                            plan={plan}
+                            handleDragStart={handleDragStart}
+                        />
+                    );
                 })}
                 {isEmpty && (
                     <div className="p-2 font-archivo text-center my-5">
-    
                         <p className="font-bold">No mods matching that description :(</p>
                         <p className="text-sm">Try searching with a different filter or keyword</p>
                     </div>
                 )}
-                </div>
+            </div>
         </div>
     );
 };
@@ -33,22 +42,13 @@ const SearchBar = ({ plan }) => {
     const [selectedFilter, setFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
-    const [error, setError] = useState("")
-
-    const typeDict = [
-        { type: "uc", fullType: "Uni Core" },
-        { type: "mc", fullType: "Major Core" },
-        { type: "me", fullType: "Major Elective" },
-        { type: "tm", fullType: "Track Module" },
-        { type: "fe", fullType: "Free Elective" },
-    ];
+    const [error, setError] = useState("");
 
     const filtersDict = [
         { filter: "Course Code", example: "\"CS101\", \"IS20\"" },
         { filter: "Course Title", example: "\"Programming\"" },
-        { filter: "Major", example: "\"Information Systems\"" },
-        { filter: "Track", example: "\"Artificial Intelligence\"" },
-        { filter: "Type", example: "\"Uni Core\"" },
+        { filter: "Major Core", example: "\"Information Systems\"" },
+        { filter: "SMU Core", example: "\"Computer Science\"" },
     ];
 
     const getExampleByFilter = (filter) => {
@@ -56,14 +56,9 @@ const SearchBar = ({ plan }) => {
         return filterObject ? filterObject.example : null;
     };
 
-    const getTypeByFullType = (fullType) => {
-        const type = typeDict.find(t => t.fullType === fullType);
-        return type ? type.type : null;
-    };
-
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
-        setError("")
+        setError("");
     };
 
     const handleInputChange = (event) => {
@@ -75,13 +70,12 @@ const SearchBar = ({ plan }) => {
 
         if (selectedFilter === '') {
             setError("Please select a filter.");
-            return
-        } 
-
+            return;
+        }
 
         const jwtToken = localStorage.getItem('jwt');
         const authHeader = `Bearer ${jwtToken}`;
-        const apiUrl = `http://localhost:8080/api/modules/search?searchTerm=${searchTerm}&planId=${plan.planId}&userId=${plan.userId}`;
+        const apiUrl = `http://localhost:8080/api/modules/search?searchTerm=${searchTerm}&filter=${selectedFilter}&planId=${plan.planId}&userId=${plan.userId}`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -94,10 +88,9 @@ const SearchBar = ({ plan }) => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('API Response:', data);
                 setSearchResult(data);
             } else {
-                console.error('Failed to fetch modules');
+                console.error('Failed to fetch modules:', response.statusText);
                 setSearchResult([]);
             }
         } catch (error) {
@@ -132,7 +125,7 @@ const SearchBar = ({ plan }) => {
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                         <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                         </svg>
                     </div>
                     <input
