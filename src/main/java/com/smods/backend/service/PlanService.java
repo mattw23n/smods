@@ -120,7 +120,7 @@ public class PlanService {
                     throw new RuntimeException("Module is already in plan");
                 }
 
-                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, module, planKey, term);
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
             } else {
