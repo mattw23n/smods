@@ -25,14 +25,16 @@ public class PlanModuleGPA {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
-            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID", insertable = false, updatable = false, nullable = false),
-            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID", insertable = false, updatable = false, nullable = false)
+            @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
+            @JoinColumn(name = "PLAN_ID", referencedColumnName = "PLAN_ID")
     })
+    @MapsId("planKey")
     @JsonBackReference(value = "plan-planModuleGPA")
     private Plan plan;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "MODULE_ID", referencedColumnName = "MODULE_ID", insertable = false, updatable = false, nullable = false)
+    @ManyToOne
+    @MapsId("moduleId")
+    @JoinColumn(name = "MODULE_ID")
     private Module module;
 
     public PlanModuleGPA() {
@@ -117,7 +119,7 @@ public class PlanModuleGPA {
                 "planModuleGPAId=" + planModuleGPAId +
                 ", gpa=" + gpa +
                 ", term=" + term +
-                ", plan=" + plan +
+                ", plan=" + plan.getPlanKey() +
                 ", module=" + module.getModuleId() +
                 '}';
     }

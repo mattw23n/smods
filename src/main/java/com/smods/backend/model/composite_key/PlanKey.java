@@ -8,6 +8,7 @@ import java.util.Objects;
 
 @Embeddable
 public class PlanKey implements Serializable {
+
     @Column(name = "PLAN_ID", nullable = false)
     private Long planId;
 

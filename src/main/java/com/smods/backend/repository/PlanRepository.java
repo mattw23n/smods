@@ -1,5 +1,7 @@
 package com.smods.backend.repository;
 
+import com.smods.backend.model.Degree;
+import com.smods.backend.model.Major;
 import com.smods.backend.model.Plan;
 import com.smods.backend.model.User;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -20,4 +22,6 @@ public interface PlanRepository extends JpaRepository<Plan, PlanKey> {
 
     @Query("SELECT COALESCE(MAX(p.planKey.planId), 0) FROM Plan p WHERE p.planKey.userId = :userId")
     Long findMaxPlanIdByUserId(Long userId);
+
+    List<Plan> findAllByDegreeAndFirstMajorAndSecondMajor(Degree degree, Major firstMajor, Major secondMajor);
 }

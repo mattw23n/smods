@@ -17,13 +17,13 @@ public class AdditionalSecondMajorModuleRequirement {
     private boolean isCompulsory;
 
     @ManyToOne
-    @JoinColumn(name = "MAJOR_NAME", nullable = false)
+    @JoinColumn(name = "MAJOR_NAME")
     @MapsId("majorName")
     @JsonBackReference
     private Major major;
 
     @ManyToOne
-    @JoinColumn(name = "MODULE_ID", nullable = false)
+    @JoinColumn(name = "MODULE_ID")
     @MapsId("moduleId")
     private Module module;
 
@@ -85,8 +85,8 @@ public class AdditionalSecondMajorModuleRequirement {
         return "AdditionalSecondMajorModuleRequirement{" +
                 "additionalSecondMajorModuleRequirementId=" + additionalSecondMajorModuleRequirementId +
                 ", isCompulsory=" + isCompulsory +
-                ", major=" + major +
-                ", module=" + module +
+                ", major=" + major.getMajorName() +
+                ", module=" + module.getModuleId() +
                 '}';
     }
 }
