@@ -1,5 +1,7 @@
 package com.smods.backend.model;
 
+import com.smods.backend.exception.PlanModificationException;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smods.backend.model.composite_key.PlanKey;
@@ -12,6 +14,26 @@ import java.util.*;
 @Table(name = "PLAN")
 public class Plan {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "degree")
+    private String degree;
+
+    @Column(name = "track")
+    private String track;
+
+    @Column(name = "exemptions")
+    private Set<Module> exemptions = new HashSet<>();
+
+    @ManyToMany
+    @Column(name = "plannedModules")
+    private Set<Module> plannedModules = new HashSet<>();
     @EmbeddedId
     private PlanKey planKey;
 
