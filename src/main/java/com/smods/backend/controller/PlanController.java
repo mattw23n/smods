@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users/{userId}/plans")
@@ -90,5 +91,12 @@ public class PlanController {
             @RequestParam boolean isAdding) {
         ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{planId}/gradRequirement")
+    public ResponseEntity<Map<String, Double>> getPlanRequirementProgress(@PathVariable Long userId, @PathVariable Long planId){
+        checkUserAuthorization(userId);
+        Map<String, Double> requirementProgress = planService.getPlanRequirementProgress(userId, planId);
+        return ResponseEntity.ok(requirementProgress);
     }
 }
