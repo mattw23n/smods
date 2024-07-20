@@ -138,8 +138,8 @@ public class PlanService {
 
         // Validate modules and calculate progress
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
-        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
-        validationResponse.setPlanRequirementProgress(progress);
+//        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+//        validationResponse.setPlanRequirementProgress(progress);
 
         return validationResponse;
     }
@@ -191,12 +191,12 @@ public class PlanService {
         }
 
         // Get compulsory modules
-        List<String> compulsoryModules = getCompulsoryModules(userId, planId);
+//        List<String> compulsoryModules = getCompulsoryModules(userId, planId);
 
         // Get requirement progress
-        Map<String, Double> requirementProgress = getPlanRequirementProgress(userId, planId);
+//        Map<String, Double> requirementProgress = getPlanRequirementProgress(userId, planId);
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, compulsoryModules, requirementProgress);
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null);
     }
 
     public List<String> getCompulsoryModules(Long userId, Long planId){
