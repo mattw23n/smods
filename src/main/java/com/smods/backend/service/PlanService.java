@@ -109,7 +109,6 @@ public class PlanService {
 
         if (isAdding != null) {
             if (isAdding) {
-                // Check if module is already in plan
                 if (planModuleGPARepository.existsById(planModuleGPAKey)) {
                     throw new RuntimeException("Module is already in plan");
                 }
@@ -118,21 +117,24 @@ public class PlanService {
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
             } else {
-                // Check if module is in the plan
                 PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                         .orElseThrow(() -> new RuntimeException("Module not found in plan"));
 
                 planModuleGPARepository.delete(planModuleGPA);
             }
         } else if (gpa != null) {
-            // Update GPA if isAdding is not provided and GPA is provided
             PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                     .orElseThrow(() -> new RuntimeException("Module not found in plan"));
             planModuleGPA.setGpa(gpa);
             planModuleGPARepository.save(planModuleGPA);
         }
 
-        return validatePlanModules(planId, userId);
+        // Validate modules and calculate progress
+        ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
+        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+        validationResponse.setProgress(progress);
+
+        return validationResponse;
     }
 
     public ModuleValidationResponse validatePlanModules(Long planId, Long userId) {
@@ -191,7 +193,10 @@ public class PlanService {
                 )
         ).collect(Collectors.toList());
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs);
+        // Calculate progress
+        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModuleGPADTOs, progress);
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
@@ -209,6 +214,7 @@ public class PlanService {
 
         return progressRequirement;
     }
+
     private Map<String, Double> getPlanTargetRequirement(Long userId, Long planId) {
         Plan plan = planRepository.findById(new PlanKey(userId, planId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));

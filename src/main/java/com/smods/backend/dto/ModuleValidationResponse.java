@@ -1,22 +1,24 @@
 package com.smods.backend.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class ModuleValidationResponse {
     private List<String> unsatisfiedPreRequisites;
     private List<String> unsatisfiedCoRequisites;
     private List<String> mutuallyExclusiveConflicts;
     private List<PlanModuleGPADTO> planModuleGPAs;
+    private Map<String, Double> progress;
 
-    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPADTO> planModuleGPAs) {
+    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPADTO> planModuleGPAs, Map<String, Double> progress) {
         this.unsatisfiedPreRequisites = unsatisfiedPreRequisites;
         this.unsatisfiedCoRequisites = unsatisfiedCoRequisites;
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
         this.planModuleGPAs = planModuleGPAs;
+        this.progress = progress;
     }
 
     // Getters and Setters
-
     public List<String> getUnsatisfiedPreRequisites() {
         return unsatisfiedPreRequisites;
     }
@@ -47,5 +49,13 @@ public class ModuleValidationResponse {
 
     public void setPlanModuleGPAs(List<PlanModuleGPADTO> planModuleGPAs) {
         this.planModuleGPAs = planModuleGPAs;
+    }
+
+    public Map<String, Double> getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Map<String, Double> progress) {
+        this.progress = progress;
     }
 }
