@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import DeleteButton from "./deleteButton";
 import DropIndicator from "./dropIndicator";
 
-const Mod = ({ module, plan, handleDragStart, mods, setMods }) => {
+const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationResponse }) => {
     const { moduleName, moduleId, courseUnit, gradRequirement, gradSubrequirement, preRequisites, coRequisites, mutuallyExclusives, major, term, GPA, isError, courseType, courseLink } = module;
     const { isEditMode, isGPAOn, view } = plan;
     const isGroupView = view === 1;
@@ -79,15 +79,15 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods }) => {
                 cursor-grab active:cursor-grabbing`}
             >
                 <div className="flex items-center justify-left gap-2">
-                    {isEditMode && !isSearchMode && (
-                        <DeleteButton setMods={setMods} module={module} />
-                    )}
                     <div>
                         {moduleId} {moduleName}
                     </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-2">
+                    {isEditMode && !isSearchMode && (
+                        <DeleteButton setMods={setMods} module={module} plan={plan} setValidationResponse={setValidationResponse} />
+                    )}
                     {isGroupView && !isSearchMode && (
                         <div>
                             {!isEditMode && (

@@ -13,8 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users/{userId}/plans")
@@ -93,10 +92,18 @@ public class PlanController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping("/{planId}/gradRequirement")
-    public ResponseEntity<Map<String, Double>> getPlanRequirementProgress(@PathVariable Long userId, @PathVariable Long planId){
+    public ResponseEntity<Map<String, Double>> getPlanRequirementProgress(@PathVariable Long userId, @PathVariable Long planId) {
         checkUserAuthorization(userId);
         Map<String, Double> requirementProgress = planService.getPlanRequirementProgress(userId, planId);
         return ResponseEntity.ok(requirementProgress);
+    }
+
+    @GetMapping("/{planId}")
+    public ResponseEntity<Plan> getPlanById(@PathVariable Long userId, @PathVariable Long planId) {
+        Optional<Plan> plan = planService.getPlanById(userId, planId);
+        return plan.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 }

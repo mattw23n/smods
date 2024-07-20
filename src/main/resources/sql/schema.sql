@@ -98,7 +98,7 @@ VALUES ('CS101', 'Computer Science', 1.0);
 INSERT INTO MODULE (module_id, module_name, course_unit)
 VALUES ('CS102', 'Computer Science', 1.0);
 
-insert into PRE_REQUISITE (module_id, module_id2)
+insert into PRE_REQUISITE (module_id, pre_requisite_module_id)
 VALUES ('CS102', 'CS101');
 
 INSERT INTO MODULE (module_id, module_name, course_unit)

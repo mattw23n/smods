@@ -24,10 +24,10 @@ public class Major {
     private boolean secondMajorDifferentSchool;
 
     @Column(name = "NUM_OF_SECOND_MAJOR_ELECTIVE")
-    private int numOfSecondMajorElective;
+    private Integer numOfSecondMajorElective;
 
     @Column(name = "NUM_OF_FIRST_MAJOR_ELECTIVE")
-    private int numOfFirstMajorElective;
+    private Integer numOfFirstMajorElective;
 
     @ManyToOne
     @JoinColumn(name = "DEGREE_NAME")
@@ -80,19 +80,19 @@ public class Major {
         this.secondMajorDifferentSchool = secondMajorDifferentSchool;
     }
 
-    public int getNumOfSecondMajorElective() {
+    public Integer getNumOfSecondMajorElective() {
         return numOfSecondMajorElective;
     }
 
-    public void setNumOfSecondMajorElective(int numOfSecondMajorElective) {
+    public void setNumOfSecondMajorElective(Integer numOfSecondMajorElective) {
         this.numOfSecondMajorElective = numOfSecondMajorElective;
     }
 
-    public int getNumOfFirstMajorElective() {
+    public Integer getNumOfFirstMajorElective() {
         return numOfFirstMajorElective;
     }
 
-    public void setNumOfFirstMajorElective(int numOfFirstMajorElective) {
+    public void setNumOfFirstMajorElective(Integer numOfFirstMajorElective) {
         this.numOfFirstMajorElective = numOfFirstMajorElective;
     }
 
