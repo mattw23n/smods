@@ -63,7 +63,7 @@ function Form({ onSubmit }) {
             };
 
             console.log('User data:', userData);
-            setSuccess('Form submitted successfully');
+            setSuccess('');
             setError('');
             setSubmit('');
             onSubmit(userData);
@@ -75,7 +75,7 @@ function Form({ onSubmit }) {
     return (
         <div className="flex flex-col items-center justify-start pt-10">
             <div className="bg-white/50 rounded-3xl p-8 text-justify max-w-screen w-4/5 mb-12">
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
                     <p className="font-poppins font-bold text-lg ml-2 pb-2">Select Your Details</p>
                     {error && <p className="text-red-500 font-archivo">{error}</p>}
                     {submit && <p className="text-red-500 font-archivo">{submit}</p>}
@@ -265,7 +265,7 @@ function Statistics() {
         <div className="relative flex flex-col min-h-screen">
             <Background />
             <div className="relative z-10">
-                <Header showLogIn={false} />
+                <Header />
                 <Form onSubmit={handleFormSubmit} />
                 {formData && <Graph data={formData} />}
                 <Footer />

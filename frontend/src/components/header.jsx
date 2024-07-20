@@ -43,6 +43,7 @@ function Header({showLogIn = true}) {
                     <div className="md:flex md:items-center md:gap-12">
                         <nav className="hidden md:block">
                             <ul className="flex items-center gap-6 text-sm text-text">
+                                <NavItem title={"Past Bids"} link={"/stats"} />
                                 <NavItem title={"About Us"} link={"/about"} />
                                 <NavItem title={"Contact Us"} link={"/contact"} />
                             </ul>
