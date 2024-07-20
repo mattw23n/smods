@@ -18,6 +18,12 @@ public class MajorModuleRequirement {
     @Column(name = "IS_SMU_CORE?")
     private boolean isSMUCore;
 
+    @Column(name = "BASKET")
+    private String basket;
+
+    @Column(name = "SUBTYPE")
+    private String subtype;
+
     @ManyToOne
     @MapsId("moduleId")
     @JoinColumn(name = "MODULE_ID")
@@ -33,10 +39,12 @@ public class MajorModuleRequirement {
     public MajorModuleRequirement() {
     }
 
-    public MajorModuleRequirement(MajorModuleRequirementKey majorModuleRequirementId, boolean isMajorCore, boolean isSMUCore) {
+    public MajorModuleRequirement(MajorModuleRequirementKey majorModuleRequirementId, boolean isMajorCore, boolean isSMUCore, String basket, String subtype) {
         this.majorModuleRequirementId = majorModuleRequirementId;
         this.isMajorCore = isMajorCore;
         this.isSMUCore = isSMUCore;
+        this.basket = basket;
+        this.subtype = subtype;
     }
 
     public MajorModuleRequirementKey getMajorModuleRequirementId() {
@@ -63,6 +71,22 @@ public class MajorModuleRequirement {
         isSMUCore = SMUCore;
     }
 
+    public String getBasket() {
+        return basket;
+    }
+
+    public void setBasket(String basket) {
+        this.basket = basket;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
+    }
+
     public Module getModule() {
         return module;
     }
@@ -84,12 +108,12 @@ public class MajorModuleRequirement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MajorModuleRequirement that = (MajorModuleRequirement) o;
-        return isMajorCore == that.isMajorCore && isSMUCore == that.isSMUCore && Objects.equals(majorModuleRequirementId, that.majorModuleRequirementId) && Objects.equals(module, that.module) && Objects.equals(degree, that.degree);
+        return isMajorCore == that.isMajorCore && isSMUCore == that.isSMUCore && Objects.equals(majorModuleRequirementId, that.majorModuleRequirementId) && Objects.equals(basket, that.basket) && Objects.equals(subtype, that.subtype) && Objects.equals(module, that.module) && Objects.equals(degree, that.degree);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(majorModuleRequirementId, isMajorCore, isSMUCore, module, degree);
+        return Objects.hash(majorModuleRequirementId, isMajorCore, isSMUCore, basket, subtype, module, degree);
     }
 
     @Override
@@ -98,6 +122,8 @@ public class MajorModuleRequirement {
                 "majorModuleRequirementId=" + majorModuleRequirementId +
                 ", isMajorCore=" + isMajorCore +
                 ", isSMUCore=" + isSMUCore +
+                ", basket='" + basket + '\'' +
+                ", subtype='" + subtype + '\'' +
                 ", module=" + module +
                 ", degree=" + degree +
                 '}';

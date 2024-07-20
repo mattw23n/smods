@@ -24,14 +24,6 @@ public class Module {
     @Column(name = "COURSE_UNIT")
     private Double courseUnit;
 
-    @ElementCollection
-    @CollectionTable(name = "BASKET", joinColumns = @JoinColumn(name = "MODULE_ID"))
-    @Column(name = "BASKET")
-    private List<String> baskets;
-
-    @Column(name = "SUBTYPE")
-    private String subtype;
-
     public static final String[][] hierarchy = {
             {"Major Core", "Major Elective", "Free Elective"},
             {"Uni Core", "Free Elective"}
@@ -78,8 +70,6 @@ public class Module {
         this.moduleId = moduleId;
         this.moduleName = moduleName;
         this.courseUnit = courseUnit;
-        this.baskets = baskets;
-        this.subtype = subtype;
     }
 
     public static String getLowerHierarchy(String currentHierarchy){
@@ -136,22 +126,6 @@ public class Module {
         this.courseUnit = courseUnit;
     }
 
-    public List<String> getBaskets() {
-        return baskets;
-    }
-
-    public void setBaskets(List<String> baskets) {
-        this.baskets = baskets;
-    }
-
-    public String getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(String subtype) {
-        this.subtype = subtype;
-    }
-
     public List<PlanModuleGPA> getPlanModuleGPAs() {
         return planModuleGPAs;
     }
@@ -197,12 +171,12 @@ public class Module {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Module module = (Module) o;
-        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(baskets, module.baskets) && Objects.equals(subtype, module.subtype) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(majorModuleRequirements, module.majorModuleRequirements);
+        return Objects.equals(moduleId, module.moduleId) && Objects.equals(moduleName, module.moduleName) && Objects.equals(courseUnit, module.courseUnit) && Objects.equals(planModuleGPAs, module.planModuleGPAs) && Objects.equals(preRequisites, module.preRequisites) && Objects.equals(coRequisites, module.coRequisites) && Objects.equals(mutuallyExclusives, module.mutuallyExclusives) && Objects.equals(majorModuleRequirements, module.majorModuleRequirements);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(moduleId, moduleName, courseUnit, baskets, subtype, planModuleGPAs, preRequisites, coRequisites, mutuallyExclusives, majorModuleRequirements);
+        return Objects.hash(moduleId, moduleName, courseUnit, planModuleGPAs, preRequisites, coRequisites, mutuallyExclusives, majorModuleRequirements);
     }
 
     @Override
@@ -211,8 +185,6 @@ public class Module {
                 "moduleId='" + moduleId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", courseUnit=" + courseUnit +
-                ", baskets=" + baskets +
-                ", subtype='" + subtype + '\'' +
                 ", planModuleGPAs=" + planModuleGPAs +
                 ", preRequisites=" + preRequisites +
                 ", coRequisites=" + coRequisites +
