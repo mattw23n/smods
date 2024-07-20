@@ -2,10 +2,10 @@ package com.smods.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import java.util.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.hibernate.annotations.Cascade;
 import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -15,15 +15,6 @@ import java.util.AbstractMap.SimpleEntry;
 public class Module {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "users")
-    private Set<User> users = new HashSet<>();
     @Column(name = "MODULE_ID")
     private String moduleId;
 

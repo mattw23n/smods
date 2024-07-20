@@ -1,9 +1,5 @@
 package com.smods.backend.model;
 
-import com.smods.backend.model.Module;
-import jakarta.persistence.Entity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -205,5 +201,4 @@ public class User {
                 ", plans=" + plans +
                 '}';
     }
->>>>>>> 4b2c7ba06db6b1a6c2f8a55e3ded14ce6856d97c
 }
