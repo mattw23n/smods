@@ -25,39 +25,55 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
 
     const getGradeValue = (letter) => {
         const grade = grades.find(g => g.letter === letter);
-        return grade ? grade.value : null; // Return the value or null if not found
+        return grade ? grade.value : null;
     };
 
     const getLetterValue = (grade) => {
         const letter = grades.find(g => g.value === grade);
-        return letter ? letter.letter : null; // Return the value or null if not found
+        return letter ? letter.letter : "";
     };
 
-    const [selectedGPA, setGPA] = useState("");
+    const [selectedGPA, setGPA] = useState(getLetterValue(GPA));
     const [selectedTerm, setTerm] = useState(term);
 
     const handleTermChange = (event) => {
         const updatedTerm = parseInt(event.target.value);
-        const tempCopy = mods.filter(m => m.moduleId !== moduleId);
+        const tempCopy = mods.map(m => m.moduleId === moduleId ? { ...m, term: updatedTerm } : m);
 
-        const modToChange = module;
-        modToChange.term = updatedTerm;
-
-        tempCopy.push(module);
         setMods(tempCopy);
         setTerm(updatedTerm);
+        updateModule({ ...module, term: updatedTerm });
     };
 
     const handleGPAChange = (event) => {
         const updatedGPA = event.target.value;
-        const tempCopy = mods.filter(m => m.moduleId !== moduleId);
+        console.log("Selected GPA:", updatedGPA);
+        const tempCopy = mods.map(m => m.moduleId === moduleId ? { ...m, GPA: getGradeValue(updatedGPA) } : m);
 
-        const modToChange = module;
-        modToChange.GPA = getGradeValue(updatedGPA);
-
-        tempCopy.push(module);
         setMods(tempCopy);
         setGPA(updatedGPA);
+        updateModule({ ...module, GPA: getGradeValue(updatedGPA) }); // Save module changes
+    };
+
+    const updateModule = async (updatedModule) => {
+        try {
+            console.log("Updating module:", updatedModule);
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${updatedModule.moduleId}&term=${updatedModule.term}&gpa=${updatedModule.GPA}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+            });
+
+            if (!response.ok) {
+                console.error('Failed to save module:', response.statusText);
+            } else {
+                console.log('Module saved successfully:', await response.json());
+            }
+        } catch (error) {
+            console.error('Error saving module:', error);
+        }
     };
 
     return (
@@ -116,7 +132,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
                             {isEditMode && (
                                 <select
                                     className="select rounded-xl bg-white/50 border-gray-100 font-archivo text-xs"
-                                    value={selectedGPA}
+                                    value={selectedGPA || ""}
                                     onChange={handleGPAChange}
                                 >
                                     <option>{getLetterValue(GPA)}</option>

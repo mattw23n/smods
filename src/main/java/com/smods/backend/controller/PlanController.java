@@ -87,8 +87,9 @@ public class PlanController {
             @PathVariable Long userId,
             @RequestParam String moduleId,
             @RequestParam int term,
-            @RequestParam boolean isAdding) {
-        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding);
+            @RequestParam(required = false) Boolean isAdding,
+            @RequestParam(required = false) Double gpa) {
+        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding, gpa);
         return ResponseEntity.ok(response);
     }
 

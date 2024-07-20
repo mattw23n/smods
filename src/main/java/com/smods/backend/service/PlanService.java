@@ -91,35 +91,43 @@ public class PlanService {
     }
 
     @Transactional
-    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, boolean isAdding) {
+    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, Boolean isAdding, Double gpa) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
-        // check if plan exists
+        // Check if plan exists
         Plan plan = planRepository.findById(planKey)
                 .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
 
-        // check if module exists
+        // Check if module exists
         Module module = moduleRepository.findById(moduleId)
                 .orElseThrow(() -> new RuntimeException("Module doesn't exist"));
 
         PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
 
-        if (isAdding) {
-            // check if module is already in plan
-            if (planModuleGPARepository.existsById(planModuleGPAKey)) {
-                throw new RuntimeException("Module is already in plan");
-            }
+        if (isAdding != null) {
+            if (isAdding) {
+                // Check if module is already in plan
+                if (planModuleGPARepository.existsById(planModuleGPAKey)) {
+                    throw new RuntimeException("Module is already in plan");
+                }
 
-            PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
-            planModuleGPA.setModule(module);
-            planModuleGPARepository.save(planModuleGPA);
-        } else {
-            // check if module is in the plan
+                PlanModuleGPA planModuleGPA = new PlanModuleGPA(planModuleGPAKey, term);
+                planModuleGPA.setModule(module);
+                planModuleGPARepository.save(planModuleGPA);
+            } else {
+                // Check if module is in the plan
+                PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
+                        .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+
+                planModuleGPARepository.delete(planModuleGPA);
+            }
+        } else if (gpa != null) {
+            // Update GPA if isAdding is not provided and GPA is provided
             PlanModuleGPA planModuleGPA = planModuleGPARepository.findById(planModuleGPAKey)
                     .orElseThrow(() -> new RuntimeException("Module not found in plan"));
-
-            planModuleGPARepository.delete(planModuleGPA);
+            planModuleGPA.setGpa(gpa);
+            planModuleGPARepository.save(planModuleGPA);
         }
 
         return validatePlanModules(planId, userId);

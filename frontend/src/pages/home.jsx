@@ -154,10 +154,13 @@ const Card = ({ plan, user, setUser, isTemplate }) => {
 
 const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!user) {
             navigate('/');
+        } else {
+            setLoading(false);
         }
     }, [user, navigate]);
 
@@ -169,64 +172,75 @@ const Content = ({ user, setUser }) => {
 
     return (
         <main className="flex-grow">
-            <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
-                <div className="text-text font-poppins font-bold">
-                    <p className="text-l">Good Afternoon</p>
-                    <p className="text-3xl">{username}</p>
-                </div>
-                <div className="py-4 flex gap-20">
-                    <div className="flex flex-col gap-5">
-                        <Link
-                            className="flex rounded-xl w-32 bg-secondary px-6 py-3 justify-between align-center font-bold font-poppins text-l text-background transition
-                            hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
-                            to="/new-plan"
-                        >
-                            <span>New</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                        </Link>
+            {loading ? (
+                <Loading />
+            ) : (
+                <div className="mx-16 py-8 max-h-screen max-w-screen flex-col gap-10 relative z-0">
+                    <div className="text-text font-poppins font-bold">
+                        <p className="text-l">Good Afternoon</p>
+                        <p className="text-3xl">{username}</p>
                     </div>
-                    <div className="flex gap-10">
-                        <div className="w-fit flex flex-col gap-2 p-2 text-text">
-                            <p className="text-l font-poppins font-bold">📚Your Plans</p>
-                            {isEmptyPlan && (
-                                <div className="flex  min-w-[520px] min-h-[160px] p-2 items-center justify-center">
-                                    <p className="text-sm font-archivo">seems kind of empty...🌵 maybe create a plan?</p>
-                                </div>
-                            )}
-                            {!isEmptyPlan && (
-                                <div className="isolate w-fit min-w-[520px] min-h-[320px] px-2 py-2 grid grid-cols-2 gap-2 z-0">
-                                    {plans.map((plan) => (
-                                        <Link key={plan.planId} to={`/plan/${plan.planId}`}>
-                                            <Card plan={plan} user={user} setUser={setUser} />
+                    <div className="py-4 flex gap-20">
+                        <div className="flex flex-col gap-5">
+                            <Link
+                                className="flex rounded-xl w-32 bg-secondary px-6 py-3 justify-between align-center font-bold font-poppins text-l text-background transition
+                                hover:scale-102 hover:shadow-xl focus:outline-none focus:ring active:bg-indigo-500"
+                                to="/new-plan"
+                            >
+                                <span>New</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                            </Link>
+                        </div>
+                        <div className="flex gap-10">
+                            <div className="w-fit flex flex-col gap-2 p-2 text-text">
+                                <p className="text-l font-poppins font-bold">📚Your Plans</p>
+                                {isEmptyPlan && (
+                                    <div className="flex  min-w-[520px] min-h-[160px] p-2 items-center justify-center">
+                                        <p className="text-sm font-archivo">seems kind of empty...🌵 maybe create a plan?</p>
+                                    </div>
+                                )}
+                                {!isEmptyPlan && (
+                                    <div className="isolate w-fit min-w-[520px] min-h-[320px] px-2 py-2 grid grid-cols-2 gap-2 z-0">
+                                        {plans.map((plan) => (
+                                            <Link key={plan.planId} to={`/plan/${plan.planId}`}>
+                                                <Card plan={plan} user={user} setUser={setUser} />
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="w-fit flex flex-col gap-2 text-text">
+                                <p className="text-l font-poppins font-bold">🪹Templates</p>
+                                <div className="isolate px-2 py-2 flex flex-col gap-2 ">
+                                    {templates.map((template, index) => (
+                                        <Link key={template.id} to={`/plan/${template.id}`}>
+                                            <Card key={index} plan={template} user={user} setUser={setUser} isTemplate={true}/>
                                         </Link>
                                     ))}
                                 </div>
-                            )}
-                        </div>
-                        <div className="w-fit flex flex-col gap-2 text-text">
-                            <p className="text-l font-poppins font-bold">🪹Templates</p>
-                            <div className="isolate px-2 py-2 flex flex-col gap-2 ">
-                                {templates.map((template, index) => (
-                                    <Link key={template.id} to={`/plan/${template.id}`}>
-                                        <Card key={index} plan={template} user={user} setUser={setUser} isTemplate={true}/>
-                                    </Link>
-                                ))}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
             <div className="my-20 py-10"></div>
         </main>
     );
 }
 
 function Home() {
+    const navigate = useNavigate();
     const { user, loading, setUser } = useContext(UserContext);
 
-    if (loading) {
+    useEffect(() => {
+        if (!user && !loading) {
+            navigate('/');
+        }
+    }, [user, loading]);
+
+    if (loading || !user) {
         return <Loading />;
     }
 

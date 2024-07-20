@@ -66,7 +66,7 @@ function Form() {
                     localStorage.setItem("type", type);
                     localStorage.setItem("userId", userId);
                     loginUser({ username, email: username, userId });
-                    navigate('/home'); // Redirect to home page
+                    navigate('/'); // Redirect to home page
                 } else {
                     setError('Invalid username or password');
                 }
