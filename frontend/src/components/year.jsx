@@ -23,7 +23,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
     const typeFull = findValue(typeDict, type);
 
     const handleDragStart = (e, module) => {
-        e.dataTransfer.setData("moduleId", module.moduleId);
+        e.dataTransfer.setData("moduleId", module.module.moduleId);
         e.dataTransfer.setData("originTerm", module.term);
     };
 
@@ -80,6 +80,8 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         setActive(false);
         clearHighlights();
 
+        // console.log("plan from user", plan)
+
         const moduleId = e.dataTransfer.getData("moduleId");
         const originTerm = e.dataTransfer.getData("originTerm");
         const indicators = getIndicators();
@@ -87,14 +89,19 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         const before = element.dataset.before || "-1";
 
         let copy = [...mods];
-        let modToTransfer = copy.find((m) => m.moduleId === moduleId);
+        let modToTransfer = copy.find((m) => m.module.moduleId === moduleId);
 
         if (modToTransfer && originTerm !== term.toString()) {
             // Remove module from the original term if it's moving to a new term
-            copy = copy.filter((m) => m.moduleId !== moduleId);
+            copy = copy.filter((m) => m.module.moduleId !== moduleId);
 
             // Update the term of the module
             modToTransfer = { ...modToTransfer, term };
+
+            console.log("plan user", plan.userId)
+            console.log("plan id", plan.planId)
+            console.log("origin term", originTerm)
+            console.log("module Id", moduleId)
 
             // Call the API to delete the module from the original term
             try {
@@ -196,8 +203,9 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     let filteredMods = [];
     if (isGroupView) {
-        filteredMods = mods.filter((m) => m.courseType === type);
+        // filteredMods = mods.filter((m) => m.courseType === type);
     } else {
+        // console.log("term mods", mods)
         filteredMods = mods.filter((m) => m.term === term);
     }
 
@@ -231,7 +239,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
                 {filteredMods.map((m) => {
                     return (
-                            <Mod key={m.module.moduleId} module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
+                            <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
                     )
                 })}
                 <DropIndicator beforeId={-1} term={term} />

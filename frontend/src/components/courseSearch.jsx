@@ -14,7 +14,7 @@ const ModuleRepository = ({ searchResult, plan }) => {
         <div className="overflow-y-auto max-h-[400px]">
                 <div className="bg-white p-2 rounded-3xl">
                 {!isEmpty && searchResult.map((m) => {
-                    return <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={handleDragStart}/>
+                    return <Mod key={m.module.moduleId} module={m} plan={plan} handleDragStart={handleDragStart}/>
                 })}
                 {isEmpty && (
                     <div className="p-2 font-archivo text-center my-5">

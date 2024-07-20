@@ -204,6 +204,8 @@ const Dashboard = ({ plan, setPlan, mods, setValidationResponse }) => {
 function Content({ plan, setPlan, mods, setMods, validationResponse, setValidationResponse }) {
     const { isEditMode, view = 4 } = plan; // Set default view to 4
 
+    console.log("mods", mods)
+
     const viewModes = {
         4: ["container mb-10 pb-10 overflow-x-auto", "inline-block flex gap-x-4"],
         3: ["container h-[580px] mb-10 pb-10 overflow-x-auto", "inline-block flex flex-col gap-4"],
@@ -217,46 +219,49 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
     const yearNums = [1, 2, 3, 4]; // Define the years array
     const isGroupView = view === 1; // Determine if the view is group view
 
-    const renderValidationResponse = (response) => {
-        if (!response || (!response.unsatisfiedPreRequisites.length && !response.unsatisfiedCoRequisites.length && !response.mutuallyExclusiveConflicts.length)) {
+    const [errorDescription, setErrorDescription] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(true); // Track modal state
+
+    useEffect(() => {
+        // Toggle modal visibility based on isModalOpen state
+        const dialog = document.getElementById('validation_modal');
+        if (dialog) {
+            if (isModalOpen) {
+                dialog.showModal();
+            } else {
+                dialog.close();
+            }
+        }
+    }, [isModalOpen]);
+
+    const closeValidationModal = () => {
+        setIsModalOpen(false); // Close modal
+    };
+
+    const renderValidationResponse = (res) => {
+        // const res = {
+        //     "unsatisfiedPreRequisites": ["forgot to take mod A", "forgor to Mod b", "i forgor"],
+        //     "unsatisfiedCoRequisites": ["COREQ", "COREQ", "COREQ"],
+        //     "mutuallyExclusive": ["MUTUALLY", "EXCLUSIVE"]
+        // };
+        if (!res || (!res.unsatisfiedPreRequisites.length && !res.unsatisfiedCoRequisites.length && !res.mutuallyExclusiveConflicts.length)) {
             return null; // Return null if all arrays are empty
         }
-
-        return (
-            <div className="bg-gray-100 border-l-4 border-gray-300 text-gray-700 p-4 rounded-lg my-4" role="alert">
-                {response.unsatisfiedPreRequisites && response.unsatisfiedPreRequisites.length > 0 && (
-                    <div>
-                        <strong>Unsatisfied Pre-Requisites:</strong>
-                        <ul className="list-disc pl-5">
-                            {response.unsatisfiedPreRequisites.map((prereq, index) => (
-                                <li key={index}>{prereq}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                {response.unsatisfiedCoRequisites && response.unsatisfiedCoRequisites.length > 0 && (
-                    <div>
-                        <strong>Unsatisfied Co-Requisites:</strong>
-                        <ul className="list-disc pl-5">
-                            {response.unsatisfiedCoRequisites.map((coreq, index) => (
-                                <li key={index}>{coreq}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-                {response.mutuallyExclusiveConflicts && response.mutuallyExclusiveConflicts.length > 0 && (
-                    <div>
-                        <strong>Mutually Exclusive Conflicts:</strong>
-                        <ul className="list-disc pl-5">
-                            {response.mutuallyExclusiveConflicts.map((conflict, index) => (
-                                <li key={index}>{conflict}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        );
-    };
+        
+        const errorDesc = [];
+        
+        for (const key in res) {
+            if (res[key].length > 0) {
+                errorDesc.push({
+                    title: key,
+                    desc: res[key]
+                });
+            }
+        }
+        
+        setErrorDescription(errorDesc);
+    }; // Add dependencies if needed
+    
 
     useEffect(() => {
         if (validationResponse && !validationResponse.unsatisfiedPreRequisites.length && !validationResponse.unsatisfiedCoRequisites.length && !validationResponse.mutuallyExclusiveConflicts.length) {
@@ -288,12 +293,34 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
                     )}
                     
                 </div>
-                    {isEditMode && (
+
+                {isEditMode && (
                             <div className="ml-5">
                                 <CourseSearch plan={plan}></CourseSearch>
                             </div>
-                        )}
+                )}
             </div>
+
+            <dialog id="validation_modal" className="modal rounded-xl">
+                <div className="bg-white/30 rounded-xl p-4 relative">
+                    <button  onClick={closeValidationModal} className="absolute right-4 top-4">✕</button>
+                    <p className="font-bold text font-poppins mb-2">Error</p>
+
+                    <div className="rounded-lg bg-gray-100 max-w-72 items-center justify-between py-2 px-4 font-archivo">
+                        {errorDescription.map(str => (
+                            <div className="mb-2">
+                                <p className="font-bold">{str.title}</p>
+                                <ul className="list-disc text-sm mx-3">
+                                    {str.desc.map((desc, index) => (
+                                        <li key={index}>{desc}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                                                
+                    </div>                
+                </div>
+            </dialog>  
         </div>
     );
 }
@@ -305,7 +332,7 @@ const hardCodedMods = [
                 "planId": 0,
                 "userId": 1234
             },
-            "moduleId": "CS101"
+            "moduleId": "CS104"
         },
         "gpa": 0.0,
         "term": 1,
@@ -323,8 +350,8 @@ const hardCodedMods = [
             "secondMajor": null
         },
         "module": {
-            "moduleId": "CS101",
-            "moduleName": "Programming Fundamentals I",
+            "moduleId": "CS104",
+            "moduleName": "Programming Fundamentals 4",
             "courseUnit": 1.0,
             "baskets": [
                 "i forgot"
@@ -343,7 +370,7 @@ const hardCodedMods = [
                 "planId": 0,
                 "userId": 1234
             },
-            "moduleId": "CS101"
+            "moduleId": "CS103"
         },
         "gpa": 0.0,
         "term": 1,
@@ -361,8 +388,8 @@ const hardCodedMods = [
             "secondMajor": null
         },
         "module": {
-            "moduleId": "CS102",
-            "moduleName": "Programming Fundamentals II",
+            "moduleId": "CS103",
+            "moduleName": "Programming Fundamentals 3",
             "courseUnit": 1.0,
             "baskets": [
                 "i forgot"
@@ -376,6 +403,7 @@ const hardCodedMods = [
         }
     },
 ]
+
 
 function Planning() {
     const { user } = useContext(UserContext);
@@ -391,7 +419,15 @@ function Planning() {
             console.log("User plans:", user.plans);
             const selectedPlan = user.plans.find(p => p.planId === parseInt(id));
             console.log("Selected Plan:", selectedPlan);
-            console.log(selectedPlan.planModuleGPAs);
+
+            console.log("planmodgpa array", selectedPlan.planModuleGPAs);
+            // console.log("hardcode2", hardCoded2)
+            // const newMods = (selectedPlan.planModuleGPAs.concat(hardCodedMods))
+            // console.log("newMods", newMods)
+            setMods(selectedPlan.planModuleGPAs)
+
+            // setMods(hardCodedMods)
+
             if (selectedPlan) {
                 // const mappedMods = selectedPlan.planModuleGPAs.map(pgpa => ({
                 //     ...pgpa.module,
@@ -399,8 +435,6 @@ function Planning() {
                 //     GPA: pgpa.gpa,
                 // }));
                 setPlan({ ...selectedPlan, view: 4, userId: user.userId });
-                // setMods(mappedMods);
-                setMods(hardCodedMods)
             }
         }
     }, [user, id]);
