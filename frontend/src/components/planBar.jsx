@@ -86,7 +86,7 @@ const Tabs = ({ tabData }) => {
     );
 };
 
-const PlanBar = ({ plan, setPlan, mods }) => {
+const PlanBar = ({ plan, setPlan, mods}) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 

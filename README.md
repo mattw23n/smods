@@ -1,12 +1,51 @@
-# heap-smods
+# SMODS: Plan Your Mods. Hassle-Free.
 
-## Features
+**SMODS** is a web app developed for SMU students by SMU students to make it easier to plan our academic journey in SMU.
 
-- **Module Recommendation:** Get recommendations based on year, term, major, and track.
-- **Academic Journey Planning:** Plan your academic journey at SMU by dragging and dropping mods based on semester.
-- **GPA Calculator:** Predict your final GPA with our calculator.
-- **Senior Recommendations:** Receive recommendations from seniors on which mods to take.
-- **Topic Coverage:** Access a list of topics covered by selected mods.
-- **Progress Tracking:** Monitor your progress by seeing how many more mods you need to clear.
-- **Professor Reviews:** Select professors for each mod and link to their AfterClass reviews.
-- **Course Route Plan:** Download or share your course route plan with others.
+## Introduction
+
+Planning your modules can be a daunting task, but with SMODS, it's now a breeze! This application is designed to simplify the process of organizing and managing your courses, ensuring you stay on track to meet your academic goals.
+
+## Key Features
+
+- **Drag and Drop Modules**: Easily determine when to take a course by dragging and dropping modules into your plan.
+- **Updated Course Search**: Quickly find specific modules with our improved search functionality.
+- **Dashboard Overview**: View your current module count and check if you have completed all the required baskets.
+- **Built-in GPA Calculator**: Track your GPA per term, year, and overall. See the minimum and maximum GPA as well.
+
+## How to Use SMODS
+
+### Step-by-Step Tutorial
+
+1. **Create an Account**
+   - Sign up and log in to your SMODS account.
+
+2. **Create a New Plan**
+   - Navigate to the home page.
+   - Press the "New Plan" button.
+
+3. **Fill in Plan Details**
+   - Enter the necessary details for your plan.
+   - Ensure you specify your degree and the first major.
+
+4. **Access Your Plan**
+   - Go back to the home page.
+   - Click on the plan you just created.
+
+5. **Edit and Customize Your Plan**
+   - Add or delete modules as needed.
+   - Drag and drop modules to adjust your schedule.
+
+Enjoy planning your academic journey with ease!
+
+## Contributing
+
+We welcome contributions from the SMU community. If you have any ideas, suggestions, or would like to contribute to the development of SMODS, please reach out to us.
+
+## License
+
+This project is licensed under the MIT License.
+
+---
+
+**Developed by SMU students for SMU students.**

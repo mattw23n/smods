@@ -139,10 +139,16 @@ public class PlanService {
             planModuleGPARepository.save(planModuleGPA);
         }
 
-        // Validate modules and calculate progress
+        // Validate modules
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
+
+        // calculate progress
         Map<String, Double> progress = getPlanRequirementProgress(planId, userId);
         validationResponse.setPlanRequirementProgress(progress);
+
+        // get target requirement
+        Map<String, Double> target = getPlanTargetRequirement(planId, userId);
+        validationResponse.setPlanTargetRequirement(target);
 
         // Get compulsory modules
         List<String> compulsoryModules = getCompulsoryModules(planId, userId);
@@ -162,11 +168,11 @@ public class PlanService {
             String moduleId = planModule.getModule().getModuleId();
             int term = planModule.getTerm();
 
-            List<Module> preRequisites = moduleRepository.findPreRequisitesById(moduleId);
+            List<Module> preRequisites = planModule.getModule().getPreRequisites();
             List<Module> takenModulesBeforeTerm = planModuleGPARepository.findAllPlanModulesByIdBeforeTerm(planId, userId, term);
 
             for (Module preReq : preRequisites) {
-                if (!takenModulesBeforeTerm.stream().anyMatch(m -> m.getModuleId().equals(preReq.getModuleId()))) {
+                if (!takenModulesBeforeTerm.contains(preReq)) {
                     unsatisfiedPreRequisites.add(moduleId + " requires " + preReq.getModuleId() + " as a pre-requisite.");
                 }
             }
@@ -175,7 +181,7 @@ public class PlanService {
             List<Module> takenModulesInTerm = planModuleGPARepository.findAllModulesByPlanIdAndTerm(planId, userId, term);
 
             for (Module coReq : coRequisites) {
-                if (!takenModulesInTerm.stream().anyMatch(m -> m.getModuleId().equals(coReq.getModuleId()))) {
+                if (!takenModulesInTerm.contains(coRequisites)) {
                     unsatisfiedCoRequisites.add(moduleId + " requires " + coReq.getModuleId() + " to be taken in the same term.");
                 }
             }
@@ -184,7 +190,7 @@ public class PlanService {
             List<Module> takenModules = planModuleGPARepository.findAllModulesByPlanId(planId, userId);
 
             for (Module conflict : mutuallyExclusives) {
-                if (takenModules.stream().anyMatch(m -> m.getModuleId().equals(conflict.getModuleId()))) {
+                if (takenModules.contains(mutuallyExclusives)) {
                     mutuallyExclusiveConflicts.add("Only one of " + moduleId + " and " + conflict.getModuleId() + " can be taken.");
                 }
             }
@@ -192,7 +198,7 @@ public class PlanService {
             planModuleGPARepository.save(planModule);
         }
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null);
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null, null);
     }
 
     public List<String> getCompulsoryModules(Long planId, Long userId){
@@ -286,7 +292,7 @@ public class PlanService {
     }
 
     public boolean moduleIsInPlan(Long userId, Long planId, String moduleId){
-        return planModuleGPARepository.existsById(new PlanModuleGPAKey(new PlanKey(userId, planId), moduleId));
+        return planModuleGPARepository.existsById(new PlanModuleGPAKey(new PlanKey(planId, userId), moduleId));
     }
 
     public Map<String, Double> getPlanRequirementProgress(Long planId, Long userId){
