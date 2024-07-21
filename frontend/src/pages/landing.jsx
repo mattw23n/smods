@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
-import Laptop from "../images/prot_clean.png";
+import Laptop from "../images/laptop-demo.png";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import calendar from "../images/calendar.png";
 import Demo from "../images/demo.gif";
 import searchDemo from "../images/searchDemo.gif";
 import validationDemo from "../images/validationDemo.gif";
@@ -125,8 +124,8 @@ function Hero() {
                     </p>
                     <PlanButton />
                 </div>
-                <div className="flex max-w-[600px] align-bottom">
-                    <img src={Laptop} alt="mockup" className="w-full h-auto " />
+                <div className="flex max-w-[700px] align-bottom">
+                    <img src={Laptop} alt="mockup" className="w-auto h-auto" />
                 </div>
             </div>
             <div className="flex flex-col mx-20">
