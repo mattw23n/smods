@@ -141,8 +141,12 @@ public class PlanService {
 
         // Validate modules and calculate progress
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
-        Map<String, Double> progress = getPlanRequirementProgress(userId, planId);
+        Map<String, Double> progress = getPlanRequirementProgress(planId, userId);
         validationResponse.setPlanRequirementProgress(progress);
+
+        // Get compulsory modules
+        List<String> compulsoryModules = getCompulsoryModules(planId, userId);
+        validationResponse.setCompulsoryModules(compulsoryModules);
 
         return validationResponse;
     }
@@ -188,17 +192,11 @@ public class PlanService {
             planModuleGPARepository.save(planModule);
         }
 
-        // Get compulsory modules
-//        List<String> compulsoryModules = getCompulsoryModules(userId, planId);
-
-        // Get requirement progress
-//        Map<String, Double> requirementProgress = getPlanRequirementProgress(userId, planId);
-
         return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null);
     }
 
-    public List<String> getCompulsoryModules(Long userId, Long planId){
-        Plan plan = planRepository.findByPlanKey(new PlanKey(userId, planId))
+    public List<String> getCompulsoryModules(Long planId, Long userId){
+        Plan plan = planRepository.findByPlanKey(new PlanKey(planId, userId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
         // Get degree and majors
@@ -278,7 +276,7 @@ public class PlanService {
         for (Entry<Integer, List<Module>> entry : electives){
             notice = "You must take any " + entry.getKey() + " of:";
             for (Module module : entry.getValue()){
-                notice += " " + module.getModuleId();
+                notice += ", " + module.getModuleId();
             }
 
             compulsoryModules.add(notice);
@@ -291,7 +289,7 @@ public class PlanService {
         return planModuleGPARepository.existsById(new PlanModuleGPAKey(new PlanKey(userId, planId), moduleId));
     }
 
-    public Map<String, Double> getPlanRequirementProgress(Long userId, Long planId){
+    public Map<String, Double> getPlanRequirementProgress(Long planId, Long userId){
         Plan plan = planRepository.findByPlanKey(new PlanKey(planId, userId))
                 .orElseThrow(() -> new RuntimeException("Plan not found"));
 
@@ -340,15 +338,11 @@ public class PlanService {
                                           Map<String, Double> requirementProgress,
                                           Double courseUnit){
 
-        if (targetRequirement.get(category) == null){
-            targetRequirement.put(category, 0.0);
-        }
+        targetRequirement.putIfAbsent(category, 0.0);
 
-        if (requirementProgress.get(category) == null){
-            requirementProgress.put(category, 0.0);
-        }
+        requirementProgress.putIfAbsent(category, 0.0);
 
-        if (Double.compare(targetRequirement.get(category), requirementProgress.get(category)) <= 0) {
+        if (Double.compare(targetRequirement.get(category), requirementProgress.get(category)) <= 0 && !category.equals("Free Elective")) {
             incrementPlanRequirement(Module.getLowerHierarchy(category), targetRequirement, requirementProgress, courseUnit);
         }
 //        else if (Double.compare(targetRequirement.get(category), requirementProgress.get(category) + courseUnit) <= 0) {
