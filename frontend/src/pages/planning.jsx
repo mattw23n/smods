@@ -9,7 +9,7 @@ import Background from "../components/background";
 import html2canvas from 'html2canvas';
 import { useParams } from "react-router-dom";
 import Loading from "./loading";
-import degreeHandbook from "../data/defaultMods";
+import {degreeHandbook} from "../data/additionalModData";
 
 const PlanDetails = ({ plan, setPlan }) => {
     const { planName, degree, firstMajor, secondMajor, view } = plan;

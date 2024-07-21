@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from "react";
-import defaultMods from "../data/defaultMods";
-
-const asiaStudiesCourses = ["COR3021"];
-const singaporeStudiesCourses = ["COR3001"];
-
+import {asiaStudiesCourses, singaporeStudiesCourses} from "../data/additionalModData";
 
 //replace this plan requirement progress with an API call to get the actual map
 const planRequirementProgress = {
