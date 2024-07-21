@@ -18,7 +18,7 @@ const DeleteButton = ({ setMods, module, plan, setValidationResponse }) => {
         console.log(`Attempting to delete module: ${moduleId} for term: ${term}`);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}&isAdding=false`, {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${term}&isAdding=false`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

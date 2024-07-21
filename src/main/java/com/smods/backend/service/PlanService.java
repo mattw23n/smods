@@ -101,7 +101,7 @@ public class PlanService {
     }
 
     @Transactional
-    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, Boolean isAdding, Double gpa) {
+    public ModuleValidationResponse updateModule(Long planId, Long userId, String moduleId, int term, Boolean isAdding) {
         authorizationService.checkUserAuthorization(userId);
         PlanKey planKey = new PlanKey(planId, userId);
 
@@ -125,19 +125,13 @@ public class PlanService {
                 planModuleGPA.setPlan(plan);
                 planModuleGPA.setModule(module);
                 planModuleGPARepository.save(planModuleGPA);
-
+                }
             } else {
                 PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
                         .orElseThrow(() -> new RuntimeException("Module not found in plan"));
 
                 planModuleGPARepository.delete(planModuleGPA);
             }
-        } else if (gpa != null) {
-            PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
-                    .orElseThrow(() -> new RuntimeException("Module not found in plan"));
-            planModuleGPA.setGpa(gpa);
-            planModuleGPARepository.save(planModuleGPA);
-        }
 
         // Validate modules
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
@@ -157,6 +151,7 @@ public class PlanService {
         return validationResponse;
     }
 
+    @Transactional
     public ModuleValidationResponse validatePlanModules(Long planId, Long userId) {
         authorizationService.checkUserAuthorization(userId);
         List<PlanModuleGPA> planModules = planModuleGPARepository.findByPlanIdAndUserId(planId, userId);
@@ -357,6 +352,23 @@ public class PlanService {
         else {
             requirementProgress.put(category, requirementProgress.get(category) + courseUnit);
         }
+    }
+
+    @Transactional
+    public void updateModuleGpa(Long planId, Long userId, String moduleId, Double gpa) {
+        authorizationService.checkUserAuthorization(userId);
+        PlanKey planKey = new PlanKey(planId, userId);
+
+        // Check if plan exists
+        Plan plan = planRepository.findByPlanKey(planKey)
+                .orElseThrow(() -> new RuntimeException("Plan doesn't exist"));
+
+        PlanModuleGPAKey planModuleGPAKey = new PlanModuleGPAKey(planKey, moduleId);
+
+        PlanModuleGPA planModuleGPA = planModuleGPARepository.findByPlanModuleGPAKey(planModuleGPAKey)
+                .orElseThrow(() -> new RuntimeException("Module not found in plan"));
+        planModuleGPA.setGpa(gpa);
+        planModuleGPARepository.save(planModuleGPA);
     }
 
     public Optional<Plan> getPlanById(Long userId, Long planId) {
