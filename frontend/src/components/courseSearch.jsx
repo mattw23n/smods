@@ -44,7 +44,6 @@ const SearchBar = ({ plan }) => {
     const [selectedFilter, setFilter] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResult, setSearchResult] = useState([]);
-    const [error, setError] = useState("");
 
     const filtersDict = [
         { filter: "Course Code", example: "\"CS101\", \"IS20\"" },
@@ -60,7 +59,6 @@ const SearchBar = ({ plan }) => {
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
-        setError("");
     };
 
     const handleInputChange = (event) => {
@@ -69,11 +67,6 @@ const SearchBar = ({ plan }) => {
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
-
-        if (selectedFilter === '') {
-            setError("Please select a filter.");
-            return;
-        }
 
         const jwtToken = localStorage.getItem('jwt');
         const authHeader = `Bearer ${jwtToken}`;
@@ -109,7 +102,6 @@ const SearchBar = ({ plan }) => {
                     className="select rounded-xl bg-white/50 border-gray-100 font-archivo text-sm"
                     value={selectedFilter}
                     onChange={handleFilterChange}
-                    required
                 >
                     <option disabled value=""> Enter Filter </option>
                     {filtersDict.map((f, index) => (
@@ -120,7 +112,6 @@ const SearchBar = ({ plan }) => {
                 </select>
                 {/*E.g. {getExampleByFilter(selectedFilter)}*/}
             </div>
-            {error && <p className="text-red-500 text-sm mb-2 font-archivo">{error}</p>}
 
             <form className="max-w-full mb-4" onSubmit={handleSearchSubmit}>
                 <label htmlFor="default-search" className="mb-2 text-sm font-archivo text-gray-900 sr-only">Search</label>

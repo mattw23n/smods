@@ -5,6 +5,7 @@ import DeleteButton from "./deleteButton";
 
 const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMode }) => {
     const [active, setActive] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const { isGPAOn, view } = plan;
     const isGroupView = view === 1;
 
@@ -84,7 +85,15 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         const originTerm = e.dataTransfer.getData("originTerm");
 
         if (originTerm === term.toString()) {
-            // Do nothing if the term is the same
+            return;
+        }
+
+        // Check if the target term already has 6 modules
+        const modulesInTargetTerm = mods.filter((m) => m.term === term).length;
+
+        if (modulesInTargetTerm >= 5) {
+            setErrorMessage(`Cannot add more than 6 modules in term ${term}`);
+            setTimeout(() => setErrorMessage(""), 3000); // Clear the error message after 3 seconds
             return;
         }
 
@@ -102,15 +111,10 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             // Update the term of the module
             modToTransfer = { ...modToTransfer, term };
 
-            console.log("user id", plan.userId)
-            console.log("plan id", plan.planId)
-            console.log("module id", moduleId)
-            console.log("originTerm", originTerm)
-
-            if(originTerm !== 0){
+            if (originTerm !== 0) {
                 // Call the API to delete the module from the original term
                 try {
-                    const deleteResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                    const deleteResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -127,7 +131,6 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
                     return;
                 }
             }
-
         }
 
         if (!modToTransfer) {
@@ -181,7 +184,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         }
 
         try {
-            const addResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}&isAdding=true`, {
+            const addResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${term}&isAdding=true`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -215,10 +218,35 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         setMods(copy);
     };
 
+    const handleGpaUpdate = async (moduleId, gpa) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module-gpa?moduleId=${moduleId}&gpa=${gpa}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                }
+            });
+
+            if (response.ok) {
+                // Update the GPA locally
+                setMods(prevMods => prevMods.map(mod => {
+                    if (mod.module.moduleId === moduleId) {
+                        return { ...mod, gpa: gpa };
+                    }
+                    return mod;
+                }));
+            } else {
+                console.error('Failed to update GPA:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating GPA:', error);
+        }
+    };
 
     const handleDelete = async (moduleId) => {
         try {
-            const response = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=&isAdding=false`, {
+            const response = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=&isAdding=false`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -277,6 +305,12 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
                 className={`min-w-[270px] px-2 py-1 rounded-3xl bg-white flex flex-col transition-colors 
                     ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"}`}>
 
+                {errorMessage && (
+                    <div className="bg-red-100 border-l-4 border-red-500 text-xs text-red-700 p-4 font-archivo rounded-lg" role="alert">
+                        <p>{errorMessage}</p>
+                    </div>
+                )}
+
                 {filteredMods.map((m) => {
                     return (
                         <Mod key={m.moduleId} module={m} plan={plan} handleDragStart={isGroupView ? null : handleDragStart} mods={mods} setMods={setMods} setValidationResponse={setValidationResponse} />
@@ -330,4 +364,3 @@ function Year({ num, plan, mods, setMods, setValidationResponse }) {
 }
 
 export default Year;
-

@@ -8,7 +8,6 @@ import SignIn from './pages/sign_in.jsx';
 import Register from './pages/register.jsx';
 import AboutUs from './pages/aboutUs.jsx';
 import ContactUs from './pages/contactUs.jsx';
-import Anims from './pages/justForAnims.jsx';
 import VerifyEmail from './pages/VerifyEmail.jsx';
 import ResendVerification from './pages/ResendVerification.jsx';
 import HandleVerification from './pages/HandleVerification.jsx';
@@ -30,7 +29,6 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/about" element={<AboutUs />} />
                     <Route path="/contact" element={<ContactUs />} />
-                    <Route path="/anims" element={<Anims />} />
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/resend-verification" element={<ResendVerification />} />
                     <Route path="/handle-verification" element={<HandleVerification />} />

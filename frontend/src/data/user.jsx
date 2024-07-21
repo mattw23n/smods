@@ -1,21 +1,7 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Loading from '../pages/loading';
-import { DEFAULT_PLANS, DEFAULT_TEMPLATES } from "./plans";
 import {useNavigate} from "react-router-dom";
-
-const templates = [
-    { title: "Double", date: "30 June 2024", degree: "Computer Science", majors: ["Artificial Intelligence", "Cybersecurity"] },
-    { title: "Skynet", date: "30 June 2024", degree: "Computer Science", majors: ["Artificial Intelligence"] },
-];
-
-export const TemplateUser = {
-    username: "Gilchris Nathaniel",
-    email: "gilchris@gmail.com",
-    password: "i like trains",
-    plans: DEFAULT_PLANS,
-    templates: DEFAULT_TEMPLATES,
-};
 
 export const UserContext = createContext();
 

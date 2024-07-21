@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
-import defaultMods from "../data/defaultMods";
+import {asiaStudiesCourses, singaporeStudiesCourses} from "../data/additionalModData";
 
-const asiaStudiesCourses = ["COR3021"];
-const singaporeStudiesCourses = ["COR3001"];
 
-const ActiveCounter = ({ Current, Max, Category, type }) => {
+const ActiveCounter = ({ Current, Max, Category }) => {
+
+    const getFirstLetters = (input) => {
+        const str = String(input)
+        const words = str.split(' ');
+
+        // Extract the first letter of each word and join them into a string
+        const firstLetters = words.map(word => word.charAt(0)).join('');
+
+        return firstLetters.toLowerCase();
+    }
+
+    const type = getFirstLetters(Category)
+    console.log("type", type)
+
     return (
-        <div className={`flex gap-1 w-full items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
+        <div className={`flex w-full items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
             <p className="text-xl">{Current}/{Max} </p>
             <p className="whitespace-nowrap">{Category}</p>
         </div>
@@ -74,21 +86,83 @@ const Tabs = ({ tabData }) => {
     );
 };
 
-const PlanBar = ({ plan, setPlan, mods }) => {
+const PlanBar = ({ plan, setPlan, mods}) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
     const [asiaStudiesMods, setAsiaStudiesMods] = useState([]);
     const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([]);
 
-    
-    // const { tracks, degree } = plan;
+    const planRequirementProgressEmpty = {
+        "targetRequirement": {
+            "Uni Core": 0.0,
+            "Major Core": 0.0,
+            "Major Elective": 0.0,
+            "Free Elective": 0.0
+        },
+        "requirementProgress": {
+            "Uni Core": 0.0,
+            "Major Core": 0.0,
+            "Major Elective": 0.0,
+            "Free Elective": 0.0
+        },
+    }
 
-    // const degreeInfo = defaultMods;
-    // const planDegree = degreeInfo.find(d => d.name === degree);
-    // const { modLimit } = planDegree;
+    const [planRequirementProgress, setPlanRequirementProgress] = useState(planRequirementProgressEmpty)
 
-    // const trackType = tracks.length;
+    useEffect(() => {
+        const getRequirementProgress = async () => {
+            if (mods.length === 0) {
+                return;
+            }
+
+            const moduleId = mods[0].module.moduleId;
+            const term = 1;
+
+            try {
+                const addResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    },
+                    body: JSON.stringify({
+                        moduleId: moduleId,
+                        term: term,
+                    })
+                });
+
+                if (addResponse.ok) {
+                    const validationResponse = await addResponse.json();
+                    const targetRequirement = validationResponse.planTargetRequirement;
+                    const progressRequirement = validationResponse.planRequirementProgress;
+
+                    const updatedRequirementProgress = {
+                        targetRequirement: {
+                            ...planRequirementProgressEmpty.targetRequirement,
+                            ...targetRequirement,
+                        },
+                        requirementProgress: {
+                            ...planRequirementProgressEmpty.requirementProgress,
+                            ...progressRequirement,
+                        },
+                    };
+
+                    console.log(updatedRequirementProgress)
+
+                    setPlanRequirementProgress(updatedRequirementProgress);
+
+                    console.log('Successfully updated plan requirements');
+                } else {
+                    console.error('Failed to get progress requirement:', addResponse.statusText);
+                }
+            } catch (error) {
+                console.error('Error in progress requirement:', error);
+            }
+        };
+
+        getRequirementProgress();
+    }, [mods]);
 
     useEffect(() => {
         setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.module.moduleId)));
@@ -169,11 +243,15 @@ const PlanBar = ({ plan, setPlan, mods }) => {
         <div className="bg-white rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto"
              style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
             {/* Commented out actual counts and limits */}
-            {/* <ActiveCounter Current={uniCore.length} Max={modTrackLimit.uc} Category="UNI CORE" type="uc" />
-            <ActiveCounter Current={majorCore.length} Max={modTrackLimit.mc} Category="MAJOR CORE" type="mc" />
-            <ActiveCounter Current={majorElective.length} Max={modTrackLimit.me} Category="MAJOR ELECTIVE" type="me" />
-            <ActiveCounter Current={trackModule.length} Max={modTrackLimit.tm} Category="TRACK MODULE" type="tm" />
-            <ActiveCounter Current={freeElective.length} Max={modTrackLimit.fe} Category="FREE ELECTIVE" type="fe" /> */}
+
+            {Object.keys(planRequirementProgress.targetRequirement).map(category => (
+                <ActiveCounter
+                    key={category}
+                    Category={category.toUpperCase()}
+                    Current={planRequirementProgress.requirementProgress[category]}
+                    Max={planRequirementProgress.targetRequirement[category]}
+                />
+            ))}
         </div>
     );
 
@@ -249,7 +327,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
 
     // Use default values or placeholders
     const tabData = [
-        { id: 0, curr: 0, max: 36, label: " CUs", content: Tab1 },
+        { id: 0, curr: mods.length, max: 36, label: " CUs", content: Tab1 },
         { id: 1, curr: gradReqs, max: 4, label: " Grad. Requirements", content: Tab2 },
         ...(isGPAOn ? [{ id: 2, curr: totalGPA, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
     ];

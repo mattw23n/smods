@@ -87,18 +87,26 @@ public class PlanController {
         return ResponseEntity.ok(planModules);
     }
 
-    @PutMapping("/{planId}/update")
+    @PutMapping("/{planId}/update-module")
     public ResponseEntity<ModuleValidationResponse> updateModule(
             @PathVariable Long planId,
             @PathVariable Long userId,
             @RequestParam String moduleId,
             @RequestParam int term,
-            @RequestParam(required = false) Boolean isAdding,
-            @RequestParam(required = false) Double gpa) {
-        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding, gpa);
+            @RequestParam(required = false) Boolean isAdding) {
+        ModuleValidationResponse response = planService.updateModule(planId, userId, moduleId, term, isAdding);
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/{planId}/update-module-gpa")
+    public ResponseEntity<String> updateModuleGpa(
+            @PathVariable Long planId,
+            @PathVariable Long userId,
+            @RequestParam String moduleId,
+            @RequestParam Double gpa) {
+        planService.updateModuleGpa(planId, userId, moduleId, gpa);
+        return ResponseEntity.ok("GPA updated successfully");
+    }
 
     @GetMapping("/{planId}/gradRequirement")
     public ResponseEntity<Map<String, Double>> getPlanRequirementProgress(@PathVariable Long userId, @PathVariable Long planId) {
