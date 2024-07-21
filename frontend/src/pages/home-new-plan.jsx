@@ -33,6 +33,7 @@ const Content = ({ user, setUser }) => {
     });
 
     const [confirmationMessage, setConfirmationMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         console.log('User context:', user); // Debugging user context
@@ -78,6 +79,14 @@ const Content = ({ user, setUser }) => {
             // Form is valid, proceed with form submission
             console.log('Form submitted');
 
+            if(selectedMajor2 === "Undeclared"){
+                setSelectedMajor2(null)
+            }
+
+            if(selectedMajor1 === "Undeclared"){
+                setSelectedMajor1(null)
+            }
+
             const newPlan = {
                 planName: selectedTitle,
                 degreeName: selectedDegree,
@@ -105,6 +114,7 @@ const Content = ({ user, setUser }) => {
                     setConfirmationMessage("Plan created successfully!");
                 } else {
                     console.error('Failed to create plan:', response.statusText);
+                    setErrorMessage("Failed to create plan")
                 }
             } catch (error) {
                 console.error('Error creating plan:', error);
@@ -139,8 +149,13 @@ const Content = ({ user, setUser }) => {
                     <div className="max-w-none flex flex-col gap-2 text-text">
                         <p className="text-l font-poppins font-bold">🪄Create a New Plan</p>
                         {confirmationMessage && (
-                            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+                            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 font-archivo rounded-lg" role="alert">
                                 <p>{confirmationMessage}</p>
+                            </div>
+                        )}
+                        {errorMessage && (
+                            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 font-archivo rounded-lg" role="alert">
+                                <p>{errorMessage}</p>
                             </div>
                         )}
                         <form className="isolate w-[600px] shadow-lg ring-1 ring-black/5 px-4 py-4 bg-white/50 rounded-3xl flex flex-col gap-5 text-text"
