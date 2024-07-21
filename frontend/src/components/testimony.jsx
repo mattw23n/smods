@@ -1,35 +1,5 @@
 import React, { useEffect } from "react";
 import { animate, useMotionValue, motion } from "framer-motion";
-import useMeasure from "react-use-measure"
-
-const testimonials = [
-    {
-        pos: 1,
-        text: "TESTIMONY 1.",
-        author: "Jane Smith",
-        title: "Highly Recommend",
-    },
-    {
-        pos: 2,
-        text: "TESTIMONY 2",
-        author: "Alice Johnson",
-        title: "Great Experience",
-    },
-    {
-        pos: 3,
-        text: "TESTIMONY 3",
-        author: "Michael Scott",
-        title: "Stayin' Alive",
-    },
-    {
-        pos: 4,
-        text: "TESTIMONY 4",
-        author: "John Doe",
-        title: "Awesome Service",
-    },
-
-
-];
 
 const TestimonyCard = ({text, author}) => {
     // console.log(text)

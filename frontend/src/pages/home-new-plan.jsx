@@ -10,12 +10,8 @@ const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
     const { username, plans = [], userId } = user;
 
-    useEffect(() => {
-        console.log('User context in Content component:', user); // Debugging user context
-    }, [user]);
-
     const majors = [
-        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical Systems", "Undeclared"] },
         { Title: "Information Systems", Majors: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management & Technology", "Undeclared"] },
         { Title: "Software Engineering", Majors: ["Not Applicable"] },
         { Title: "Computing & Law", Majors: ["Not Applicable"] },
@@ -34,6 +30,24 @@ const Content = ({ user, setUser }) => {
 
     const [confirmationMessage, setConfirmationMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+    useEffect(() => {
+        if (confirmationMessage) {
+            const timer = setTimeout(() => {
+                setConfirmationMessage('');
+            }, 3000);
+            return () => clearTimeout(timer); // Cleanup the timer
+        }
+    }, [confirmationMessage]);
+
+    useEffect(() => {
+        if (errorMessage) {
+            const timer = setTimeout(() => {
+                setErrorMessage('');
+            }, 3000);
+            return () => clearTimeout(timer); // Cleanup the timer
+        }
+    }, [errorMessage]);
 
     useEffect(() => {
         console.log('User context:', user); // Debugging user context
@@ -57,6 +71,8 @@ const Content = ({ user, setUser }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+
 
         // Validate form
         const newErrors = {
@@ -102,9 +118,11 @@ const Content = ({ user, setUser }) => {
             const newPlan = {
                 planName: selectedTitle,
                 degreeName: selectedDegree,
-                firstMajorName: selectedMajor1,
-                secondMajorName: selectedMajor2,
+                firstMajorName: selectedMajor1 === "Undeclared" ? null : selectedMajor1,
+                secondMajorName: selectedMajor2 === "Undeclared" ? null : selectedMajor2,
             };
+
+            console.log("new plan", newPlan)
 
             try {
                 const response = await fetch(`http://localhost:8080/api/users/${userId}/plans`, {
@@ -209,11 +227,13 @@ const Content = ({ user, setUser }) => {
                                     onChange={handleMajor1Change}
                                     disabled={!selectedDegree} >
                                     <option disabled value="">Select First Major</option>
-                                    {selectedDegreeMajors.map((major, index) => (
-                                        <option key={index} value={major}>
-                                            {major}
-                                        </option>
-                                    ))}
+                                    {selectedDegreeMajors
+                                        .filter(major => major !== "Undeclared")
+                                        .map((major, index) => (
+                                            <option key={index} value={major}>
+                                                {major}
+                                            </option>
+                                        ))}
                                 </select>
                                 {errors.major1 && <p className="text-red-500 text-xs mt-1">{errors.major1}</p>}
                             </div>

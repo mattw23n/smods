@@ -8,64 +8,9 @@ import searchDemo from "../images/searchDemo.gif";
 import validationDemo from "../images/validationDemo.gif";
 import { Link } from 'react-router-dom';
 import Background from "../components/background";
-import { animate, useMotionValue, motion } from "framer-motion";
-import useMeasure from "react-use-measure";
 import TestimonyCarousel from "../components/testimony";
 import { UserContext } from "../data/user";  // Import the UserContext
 
-const VerdioPart = () => {
-    return (
-        <>
-            <div className="flex flex-col items-center mx-6 mt-8">
-                <h1 className="text-center text-4xl font-extrabold font-poppins py-2 mb-16 max-w-2xl">
-                    Simplify your learning with us
-                </h1>
-                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                    <div className="flex-1 justify-center px-16">
-                        <h1 className="text-3xl font-bold font-poppins mb-4">
-                            Plan Your Academic Journey
-                        </h1>
-                        <p className="text-lg mb-4 max-w-lg font-archivo">
-                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                        </p>
-                    </div>
-                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
-                    </div>
-                    <div className="flex-1 justify-center px-16">
-                        <h1 className="text-3xl font-bold font-poppins mb-4">
-                            Plan Your Academic Journey
-
-                        </h1>
-                        <p className="text-lg mb-4 max-w-lg font-archivo">
-                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                        </p>
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between w-full max-w-screen-lg p-6 bg-white bg-opacity-30 rounded-xl shadow-lg mb-12 py-16">
-                    <div className="flex-1 justify-center px-16">
-                        <h1 className="text-3xl font-bold font-poppins mb-4">
-                            Plan Your Academic Journey
-                        </h1>
-                        <p className="text-lg mb-4 max-w-lg font-archivo">
-                            Chart your path to success with our intuitive academic planning tool. Whether you need help organizing your courses or tracking your progress, our platform provides the support you need to excel. Tailor your plan to fit your unique needs.
-                        </p>
-                    </div>
-                    <div className="flex-grow-0 flex-shrink-0 basis-1/3 flex justify-center">
-                        <img src={calendar} alt="Placeholder" className="w-40 h-auto rounded-lg"/>
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
 
 const PlanButton = () => {
     const { user } = useContext(UserContext);
@@ -125,7 +70,7 @@ const testimonials = [
     },
     {
         pos: 2,
-        text: "I am the king of SCIS",
+        text: "compared to the original way, i find this more useful in terms of how we can view the graduation requirements and hence plan accordingly in a more efficient way",
         author: "Justin DW",
     },
     {
@@ -135,18 +80,18 @@ const testimonials = [
     },
     {
         pos: 4,
-        text: "TESTIMONY 4",
-        author: "John Doe",
+        text: "SMODS is the goat fr fr ong",
+        author: "Zu Mer",
     },
     {
         pos: 5,
-        text: "TESTIMONY 5",
-        author: "John Doe",
+        text: "SMODS has made my skibidi dop dop dop! Long gone are the days of gyatts and rizzlers fanum taxing my planning. Can't wait to sigma mr.beast my time in SMU!",
+        author: "Brian Rod",
     },
     {
         pos: 6,
-        text: "TESTIMONY 6",
-        author: "John Doe",
+        text: "i like smods, i hope smods likes me too",
+        author: "Boo chin",
     },
 ];
 
