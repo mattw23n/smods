@@ -139,10 +139,16 @@ public class PlanService {
             planModuleGPARepository.save(planModuleGPA);
         }
 
-        // Validate modules and calculate progress
+        // Validate modules
         ModuleValidationResponse validationResponse = validatePlanModules(planId, userId);
+
+        // calculate progress
         Map<String, Double> progress = getPlanRequirementProgress(planId, userId);
         validationResponse.setPlanRequirementProgress(progress);
+
+        // get target requirement
+        Map<String, Double> target = getPlanTargetRequirement(planId, userId);
+        validationResponse.setPlanTargetRequirement(target);
 
         // Get compulsory modules
         List<String> compulsoryModules = getCompulsoryModules(planId, userId);
@@ -192,7 +198,7 @@ public class PlanService {
             planModuleGPARepository.save(planModule);
         }
 
-        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null);
+        return new ModuleValidationResponse(unsatisfiedPreRequisites, unsatisfiedCoRequisites, mutuallyExclusiveConflicts, planModules, null, null, null);
     }
 
     public List<String> getCompulsoryModules(Long planId, Long userId){

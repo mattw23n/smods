@@ -86,7 +86,7 @@ const Tabs = ({ tabData }) => {
     );
 };
 
-const PlanBar = ({ plan, setPlan, mods, planRequirementProgress }) => {
+const PlanBar = ({ plan, setPlan, mods}) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
@@ -136,6 +136,8 @@ const PlanBar = ({ plan, setPlan, mods, planRequirementProgress }) => {
                     const validationResponse = await addResponse.json();
                     const requirementProgress = validationResponse.planRequirementProgress;
 
+                    console.log("validation response", validationResponse);
+                    console.log("requirement progress", requirementProgress);
                     setPlanRequirementProgress(requirementProgress);
                     console.log('Successfully updated plan requirements');
                 } else {

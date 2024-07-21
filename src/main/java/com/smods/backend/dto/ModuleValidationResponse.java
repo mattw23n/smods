@@ -11,13 +11,15 @@ public class ModuleValidationResponse {
     private List<String> mutuallyExclusiveConflicts;
     private List<String> compulsoryModules;
     private Map<String, Double> planRequirementProgress;
+    private Map<String, Double> planTargetRequirement;
 
-    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPA> planModuleGPAs, List<String> compulsoryModules, Map<String, Double> planRequirementProgress) {
+    public ModuleValidationResponse(List<String> unsatisfiedPreRequisites, List<String> unsatisfiedCoRequisites, List<String> mutuallyExclusiveConflicts, List<PlanModuleGPA> planModuleGPAs, List<String> compulsoryModules, Map<String, Double> planRequirementProgress, Map<String, Double> planTargetRequirement) {
         this.unsatisfiedPreRequisites = unsatisfiedPreRequisites;
         this.unsatisfiedCoRequisites = unsatisfiedCoRequisites;
         this.mutuallyExclusiveConflicts = mutuallyExclusiveConflicts;
         this.compulsoryModules = compulsoryModules;
         this.planRequirementProgress = planRequirementProgress;
+        this.planTargetRequirement = planTargetRequirement;
     }
 
     // Getters and Setters
@@ -60,5 +62,13 @@ public class ModuleValidationResponse {
 
     public void setPlanRequirementProgress(Map<String, Double> planRequirementProgress) {
         this.planRequirementProgress = planRequirementProgress;
+    }
+
+    public Map<String, Double> getPlanTargetRequirement() {
+        return planTargetRequirement;
+    }
+
+    public void setPlanTargetRequirement(Map<String, Double> planTargetRequirement) {
+        this.planTargetRequirement = planTargetRequirement;
     }
 }
