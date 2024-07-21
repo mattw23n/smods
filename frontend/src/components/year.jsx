@@ -102,24 +102,32 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             // Update the term of the module
             modToTransfer = { ...modToTransfer, term };
 
-            // Call the API to delete the module from the original term
-            try {
-                const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-                    }
-                });
+            console.log("user id", plan.userId)
+            console.log("plan id", plan.planId)
+            console.log("module id", moduleId)
+            console.log("originTerm", originTerm)
 
-                if (!deleteResponse.ok) {
-                    console.error('Failed to remove module from the original term:', deleteResponse.statusText);
+            if(originTerm !== 0){
+                // Call the API to delete the module from the original term
+                try {
+                    const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                        }
+                    });
+
+                    if (!deleteResponse.ok) {
+                        console.error('Failed to remove module from the original term:', deleteResponse.statusText);
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error removing module from the original term:', error);
                     return;
                 }
-            } catch (error) {
-                console.error('Error removing module from the original term:', error);
-                return;
             }
+
         }
 
         if (!modToTransfer) {

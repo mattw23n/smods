@@ -4,6 +4,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import Background from "../components/background";
 import { UserContext } from "../data/user";
+import Loading from "./loading";
 
 const Content = ({ user, setUser }) => {
     const navigate = useNavigate();
@@ -221,8 +222,19 @@ const Content = ({ user, setUser }) => {
 };
 
 function NewPlan() {
-    const { user, setUser } = useContext(UserContext);
+
     const navigate = useNavigate();
+    const { user, loading, setUser } = useContext(UserContext);
+
+    useEffect(() => {
+        if (!user && !loading) {
+            navigate('/');
+        }
+    }, [user, loading]);
+
+    if (loading || !user) {
+        return <Loading />;
+    }
 
     return (
         <div className="relative">

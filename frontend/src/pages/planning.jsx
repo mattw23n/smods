@@ -9,6 +9,7 @@ import Background from "../components/background";
 import html2canvas from 'html2canvas';
 import { useParams } from "react-router-dom";
 import Loading from "./loading";
+import degreeHandbook from "../data/defaultMods";
 
 const PlanDetails = ({ plan, setPlan }) => {
     const { planName, degree, firstMajor, secondMajor, view } = plan;
@@ -18,6 +19,9 @@ const PlanDetails = ({ plan, setPlan }) => {
         { value: 2, label: 'T' },
         { value: 1, label: 'G' },
     ];
+
+    const handbook = degreeHandbook.filter((d) => d.name === degree)[0].handbook
+
 
     return (
         <div className="px-6 py-4 w-fit rounded-3xl bg-white/50 flex flex-col gap-2">
@@ -36,13 +40,13 @@ const PlanDetails = ({ plan, setPlan }) => {
                 </div>
             </div>
 
-            {plan.handbook && (
+            {handbook && (
                 <div className="bg-blue-100 rounded-lg px-2 py-1 w-fit flex text-text font-archivo gap-2 text-sm hover:bg-blue-300 hover:scale-105 transition all">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                     </svg>
-                    <a href={`${plan.handbook.link}`}>
-                        {plan.handbook.name}
+                    <a href={`${handbook.link}`}>
+                        {handbook.name}
                     </a>
                 </div>
             )}

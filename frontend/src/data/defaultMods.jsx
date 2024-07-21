@@ -656,7 +656,45 @@ const defaultMods = [
     },
 ];
 
+const degreeHandbook = [
+    {
+        name: "Computer Science",
+        handbook:{
+            name:"CSAcademicHandbook",
+            link:"https://smu.sharepoint.com/:b:/r/sites/oasis/Documents/Downloads/RO/Student%20Handbook/BSc%20(SE)/BSc(SE)%20AY2022-2023.pdf?csf=1&web=1&e=zTGT4y",
+        }
+    },
+    {
+        name: "Information Systems",
+        handbook:{
+            name:"ISAcademicHandbook",
+            link:"https://smu.sharepoint.com/:b:/r/sites/oasis/Documents/Downloads/RO/Student%20Handbook/BSc%20(IS)/BSc%20(IS)%20AY2022-23%20onwards.pdf?csf=1&web=1&e=upt6dQ",
+        },
+    },
+    {
+        name: "Software Engineering",
+        handbook:{
+            name:"SEAcademicHandbook",
+            link:"https://smu.sharepoint.com/:b:/r/sites/oasis/Documents/Downloads/RO/Student%20Handbook/BSc%20(SE)/BSc(SE)%20AY2022-2023.pdf?csf=1&web=1&e=zTGT4y",
+        },
+    },
+    {
+        name: "Computing and Law",
+        handbook:{
+            name:"CLAcademicHandbook",
+            link:"https://smu.sharepoint.com/:b:/r/sites/oasis/Documents/Downloads/RO/Student%20Handbook/BSc%20(CL)/BSc%20(CL)%20AY2022-2023%20onwards.pdf?csf=1&web=1&e=bPCUwp",
+        },
+        modLimit:[
+            {
+                uc:12,
+                mc:12,
+                me: 6,
+                tm: 0,
+                fe: 6,
+            }
+        ]
 
+    },
+];
 
-
-export default defaultMods
+export default degreeHandbook

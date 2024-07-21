@@ -101,50 +101,50 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     // const foundAsiaStudies = asiaStudiesMods.length > 0;
     // const foundSingaporeStudies = singaporeStudiesMods.length > 0;
 
-    // const calculateTermGPA = (mods) => {
-    //     const termGpaDict = {};
+    const calculateTermGPA = (mods) => {
+        const termGpaDict = {};
 
-    //     mods.forEach(mod => {
-    //         if (!termGpaDict[mod.term]) {
-    //             termGpaDict[mod.term] = [];
-    //         }
-    //         termGpaDict[mod.term].push(mod.GPA);
-    //     });
+        mods.forEach(mod => {
+            if (!termGpaDict[mod.term]) {
+                termGpaDict[mod.term] = [];
+            }
+            termGpaDict[mod.term].push(mod.GPA);
+        });
 
-    //     const termGpaArray = [];
-    //     for (const term in termGpaDict) {
-    //         if (termGpaDict.hasOwnProperty(term)) {
-    //             const gpas = termGpaDict[term];
-    //             const termGpa = gpas.reduce((acc, gpa) => acc + gpa, 0) / gpas.length;
-    //             termGpaArray.push({ term: term, gpa: termGpa });
-    //         }
-    //     }
+        const termGpaArray = [];
+        for (const term in termGpaDict) {
+            if (termGpaDict.hasOwnProperty(term)) {
+                const gpas = termGpaDict[term];
+                const termGpa = gpas.reduce((acc, gpa) => acc + gpa, 0) / gpas.length;
+                termGpaArray.push({ term: term, gpa: termGpa });
+            }
+        }
 
-    //     return termGpaArray;
-    // };
+        return termGpaArray;
+    };
 
-    // const findMinMaxGPA = (termGpaArray) => {
-    //     if (termGpaArray.length === 0) {
-    //         return { highest: null, lowest: null };
-    //     }
+    const findMinMaxGPA = (termGpaArray) => {
+        if (termGpaArray.length === 0) {
+            return { max: { term: 'N/A', gpa: 0 }, min: { term: 'N/A', gpa: 0 } };
+        }
 
-    //     let highest = termGpaArray[0];
-    //     let lowest = termGpaArray[0];
+        let highest = termGpaArray[0];
+        let lowest = termGpaArray[0];
 
-    //     termGpaArray.forEach(termGpa => {
-    //         if (termGpa.gpa > highest.gpa) {
-    //             highest = termGpa;
-    //         }
-    //         if (termGpa.gpa < lowest.gpa) {
-    //             lowest = termGpa;
-    //         }
-    //     });
+        termGpaArray.forEach(termGpa => {
+            if (termGpa.gpa > highest.gpa) {
+                highest = termGpa;
+            }
+            if (termGpa.gpa < lowest.gpa) {
+                lowest = termGpa;
+            }
+        });
 
-    //     return { max: highest, min: lowest };
-    // };
+        return { max: highest, min: lowest };
+    };
 
-    // const termGPAArr = calculateTermGPA(mods);
-    // const minMax = findMinMaxGPA(termGPAArr);
+    const termGPAArr = calculateTermGPA(mods);
+    const minMax = findMinMaxGPA(termGPAArr);
 
     // console.log("termGPAArr", termGPAArr);
     // console.log("minMax", minMax);
@@ -157,12 +157,12 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     // const trackModule = mods.filter((m) => m.courseType === "tm");
     // const freeElective = mods.filter((m) => m.courseType === "fe");
 
-    // const totalCUs = mods.length;
+    const totalCUs = mods.length;
 
-    // const totalPoints = mods.reduce((accumulator, mod) => {
-    //     return accumulator + mod.GPA;
-    // }, 0);
-    // const totalGPA = totalPoints / parseFloat(mods.length);
+    const totalPoints = mods.reduce((accumulator, mod) => {
+        return accumulator + mod.gpa;
+    }, 0);
+    const totalGPA = totalPoints / parseFloat(mods.length);
 
     // Tabs content
     const Tab1 = (
@@ -222,7 +222,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     const Tab3 = (
         <div className="bg-white/50 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 w-fit">
             {/* Commented out GPA calculations */}
-            {/* <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
+            <div className="flex gap-1 items-center justify-left font-archivo gap-5 font-bold text-d">
                 <p className="text-xl">{totalPoints.toFixed(2)}</p>
                 Total Grade Points
             </div>
@@ -243,7 +243,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
                 <div className="absolute left-1/2 min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
                     Achieved in Term {minMax.max.term}
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 
@@ -251,7 +251,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     const tabData = [
         { id: 0, curr: 0, max: 36, label: " CUs", content: Tab1 },
         { id: 1, curr: 0, max: 4, label: " Grad. Requirements", content: Tab2 },
-        ...(isGPAOn ? [{ id: 2, curr: 0, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
+        ...(isGPAOn ? [{ id: 2, curr: totalGPA, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
     ];
 
     return (
