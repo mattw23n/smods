@@ -74,6 +74,18 @@ const Content = ({ user, setUser }) => {
             return;
         }
 
+        if(selectedMajor1 === selectedMajor2){
+            const newErrors = {
+                title: selectedTitle ? '' : 'Title is required',
+                degree: selectedDegree ? '' : 'Degree is required',
+                major1: 'First major and second major cannot be the same',
+                major2: 'Second major and first major cannot be the same',
+            };
+
+            setErrors(newErrors)
+            return
+        }
+
         // Check if there are no errors
         if (!newErrors.title && !newErrors.degree && !newErrors.major1 && !newErrors.major2) {
             // Form is valid, proceed with form submission
