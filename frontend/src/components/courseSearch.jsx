@@ -53,10 +53,10 @@ const SearchBar = ({ plan }) => {
         { filter: "SMU Core", example: "\"Computer Science\"" },
     ];
 
-    const getExampleByFilter = (filter) => {
-        const filterObject = filtersDict.find(f => f.filter === filter);
-        return filterObject ? filterObject.example : null;
-    };
+    // const getExampleByFilter = (filter) => {
+    //     const filterObject = filtersDict.find(f => f.filter === filter);
+    //     return filterObject ? filterObject.example : null;
+    // };
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
@@ -118,7 +118,7 @@ const SearchBar = ({ plan }) => {
                         </option>
                     ))}
                 </select>
-                E.g. {getExampleByFilter(selectedFilter)}
+                {/*E.g. {getExampleByFilter(selectedFilter)}*/}
             </div>
             {error && <p className="text-red-500 text-sm mb-2 font-archivo">{error}</p>}
 

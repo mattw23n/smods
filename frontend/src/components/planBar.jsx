@@ -78,8 +78,8 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
-    // const [asiaStudiesMods, setAsiaStudiesMods] = useState([]);
-    // const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([]);
+    const [asiaStudiesMods, setAsiaStudiesMods] = useState([]);
+    const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([]);
 
     
     // const { tracks, degree } = plan;
@@ -90,16 +90,16 @@ const PlanBar = ({ plan, setPlan, mods }) => {
 
     // const trackType = tracks.length;
 
-    // useEffect(() => {
-    //     setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.moduleId)));
-    //     console.log("asia studies", asiaStudiesMods);
+    useEffect(() => {
+        setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.module.moduleId)));
+        console.log("asia studies", asiaStudiesMods);
 
-    //     setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.moduleId)));
-    //     console.log("sg studies", singaporeStudiesCourses);
-    // }, [mods, asiaStudiesCourses, singaporeStudiesCourses]);
+        setSingaporeStudiesMods(mods.filter(m => singaporeStudiesCourses.includes(m.module.moduleId)));
+        console.log("sg studies", singaporeStudiesCourses);
+    }, [mods, asiaStudiesCourses, singaporeStudiesCourses]);
 
-    // const foundAsiaStudies = asiaStudiesMods.length > 0;
-    // const foundSingaporeStudies = singaporeStudiesMods.length > 0;
+    const foundAsiaStudies = asiaStudiesMods.length > 0;
+    const foundSingaporeStudies = singaporeStudiesMods.length > 0;
 
     const calculateTermGPA = (mods) => {
         const termGpaDict = {};
@@ -149,7 +149,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     // console.log("termGPAArr", termGPAArr);
     // console.log("minMax", minMax);
 
-    // const gradReqs = (foundAsiaStudies ? 1 : 0) + (foundSingaporeStudies ? 1 : 0);
+    const gradReqs = (foundAsiaStudies ? 1 : 0) + (foundSingaporeStudies ? 1 : 0);
 
     // const uniCore = mods.filter((m) => m.courseType === "uc");
     // const majorCore = mods.filter((m) => m.courseType === "mc");
@@ -180,17 +180,17 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     const Tab2 = (
         <div className="bg-gray-100 rounded-lg px-4 py-2 grid grid-cols-2 gap-x-8 gap-y-2 font-bold text-text w-fit">
             {/* Commented out checks and conditions */}
-            {/* <div className="relative flex justify-end items-center gap-5 font-archivo">
+            <div className="relative flex justify-end items-center gap-5 font-archivo">
             <p>🌏 Asia Studies </p>
             <CrossCheck status={foundAsiaStudies} />
             <div className="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
                 {foundAsiaStudies ? `Cleared by ${asiaStudiesMods[0].moduleId}` : `Not cleared yet`}
             </div>
-        </div> */}
-            {/* <div className="flex justify-end items-center gap-5 font-archivo">
+        </div>
+            <div className="flex justify-end items-center gap-5 font-archivo">
             <p>🫂 Community Service </p>
             <CrossCheck />
-        </div> */}
+        </div>
             <div className="relative flex justify-end items-center gap-5 font-archivo">
                 <div className="flex gap-1 items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
@@ -208,9 +208,9 @@ const PlanBar = ({ plan, setPlan, mods }) => {
                     <p>Singapore Studies</p>
                 </div>
                 <CrossCheck status={false} />
-                {/* <div className="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute left-[100px] min-w-48 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white text-xs rounded px-2 py-1 opacity-0 hover:opacity-100 transition-opacity duration-300">
                 {foundSingaporeStudies ? `Cleared by ${singaporeStudiesMods[0].moduleId}` : `Not cleared yet`}
-            </div> */}
+            </div>
             </div>
             <div className="flex justify-end items-center gap-5 font-archivo">
                 <p>💼 Internship</p>
@@ -250,7 +250,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
     // Use default values or placeholders
     const tabData = [
         { id: 0, curr: 0, max: 36, label: " CUs", content: Tab1 },
-        { id: 1, curr: 0, max: 4, label: " Grad. Requirements", content: Tab2 },
+        { id: 1, curr: gradReqs, max: 4, label: " Grad. Requirements", content: Tab2 },
         ...(isGPAOn ? [{ id: 2, curr: totalGPA, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
     ];
 
