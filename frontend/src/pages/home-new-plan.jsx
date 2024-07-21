@@ -55,6 +55,8 @@ const Content = ({ user, setUser }) => {
 
     const handleDegreeChange = (event) => {
         setSelectedDegree(event.target.value);
+        setSelectedMajor1(""); // Reset the first major
+        setSelectedMajor2(""); // Reset the second major
     };
 
     const handleMajor1Change = (event) => {
@@ -90,7 +92,7 @@ const Content = ({ user, setUser }) => {
             return;
         }
 
-        if(selectedMajor1 === selectedMajor2){
+        if (selectedMajor1 === selectedMajor2) {
             const newErrors = {
                 title: selectedTitle ? '' : 'Title is required',
                 degree: selectedDegree ? '' : 'Degree is required',
