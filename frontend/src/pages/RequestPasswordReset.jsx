@@ -17,7 +17,7 @@ function RequestPasswordReset() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8080/api/auth/request-password-reset?email=${email}`);
+            const response = await axios.post(`http://159.138.85.198:8080/api/auth/request-password-reset?email=${email}`);
             setMessage('Email Sent! Please check your inbox.');
             setError('');
         } catch (error) {

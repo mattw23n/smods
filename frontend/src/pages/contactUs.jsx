@@ -40,7 +40,7 @@ function Form() {
 
         if (!newErrors.name && !newErrors.email && !newErrors.message) {
             try {
-                const response = await axios.post('http://localhost:8080/api/contact/send', {
+                const response = await axios.post('http://159.138.85.198:8080/api/contact/send', {
                     name,
                     email,
                     message

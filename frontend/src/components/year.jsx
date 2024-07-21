@@ -110,7 +110,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             if(originTerm !== 0){
                 // Call the API to delete the module from the original term
                 try {
-                    const deleteResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                    const deleteResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
         if (!modToTransfer) {
             try {
-                const response = await fetch(`http://localhost:8080/api/modules/${moduleId}`, {
+                const response = await fetch(`http://159.138.85.198:8080/api/modules/${moduleId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -181,7 +181,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         }
 
         try {
-            const addResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}&isAdding=true`, {
+            const addResponse = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}&isAdding=true`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     const handleDelete = async (moduleId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=&isAdding=false`, {
+            const response = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=&isAdding=false`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

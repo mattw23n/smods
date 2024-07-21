@@ -18,7 +18,7 @@ function ResendVerification() {
         event.preventDefault();
 
         try {
-            const response = await axios.post(`http://localhost:8080/api/auth/resend-verification?email=${email}`);
+            const response = await axios.post(`http://159.138.85.198:8080/api/auth/resend-verification?email=${email}`);
             setMessage('Verification email resent successfully. Please check your email.');
             setError('');
         } catch (error) {

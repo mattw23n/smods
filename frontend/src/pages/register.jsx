@@ -73,7 +73,7 @@ function Form() {
             };
 
             try {
-                const response = await axios.post('http://localhost:8080/api/auth/register', userData);
+                const response = await axios.post('http://159.138.85.198:8080/api/auth/register', userData);
                 setSuccess('Registration successful');
                 setError('');
                 console.log('Registration successful:', response.data);

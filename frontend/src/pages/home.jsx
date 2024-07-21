@@ -44,7 +44,7 @@ const Home = () => {
                 try {
                     const token = localStorage.getItem('jwt');
                     const response = await axios.put(
-                        `http://localhost:8080/api/users/${user.userId}/plans/${planId}/rename`,
+                        `http://159.138.85.198:8080/api/users/${user.userId}/plans/${planId}/rename`,
                         null,
                         {
                             params: { newPlanName: editedTitle },
@@ -73,7 +73,7 @@ const Home = () => {
             try {
                 const token = localStorage.getItem('jwt');
                 const response = await axios.delete(
-                    `http://localhost:8080/api/users/${user.userId}/plans/${planId}`,
+                    `http://159.138.85.198:8080/api/users/${user.userId}/plans/${planId}`,
                     {
                         headers: { Authorization: `Bearer ${token}` },
                     }

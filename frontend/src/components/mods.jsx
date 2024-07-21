@@ -104,7 +104,7 @@ const Mod = ({ module, plan, handleDragStart, mods, setMods, setValidationRespon
     const updateModule = async (updatedModule) => {
         try {
             console.log("Updating module:", updatedModule);
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${updatedModule.moduleId}&term=${updatedModule.term}&gpa=${updatedModule.GPA}`, {
+            const response = await fetch(`http://159.138.85.198:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${updatedModule.moduleId}&term=${updatedModule.term}&gpa=${updatedModule.GPA}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
