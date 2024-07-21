@@ -9,6 +9,13 @@ public class PlanRequest {
     private String firstMajorName;
     private String secondMajorName;
 
+    public PlanRequest(String planName, String degreeName, String firstMajorName, String secondMajorName) {
+        this.planName = planName;
+        this.degreeName = degreeName;
+        this.firstMajorName = firstMajorName;
+        this.secondMajorName = secondMajorName;
+    }
+
     // Getters and setters
     public String getPlanName() {
         return planName;

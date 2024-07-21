@@ -55,11 +55,14 @@ public class PlanController {
     @PostMapping
     public ResponseEntity<Plan> createPlan(
             @PathVariable Long userId,
-            @RequestBody PlanRequest planRequest) {
+            @RequestParam String planName,
+            @RequestParam String degreeName,
+            @RequestParam String firstMajorName,
+            @RequestParam(required = false) String secondMajorName) {
+        PlanRequest planRequest = new PlanRequest(planName, degreeName, firstMajorName, secondMajorName);
         Plan createdPlan = planService.createPlan(userId, planRequest);
         return ResponseEntity.ok(createdPlan);
     }
-
     @DeleteMapping("/{planId}")
     public ResponseEntity<String> deletePlan(@PathVariable Long userId, @PathVariable Long planId) {
         checkUserAuthorization(userId);

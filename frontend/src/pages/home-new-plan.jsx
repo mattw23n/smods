@@ -107,31 +107,22 @@ const Content = ({ user, setUser }) => {
             // Form is valid, proceed with form submission
             console.log('Form submitted');
 
-            if(selectedMajor2 === "Undeclared"){
-                setSelectedMajor2(null)
-            }
-
-            if(selectedMajor1 === "Undeclared"){
-                setSelectedMajor1(null)
-            }
-
-            const newPlan = {
+            const queryParams = new URLSearchParams({
                 planName: selectedTitle,
                 degreeName: selectedDegree,
-                firstMajorName: selectedMajor1 === "Undeclared" ? null : selectedMajor1,
-                secondMajorName: selectedMajor2 === "Undeclared" ? null : selectedMajor2,
-            };
+                firstMajorName: selectedMajor1,
+                secondMajorName: selectedMajor2 || '' // Handle optional second major
+           });
 
             console.log("new plan", newPlan)
 
+
             try {
-                const response = await fetch(`http://localhost:8080/api/users/${userId}/plans`, {
+                const response = await fetch(`http://localhost:8080/api/users/${userId}/plans?${queryParams.toString()}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${jwtToken}`
-                    },
-                    body: JSON.stringify(newPlan)
+                    }
                 });
 
                 if (response.ok) {
@@ -144,7 +135,7 @@ const Content = ({ user, setUser }) => {
                     setConfirmationMessage("Plan created successfully!");
                 } else {
                     console.error('Failed to create plan:', response.statusText);
-                    setErrorMessage("Failed to create plan")
+                    setErrorMessage("Failed to create plan");
                 }
             } catch (error) {
                 console.error('Error creating plan:', error);
