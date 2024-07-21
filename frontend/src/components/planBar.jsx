@@ -134,11 +134,24 @@ const PlanBar = ({ plan, setPlan, mods}) => {
 
                 if (addResponse.ok) {
                     const validationResponse = await addResponse.json();
-                    const requirementProgress = validationResponse.planRequirementProgress;
+                    const targetRequirement = validationResponse.planTargetRequirement;
+                    const progressRequirement = validationResponse.planRequirementProgress;
 
-                    console.log("validation response", validationResponse);
-                    console.log("requirement progress", requirementProgress);
-                    setPlanRequirementProgress(requirementProgress);
+                    const updatedRequirementProgress = {
+                        targetRequirement: {
+                            ...planRequirementProgressEmpty.targetRequirement,
+                            ...targetRequirement,
+                        },
+                        requirementProgress: {
+                            ...planRequirementProgressEmpty.requirementProgress,
+                            ...progressRequirement,
+                        },
+                    };
+
+                    console.log(updatedRequirementProgress)
+
+                    setPlanRequirementProgress(updatedRequirementProgress);
+
                     console.log('Successfully updated plan requirements');
                 } else {
                     console.error('Failed to get progress requirement:', addResponse.statusText);
