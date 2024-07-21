@@ -86,7 +86,7 @@ const Tabs = ({ tabData }) => {
     );
 };
 
-const PlanBar = ({ plan, setPlan, mods, planRequirementProgress }) => {
+const PlanBar = ({ plan, setPlan, mods }) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
@@ -134,9 +134,24 @@ const PlanBar = ({ plan, setPlan, mods, planRequirementProgress }) => {
 
                 if (addResponse.ok) {
                     const validationResponse = await addResponse.json();
-                    const requirementProgress = validationResponse.planRequirementProgress;
+                    const targetRequirement = validationResponse.planTargetRequirement;
+                    const progressRequirement = validationResponse.planRequirementProgress;
 
-                    setPlanRequirementProgress(requirementProgress);
+                    const updatedRequirementProgress = {
+                        targetRequirement: {
+                            ...planRequirementProgressEmpty.targetRequirement,
+                            ...targetRequirement,
+                        },
+                        requirementProgress: {
+                            ...planRequirementProgressEmpty.requirementProgress,
+                            ...progressRequirement,
+                        },
+                    };
+
+                    console.log(updatedRequirementProgress)
+
+                    setPlanRequirementProgress(updatedRequirementProgress);
+
                     console.log('Successfully updated plan requirements');
                 } else {
                     console.error('Failed to get progress requirement:', addResponse.statusText);
