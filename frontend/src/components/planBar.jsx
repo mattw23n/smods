@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {asiaStudiesCourses, singaporeStudiesCourses} from "../data/additionalModData";
 
-//replace this plan requirement progress with an API call to get the actual map
-const planRequirementProgress = {
-    "targetRequirement": {
-        "Uni Core": 6.0,
-        "Major Core": 17.0,
-        "Major Elective": 7.0,
-        "Free Elective": 6.0
-    },
-    "requirementProgress": {
-        "Uni Core": 4.0,
-        "Major Core": 10.0,
-        "Major Elective": 5.0,
-        "Free Elective": 2.0
-    },
-}
 
 const ActiveCounter = ({ Current, Max, Category }) => {
 
@@ -101,21 +86,68 @@ const Tabs = ({ tabData }) => {
     );
 };
 
-const PlanBar = ({ plan, setPlan, mods }) => {
+const PlanBar = ({ plan, setPlan, mods, planRequirementProgress }) => {
     const { isGPAOn } = plan;
     // Commented out or removed validation and calculation logic
 
     const [asiaStudiesMods, setAsiaStudiesMods] = useState([]);
     const [singaporeStudiesMods, setSingaporeStudiesMods] = useState([]);
 
-    
-    // const { tracks, degree } = plan;
+    const planRequirementProgressEmpty = {
+        "targetRequirement": {
+            "Uni Core": 0.0,
+            "Major Core": 0.0,
+            "Major Elective": 0.0,
+            "Free Elective": 0.0
+        },
+        "requirementProgress": {
+            "Uni Core": 0.0,
+            "Major Core": 0.0,
+            "Major Elective": 0.0,
+            "Free Elective": 0.0
+        },
+    }
 
-    // const degreeInfo = defaultMods;
-    // const planDegree = degreeInfo.find(d => d.name === degree);
-    // const { modLimit } = planDegree;
+    const [planRequirementProgress, setPlanRequirementProgress] = useState(planRequirementProgressEmpty)
 
-    // const trackType = tracks.length;
+    useEffect(() => {
+        const getRequirementProgress = async () => {
+            if (mods.length === 0) {
+                return;
+            }
+
+            const moduleId = mods[0].module.moduleId;
+            const term = 1;
+
+            try {
+                const addResponse = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                    },
+                    body: JSON.stringify({
+                        moduleId: moduleId,
+                        term: term,
+                    })
+                });
+
+                if (addResponse.ok) {
+                    const validationResponse = await addResponse.json();
+                    const requirementProgress = validationResponse.planRequirementProgress;
+
+                    setPlanRequirementProgress(requirementProgress);
+                    console.log('Successfully updated plan requirements');
+                } else {
+                    console.error('Failed to get progress requirement:', addResponse.statusText);
+                }
+            } catch (error) {
+                console.error('Error in progress requirement:', error);
+            }
+        };
+
+        getRequirementProgress();
+    }, [mods]);
 
     useEffect(() => {
         setAsiaStudiesMods(mods.filter(m => asiaStudiesCourses.includes(m.module.moduleId)));
