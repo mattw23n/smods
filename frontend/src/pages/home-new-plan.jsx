@@ -15,7 +15,7 @@ const Content = ({ user, setUser }) => {
     }, [user]);
 
     const majors = [
-        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyberphysical-Systems", "Undeclared"] },
+        { Title: "Computer Science", Majors: ["Artificial Intelligence", "Cybersecurity", "Cyber-Physical Systems", "Undeclared"] },
         { Title: "Information Systems", Majors: ["Business Analytics", "Product Development", "Financial Technology", "Smart-City Management and Technology", "Undeclared"] },
         { Title: "Software Engineering", Majors: ["Not Applicable"] },
         { Title: "Computing & Law", Majors: ["Not Applicable"] },
