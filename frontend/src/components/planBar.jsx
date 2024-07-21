@@ -4,9 +4,40 @@ import defaultMods from "../data/defaultMods";
 const asiaStudiesCourses = ["COR3021"];
 const singaporeStudiesCourses = ["COR3001"];
 
-const ActiveCounter = ({ Current, Max, Category, type }) => {
+
+//replace this plan requirement progress with an API call to get the actual map
+const planRequirementProgress = {
+    "targetRequirement": {
+        "Uni Core": 6.0,
+        "Major Core": 17.0,
+        "Major Elective": 7.0,
+        "Free Elective": 6.0
+    },
+    "requirementProgress": {
+        "Uni Core": 4.0,
+        "Major Core": 10.0,
+        "Major Elective": 5.0,
+        "Free Elective": 2.0
+    },
+}
+
+const ActiveCounter = ({ Current, Max, Category }) => {
+
+    const getFirstLetters = (input) => {
+        const str = String(input)
+        const words = str.split(' ');
+
+        // Extract the first letter of each word and join them into a string
+        const firstLetters = words.map(word => word.charAt(0)).join('');
+
+        return firstLetters.toLowerCase();
+    }
+
+    const type = getFirstLetters(Category)
+    console.log("type", type)
+
     return (
-        <div className={`flex gap-1 w-full items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
+        <div className={`flex w-full items-center justify-left font-archivo gap-3 font-bold text-${type}-d`}>
             <p className="text-xl">{Current}/{Max} </p>
             <p className="whitespace-nowrap">{Category}</p>
         </div>
@@ -169,11 +200,15 @@ const PlanBar = ({ plan, setPlan, mods }) => {
         <div className="bg-white rounded-lg px-4 py-2 grid gap-x-auto gap-y-2 w-[600px] auto-cols-auto"
              style={{ gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))' }}>
             {/* Commented out actual counts and limits */}
-            {/* <ActiveCounter Current={uniCore.length} Max={modTrackLimit.uc} Category="UNI CORE" type="uc" />
-            <ActiveCounter Current={majorCore.length} Max={modTrackLimit.mc} Category="MAJOR CORE" type="mc" />
-            <ActiveCounter Current={majorElective.length} Max={modTrackLimit.me} Category="MAJOR ELECTIVE" type="me" />
-            <ActiveCounter Current={trackModule.length} Max={modTrackLimit.tm} Category="TRACK MODULE" type="tm" />
-            <ActiveCounter Current={freeElective.length} Max={modTrackLimit.fe} Category="FREE ELECTIVE" type="fe" /> */}
+
+            {Object.keys(planRequirementProgress.targetRequirement).map(category => (
+                <ActiveCounter
+                    key={category}
+                    Category={category.toUpperCase()}
+                    Current={planRequirementProgress.requirementProgress[category]}
+                    Max={planRequirementProgress.targetRequirement[category]}
+                />
+            ))}
         </div>
     );
 
@@ -249,7 +284,7 @@ const PlanBar = ({ plan, setPlan, mods }) => {
 
     // Use default values or placeholders
     const tabData = [
-        { id: 0, curr: 0, max: 36, label: " CUs", content: Tab1 },
+        { id: 0, curr: mods.length, max: 36, label: " CUs", content: Tab1 },
         { id: 1, curr: gradReqs, max: 4, label: " Grad. Requirements", content: Tab2 },
         ...(isGPAOn ? [{ id: 2, curr: totalGPA, max: "4.0", label: " cum. GPA", content: Tab3 }] : []), // Optional tab
     ];

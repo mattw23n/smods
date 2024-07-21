@@ -336,85 +336,21 @@ function Content({ plan, setPlan, mods, setMods, validationResponse, setValidati
     );
 }
 
-const hardCodedMods = [
-    {
-        "planModuleGPAId": {
-            "planId": {
-                "planId": 0,
-                "userId": 1234
-            },
-            "moduleId": "CS104"
-        },
-        "gpa": 0.0,
-        "term": 1,
-        "plan": {
-            "planId": {
-                "planId": 0,
-                "userId": 1234
-            },
-            "planName": "Matteo gay",
-            "creationDateTime": "2024-07-19T11:25:40.36652+07:00",
-            "user": null,
-            "planModuleGPAs": null,
-            "degree": null,
-            "firstMajor": null,
-            "secondMajor": null
-        },
-        "module": {
-            "moduleId": "CS104",
-            "moduleName": "Programming Fundamentals 4",
-            "courseUnit": 1.0,
-            "baskets": [
-                "i forgot"
-            ],
-            "subtype": null,
-            "planModuleGPAs": null,
-            "preRequisites": null,
-            "coRequisites": null,
-            "mutuallyExclusives": null,
-            "majorModuleRequirements": null
-        }
-    },
-    {
-        "planModuleGPAId": {
-            "planId": {
-                "planId": 0,
-                "userId": 1234
-            },
-            "moduleId": "CS103"
-        },
-        "gpa": 0.0,
-        "term": 1,
-        "plan": {
-            "planId": {
-                "planId": 0,
-                "userId": 1234
-            },
-            "planName": "Matteo gay",
-            "creationDateTime": "2024-07-19T11:25:40.36652+07:00",
-            "user": null,
-            "planModuleGPAs": null,
-            "degree": null,
-            "firstMajor": null,
-            "secondMajor": null
-        },
-        "module": {
-            "moduleId": "CS103",
-            "moduleName": "Programming Fundamentals 3",
-            "courseUnit": 1.0,
-            "baskets": [
-                "i forgot"
-            ],
-            "subtype": null,
-            "planModuleGPAs": null,
-            "preRequisites": null,
-            "coRequisites": null,
-            "mutuallyExclusives": null,
-            "majorModuleRequirements": null
-        }
-    },
-]
 
+const planRequirementProgress = {
+    "targetRequirement": {
+        "Uni Core": 6.0,
+        "Major Core": 17.0,
+        "Major Elective": 7.0,
+        "Free Elective": 6.0
+    },
+    "requirementProgress": {
+        "Uni Core": 4.0,
+        "Major Core": 10.0,
+        "Major Elective": 5.0,
+        "Free Elective": 2.0
+    },
+}
 
 function Planning() {
     const { user } = useContext(UserContext);
