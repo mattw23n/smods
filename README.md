@@ -1,5 +1,15 @@
 # SMODS: Plan Your Mods. Hassle-Free.
 
+![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)
+![Issues](https://img.shields.io/github/issues/mattw23n/heap-smods)
+![Contributors](https://img.shields.io/github/contributors/mattw23n/heap-smods)
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![NGINX](https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Huawei](https://img.shields.io/badge/Huawei-%23FF0000.svg?style=for-the-badge&logo=huawei&logoColor=white)
+
 **SMODS** is a web app developed for SMU students by SMU students to make it easier to plan our academic journey in SMU.
 
 ## Introduction
@@ -15,7 +25,7 @@ Planning your modules can be a daunting task, but with SMODS, it's now a breeze!
 
 ## Accessing SMODS
 
-You can access the SMODS application via the IP address http://159.138.85.198. Simply open this link in your web browser to start planning your modules.
+You can access SMODS via the IP address http://159.138.85.198. Simply open this link in your web browser to start planning your modules.
 
 ## How to Use SMODS
 
