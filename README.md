@@ -29,8 +29,6 @@ You can access SMODS via the IP address http://159.138.85.198. Simply open this 
 
 ## How to Use SMODS
 
-### Step-by-Step Tutorial
-
 1. **Create an Account**
    - Sign up and log in to your SMODS account.
 
