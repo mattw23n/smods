@@ -13,6 +13,10 @@ Planning your modules can be a daunting task, but with SMODS, it's now a breeze!
 - **Dashboard Overview**: View your current module count and check if you have completed all the required baskets.
 - **Built-in GPA Calculator**: Track your GPA per term, year, and overall. See the minimum and maximum GPA as well.
 
+## Accessing SMODS
+
+You can access the SMODS application via the IP address http://159.138.85.198. Simply open this link in your web browser to start planning your modules.
+
 ## How to Use SMODS
 
 ### Step-by-Step Tutorial
