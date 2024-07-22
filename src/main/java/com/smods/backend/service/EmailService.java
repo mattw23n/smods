@@ -1,6 +1,7 @@
 package com.smods.backend.service;
 
 import com.smods.backend.model.User;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -37,8 +38,8 @@ public class EmailService {
 
     public void sendContactFormMessage(String name, String email, String messageContent) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("smodstesting@gmail.com");
-        message.setSubject("New Contact Form Submission from " + name);
+        Dotenv dotenv = Dotenv.load();
+        message.setTo(dotenv.get("EMAIL_USERNAME"));
         message.setText("Name: " + name + "\nEmail: " + email + "\n\nMessage:\n" + messageContent);
         mailSender.send(message);
     }
