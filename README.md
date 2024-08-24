@@ -24,7 +24,7 @@ Planning your modules can be a daunting task, but with SMODS, it's now a breeze!
 
 ## Accessing SMODS
 
-You can access SMODS via the IP address http://54.179.173.196. Simply open this link in your web browser to start planning your modules.
+You can access SMODS via the IP address [http://54.179.173.196](http://54.179.173.196/). Simply open this link in your web browser to start planning your modules.
 
 ## How to Use SMODS
 
