@@ -120,7 +120,7 @@ const PlanBar = ({ plan, setPlan, mods}) => {
             const term = 1;
 
             try {
-                const addResponse = await fetch(`http://54.179.173.196/:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}`, {
+                const addResponse = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update?moduleId=${moduleId}&term=${term}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
