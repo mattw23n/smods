@@ -220,7 +220,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     const handleGpaUpdate = async (moduleId, gpa) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module-gpa?moduleId=${moduleId}&gpa=${gpa}`, {
+            const response = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module-gpa?moduleId=${moduleId}&gpa=${gpa}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
