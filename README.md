@@ -11,6 +11,8 @@
 
 **SMODS** is a web app developed for SMU students by SMU students to make it easier to plan our academic journey in SMU.
 
+Project Demo: https://youtu.be/JvwDfQk9zeE
+
 ## Introduction
 
 Planning your modules can be a daunting task, but with SMODS, it's now a breeze! This application is designed to simplify the process of organizing and managing your courses, ensuring you stay on track to meet your academic goals.
