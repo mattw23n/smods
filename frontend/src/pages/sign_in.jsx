@@ -36,10 +36,7 @@ function Form() {
         // Trim spaces from username and password
         const trimmedUsername = username.trim();
         const trimmedPassword = password.trim();
-
-        console.log("Username:", username);
-        console.log("Password:", password);
-
+        
         const newErrors = {
             username: trimmedUsername ? '' : 'Username/Email is required',
             password: trimmedPassword ? '' : 'Password is required',
