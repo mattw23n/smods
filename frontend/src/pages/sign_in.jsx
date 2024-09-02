@@ -48,7 +48,7 @@ function Form() {
             setLoading(true);
 
             try {
-                const response = await axios.post('http://54.179.173.196:8080/api/auth/login', {
+                const response = await axios.post('http://52.221.189.77:8080/api/auth/login', {
                     username: trimmedUsername,
                     password: trimmedPassword,
                 });

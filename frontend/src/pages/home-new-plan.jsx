@@ -101,7 +101,7 @@ const Content = ({ user, setUser }) => {
             });
 
             try {
-                const response = await fetch(`http://54.179.173.196:8080/api/users/${userId}/plans?${queryParams.toString()}`, {
+                const response = await fetch(`http://52.221.189.77:8080/api/users/${userId}/plans?${queryParams.toString()}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${jwtToken}`

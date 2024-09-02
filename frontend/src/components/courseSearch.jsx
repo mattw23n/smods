@@ -70,7 +70,7 @@ const SearchBar = ({ plan }) => {
 
         const jwtToken = localStorage.getItem('jwt');
         const authHeader = `Bearer ${jwtToken}`;
-        const apiUrl = `http://54.179.173.196:8080/api/modules/search?searchTerm=${searchTerm}&filter=${selectedFilter}&planId=${plan.planId}&userId=${plan.userId}`;
+        const apiUrl = `http://52.221.189.77:8080/api/modules/search?searchTerm=${searchTerm}&filter=${selectedFilter}&planId=${plan.planId}&userId=${plan.userId}`;
 
         try {
             const response = await fetch(apiUrl, {

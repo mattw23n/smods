@@ -114,7 +114,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
             if (originTerm !== 0) {
                 // Call the API to delete the module from the original term
                 try {
-                    const deleteResponse = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
+                    const deleteResponse = await fetch(`http://52.221.189.77:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${originTerm}&isAdding=false`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
         if (!modToTransfer) {
             try {
-                const response = await fetch(`http://54.179.173.196:8080/api/modules/${moduleId}`, {
+                const response = await fetch(`http://52.221.189.77:8080/api/modules/${moduleId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -184,7 +184,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
         }
 
         try {
-            const addResponse = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${term}&isAdding=true`, {
+            const addResponse = await fetch(`http://52.221.189.77:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=${term}&isAdding=true`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     const handleGpaUpdate = async (moduleId, gpa) => {
         try {
-            const response = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module-gpa?moduleId=${moduleId}&gpa=${gpa}`, {
+            const response = await fetch(`http://52.221.189.77:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module-gpa?moduleId=${moduleId}&gpa=${gpa}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ const Term = ({ term, plan, mods, setMods, type, setValidationResponse, isEditMo
 
     const handleDelete = async (moduleId) => {
         try {
-            const response = await fetch(`http://54.179.173.196:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=&isAdding=false`, {
+            const response = await fetch(`http://52.221.189.77:8080/api/users/${plan.userId}/plans/${plan.planId}/update-module?moduleId=${moduleId}&term=&isAdding=false`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

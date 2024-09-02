@@ -110,7 +110,7 @@ public class AuthController {
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
         // Redirect to the frontend with tokens as query parameters
-        String redirectUrl = String.format("http://54.179.173.196/handle-verification?jwt=%s&refreshToken=%s&username=%s", jwt, refreshToken, userDetails.getUsername());
+        String redirectUrl = String.format("http://52.221.189.77/handle-verification?jwt=%s&refreshToken=%s&username=%s", jwt, refreshToken, userDetails.getUsername());
         response.sendRedirect(redirectUrl);
     }
 
@@ -137,7 +137,7 @@ public class AuthController {
 
     @GetMapping("/redirect-reset-password")
     public void redirectToResetPassword(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
-        String redirectUrl = "http://54.179.173.196/reset-password?token=" + token;
+        String redirectUrl = "http://52.221.189.77/reset-password?token=" + token;
         response.sendRedirect(redirectUrl);
     }
 

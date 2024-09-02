@@ -15,7 +15,7 @@ public class CORSConfig {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000", "http://54.179.173.196")
+                        .allowedOrigins("http://localhost:3000", "http://52.221.189.77")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
